@@ -84,6 +84,8 @@ SOFTWARE.
   .topnav{display:flex;gap:6px;align-items:center;}
   .prose-lang{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);}
   .code[data-tip]{cursor:help;}
+  .langlbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);}
+  .topnav{flex-wrap:wrap;}
   .langsel{padding:6px 10px;border:1px solid var(--ink);border-radius:7px;font:600 12.5px/1.2 inherit;font-family:inherit;background:#fff;color:var(--ink);cursor:pointer;}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
   .navbtn{padding:6px 12px;border:1px solid var(--ink);background:#fff;color:var(--ink);border-radius:7px;font:600 12.5px/1.2 inherit;font-family:inherit;cursor:pointer;}
@@ -199,8 +201,8 @@ SOFTWARE.
       <!-- Ajuste global de quien opera la herramienta: va acá arriba y no entre
            los controles de la etiqueta, para que no se confunda con el idioma
            que SÍ entra al artículo. Opciones construidas en JS desde LANGS. -->
-      <label class="sr-only" for="lang" data-i18n="lblLang"></label>
-      <select id="lang" class="langsel"></select>
+      <label class="langlbl" for="lang" data-i18n="lblLang"></label>
+      <select id="lang" class="langsel" data-i18n-tip="tipLang" data-i18n-tipsub="tipLangSub"></select>
       <button type="button" class="navbtn" data-open="dlgManual" data-i18n="navManual"></button>
       <button type="button" class="navbtn" data-open="dlgAbout" data-i18n="navAbout"></button>
     </nav>
@@ -451,10 +453,12 @@ const UI = {
     hdrVocab:'<b>Vocabulario.</b> STM Association (2025), <i>Recommendations for a Classification of AI Use in Academic Manuscript Preparation</i>. Las nueve actividades se adoptan sin redefinirlas; ocho son declarables y la novena no, porque las guías de STM recomiendan prohibirla. El alcance es el de la fuente: solo la preparación del manuscrito, no el resto del proceso de investigación.',
     hdrAxes:'<b>Dos ejes.</b> Tipo de tarea (Eje 1) y extensión del uso (Eje 2, opcional). La verificación humana no es un nivel: es una afirmación única que cubre todo lo declarado.',
     legAxes:'Eje 1 · Tipo de tarea &nbsp;·&nbsp; Eje 2 · Extensión (opcional)',
-    lblLang:'Idioma de la interfaz',
-    lblDocLang:'Idioma de la etiqueta',
-    legLabel:'Idioma y enlace de la etiqueta',
-    noteDocLang:'Es el idioma del artículo, no el de quien usa la herramienta. Gobierna las descripciones dentro de la etiqueta y la prosa. <b>El código NO cambia</b>: <code>AI: ED+TR+CO</code> se escribe igual en cualquier idioma.',
+    lblLang:'Idioma de la herramienta',
+    lblDocLang:'Idioma de la etiqueta y la prosa',
+    legLabel:'Etiqueta y prosa',
+    tipLang:'Idioma de la herramienta',
+    tipLangSub:'Solo cambia esta pantalla. El idioma de la etiqueta y de la prosa se escoge más abajo, en «Etiqueta y prosa».',
+    noteDocLang:'Es el idioma del artículo, no el de quien usa la herramienta. <b>El código NO cambia</b>: <code>AI: ED+TR+CO</code> se escribe igual en cualquier idioma.',
     lblQrUrl:'URL del QR (página explicativa)',
     legProd:'Opciones de producción',
     optQrSafe:'QR de alto contraste estándar<small>Módulos oscuros sobre placa blanca dentro del bloque negro.</small>',
@@ -507,10 +511,12 @@ const UI = {
     hdrVocab:'<b>Vocabulary.</b> STM Association (2025), <i>Recommendations for a Classification of AI Use in Academic Manuscript Preparation</i>. The nine activities are adopted without redefining them; eight are disclosable and the ninth is not, because the STM guidelines recommend prohibiting it. The scope is that of the source: manuscript preparation only, not the rest of the research process.',
     hdrAxes:'<b>Two axes.</b> Task type (Axis 1) and extent of use (Axis 2, optional). Human verification is not a level: it is a single statement covering everything declared.',
     legAxes:'Axis 1 · Task type &nbsp;·&nbsp; Axis 2 · Extent (optional)',
-    lblLang:'Interface language',
-    lblDocLang:'Label language',
-    legLabel:'Label language and link',
-    noteDocLang:'The language of the article, not of whoever uses the tool. It governs the descriptions inside the label and the prose. <b>The code does NOT change</b>: <code>AI: ED+TR+CO</code> is written the same in any language.',
+    lblLang:'Tool language',
+    lblDocLang:'Label and prose language',
+    legLabel:'Label and prose',
+    tipLang:'Tool language',
+    tipLangSub:'Changes this screen only. The language of the label and the prose is chosen further down, under «Label and prose».',
+    noteDocLang:'The language of the article, not of whoever uses the tool. <b>The code does NOT change</b>: <code>AI: ED+TR+CO</code> is written the same in any language.',
     lblQrUrl:'QR URL (explanatory page)',
     legProd:'Production options',
     optQrSafe:'Standard high-contrast QR<small>Dark modules on a white plate inside the black block.</small>',
@@ -563,10 +569,12 @@ const UI = {
     hdrVocab:'<b>Vocabulário.</b> STM Association (2025), <i>Recommendations for a Classification of AI Use in Academic Manuscript Preparation</i>. As nove atividades são adotadas sem redefini-las; oito são declaráveis e a nona não, porque as diretrizes da STM recomendam proibi-la. O alcance é o da fonte: apenas a preparação do manuscrito, não o restante do processo de pesquisa.',
     hdrAxes:'<b>Dois eixos.</b> Tipo de tarefa (Eixo 1) e extensão do uso (Eixo 2, opcional). A verificação humana não é um nível: é uma afirmação única que cobre tudo o que foi declarado.',
     legAxes:'Eixo 1 · Tipo de tarefa &nbsp;·&nbsp; Eixo 2 · Extensão (opcional)',
-    lblLang:'Idioma da interface',
-    lblDocLang:'Idioma da etiqueta',
-    legLabel:'Idioma e link da etiqueta',
-    noteDocLang:'É o idioma do artigo, não o de quem usa a ferramenta. Governa as descrições dentro da etiqueta e a prosa. <b>O código NÃO muda</b>: <code>AI: ED+TR+CO</code> escreve-se igual em qualquer idioma.',
+    lblLang:'Idioma da ferramenta',
+    lblDocLang:'Idioma da etiqueta e da prosa',
+    legLabel:'Etiqueta e prosa',
+    tipLang:'Idioma da ferramenta',
+    tipLangSub:'Muda apenas esta tela. O idioma da etiqueta e da prosa escolhe-se mais abaixo, em «Etiqueta e prosa».',
+    noteDocLang:'É o idioma do artigo, não o de quem usa a ferramenta. <b>O código NÃO muda</b>: <code>AI: ED+TR+CO</code> escreve-se igual em qualquer idioma.',
     lblQrUrl:'URL do QR (página explicativa)',
     legProd:'Opções de produção',
     optQrSafe:'QR de alto contraste padrão<small>Módulos escuros sobre placa branca dentro do bloco preto.</small>',
@@ -723,7 +731,7 @@ function manualHTML(){
 <li><b>Tick the tasks</b> where AI was used (Axis 1). If there was no use above the disclosable threshold, keep <b>N</b> ticked: it is the starting option.</li>
 <li><b>Optional: state the extent</b> of each task (Axis 2) with buttons 1 to 4. «—» means you do not state it, which is a valid declaration. Hover over each number to see what it means.</li>
 <li><b>Optional: add the tools and models</b> you used (up to 6). Empty rows are ignored.</li>
-<li>Choose the <b>label language</b>: the language of the article. It sets the descriptions inside the label and the language of the prose. It is independent of the interface language, and it does not touch the codes.</li>
+<li>Choose the <b>label and prose language</b>: the language of the article. It sets the descriptions inside the label and the language of the prose. It is independent of the interface language, and it does not touch the codes.</li>
 <li>Enter the <b>QR URL</b>: the page that explains the system or the journal's policy.</li>
 <li><b>Download</b> the label as PNG (image) or SVG (vector).</li>
 </ol>
@@ -769,7 +777,7 @@ ${extentTable()}
 <li><b>Marque as tarefas</b> em que usou IA (Eixo 1). Se não houve uso acima do limiar declarável, deixe <b>N</b> marcada: é a opção inicial.</li>
 <li><b>Opcional: indique a extensão</b> de cada tarefa (Eixo 2) com os botões 1 a 4. «—» significa que você não a declara, e é uma declaração válida. Passe o cursor sobre cada número para ver o que significa.</li>
 <li><b>Opcional: acrescente as ferramentas e modelos</b> que usou (até 6). Linhas vazias são ignoradas.</li>
-<li>Escolha o <b>idioma da etiqueta</b>: o idioma do artigo. Fixa as descrições dentro da etiqueta e a língua da prosa. É independente do idioma da interface, e não toca nos códigos.</li>
+<li>Escolha o <b>idioma da etiqueta e da prosa</b>: o idioma do artigo. Fixa as descrições dentro da etiqueta e a língua da prosa. É independente do idioma da interface, e não toca nos códigos.</li>
 <li>Escreva a <b>URL do QR</b>: a página que explica o sistema ou a política da revista.</li>
 <li><b>Baixe</b> a etiqueta em PNG (imagem) ou SVG (vetorial).</li>
 </ol>
@@ -815,7 +823,7 @@ ${extentTable()}
 <li><b>Marque las tareas</b> en las que usó IA (Eje 1). Si no hubo uso por encima del umbral declarable, deje marcada <b>N</b>: es la opción inicial.</li>
 <li><b>Opcional: indique la extensión</b> de cada tarea (Eje 2) con los botones 1 a 4. «—» significa que no la declara, y es una declaración válida. Pase el cursor sobre cada número para ver qué significa.</li>
 <li><b>Opcional: agregue las herramientas y modelos</b> que usó (hasta 6). Las filas vacías se ignoran.</li>
-<li>Escoja el <b>idioma de la etiqueta</b>: el idioma del artículo. Fija las descripciones dentro de la etiqueta y la lengua de la prosa. Es independiente del idioma de la interfaz, y no toca los códigos.</li>
+<li>Escoja el <b>idioma de la etiqueta y la prosa</b>: el idioma del artículo. Fija las descripciones dentro de la etiqueta y la lengua de la prosa. Es independiente del idioma de la interfaz, y no toca los códigos.</li>
 <li>Escriba la <b>URL del QR</b>: la página que explica el sistema o la política de la revista.</li>
 <li><b>Descargue</b> la etiqueta en PNG (imagen) o SVG (vectorial).</li>
 </ol>
@@ -962,6 +970,13 @@ function applyLang(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{
     const v = U[el.getAttribute('data-i18n')];
     if(v !== undefined) el.innerHTML = v;
+  });
+  /* Guías flotantes cuyo texto también se traduce. Van como atributo, no como
+     contenido, así que no las alcanza el bucle de arriba. */
+  document.querySelectorAll('[data-i18n-tip]').forEach(el=>{
+    el.setAttribute('data-tip', U[el.getAttribute('data-i18n-tip')] || '');
+    const sub = el.getAttribute('data-i18n-tipsub');
+    if(sub) el.setAttribute('data-tip-sub', U[sub] || '');
   });
   $('foot').innerHTML = footerHTML();
   $('manualBody').innerHTML = manualHTML();
