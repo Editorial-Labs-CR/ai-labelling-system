@@ -1,0 +1,2636 @@
+<!DOCTYPE html>
+<!--
+  Sistema de etiquetado AI / AI Labelling System — v19
+
+  SPDX-FileCopyrightText: 2026 Alexander Chinchilla Serrano
+  SPDX-License-Identifier: MIT AND CC-BY-4.0
+
+  AUTORÍA / AUTHORSHIP
+  Alexander Chinchilla Serrano · ORCID 0000-0001-9465-1522 · fchinchillas@uned.ac.cr
+
+  INSTITUCIÓN / INSTITUTION
+  Unidad de Ciencia Abierta
+  VICERRECTORÍA DE INVESTIGACIÓN
+  Universidad Estatal a Distancia (UNED), Costa Rica
+
+  LICENCIAS / LICENCES
+  · Código (HTML, CSS, JavaScript) / Code: MIT — texto completo abajo.
+  · Contenido (notación, textos, manual, diseño de la etiqueta y logotipo) /
+    Content (notation, texts, guide, label design and logo):
+    CC BY 4.0 — https://creativecommons.org/licenses/by/4.0/
+  · La clasificación de actividades es de STM Association (2025) y no queda
+    cubierta por estas licencias. QRious (GPL-3.0) e Inter (OFL-1.1) se cargan
+    desde CDN y conservan sus propias licencias.
+
+  MIT License
+
+Copyright (c) 2026 Alexander Chinchilla Serrano
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sistema de etiquetado Alexander — declaración de uso de IA</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<style>
+  :root{
+    --ink:#101114;
+    --paper:#ffffff;
+    --muted:#6b6d75;
+    --line:#e2e2e6;
+    --panel:#f2f2f4;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    background:var(--panel);
+    color:var(--ink);
+    padding:22px;
+    font-size:14px;
+  }
+  header{max-width:1400px;margin:0 auto 18px;}
+  h1{font-size:18px;margin:0 0 5px;letter-spacing:-0.015em;}
+  .sub{font-size:13px;color:var(--muted);margin:0;line-height:1.5;max-width:70ch;}
+  .layout{display:flex;flex-direction:column;gap:18px;max-width:1400px;margin:0 auto;}
+  @media (min-width:1040px){
+    .layout{flex-direction:row;align-items:flex-start;}
+    .controls{width:420px;flex-shrink:0;position:sticky;top:22px;}
+  }
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .topbar h1{margin:0 0 5px;}
+  .topnav{display:flex;gap:6px;align-items:center;}
+  .prose-lang{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);}
+  .code[data-tip]{cursor:help;}
+  .langsel{padding:6px 10px;border:1px solid var(--ink);border-radius:7px;font:600 12.5px/1.2 inherit;font-family:inherit;background:#fff;color:var(--ink);cursor:pointer;}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+  .navbtn{padding:6px 12px;border:1px solid var(--ink);background:#fff;color:var(--ink);border-radius:7px;font:600 12.5px/1.2 inherit;font-family:inherit;cursor:pointer;}
+  .navbtn:hover{background:var(--ink);color:#fff;}
+  .foot{max-width:1400px;margin:26px auto 4px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;line-height:1.7;color:var(--muted);}
+  .foot a{color:var(--ink);}
+  .foot .sep{margin:0 6px;color:#b9bbc1;}
+  .foot .lic{display:inline-block;border:1px solid var(--ink);border-radius:4px;padding:0 5px;font-weight:700;color:var(--ink);font-size:10.5px;}
+  .foot button{border:none;background:none;padding:0;font:inherit;color:var(--ink);text-decoration:underline;cursor:pointer;}
+  .dlg{border:none;border-radius:14px;padding:0;width:min(760px, calc(100vw - 32px));max-height:86vh;color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35);}
+  .dlg::backdrop{background:rgba(16,17,20,.55);}
+  .dlg-in{padding:24px 28px 8px;overflow:auto;max-height:calc(86vh - 64px);font-size:13.5px;line-height:1.6;}
+  .dlg-in h2{font-size:19px;margin:0 0 6px;}
+  .dlg-in h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:20px 0 6px;}
+  .dlg-in .lead{color:var(--muted);margin:0 0 4px;}
+  .dlg-in ol,.dlg-in ul{padding-left:20px;margin:6px 0;}
+  .dlg-in li{margin-bottom:4px;}
+  .dlg-in table{border-collapse:collapse;width:100%;font-size:12.5px;margin:6px 0;}
+  .dlg-in th,.dlg-in td{text-align:left;vertical-align:top;padding:5px 8px;border-bottom:1px solid var(--line);}
+  .dlg-in th{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);}
+  .dlg-in code{font-size:12px;background:#f2f2f4;padding:1px 4px;border-radius:4px;}
+  .dlg-in .cite{border-left:3px solid var(--ink);padding-left:10px;}
+  .dlg-in details summary{cursor:pointer;font-weight:600;margin-top:8px;}
+  .dlg-in .lic-text{white-space:pre-wrap;font-size:11px;line-height:1.5;background:#f6f6f8;padding:10px 12px;border-radius:8px;max-height:260px;overflow:auto;}
+  .prose h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0;}
+  .prose-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+  .prose-tools{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);}
+  .prose-tools select{padding:5px 7px;border:1px solid #cfcfd4;border-radius:7px;font-family:inherit;font-size:12.5px;background:#fff;}
+  .prose-box{font-family:Georgia,'Times New Roman',serif;font-size:15px;line-height:1.7;color:var(--ink);
+             background:#fafafb;border:1px solid var(--line);border-radius:9px;padding:14px 16px;}
+  .prose-box mark.ph{background:#ececf0;color:var(--ink);border-bottom:1.5px dashed #8a8c93;padding:0 2px;font-style:italic;}
+  .dlg-foot{padding:10px 28px 16px;text-align:right;border-top:1px solid var(--line);margin:0;}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;}
+  fieldset{border:none;padding:0;margin:0 0 18px;}
+  legend{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:9px;padding:0;}
+  .task-row{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid #f0f0f2;}
+  .task-row:last-child{border-bottom:none;}
+  .tool-row{display:grid;grid-template-columns:1fr 1fr 30px;gap:6px;margin-bottom:6px;}
+  .tool-row input{width:100%;min-width:0;padding:7px 8px;border:1px solid #cfcfd4;border-radius:7px;font-size:12.5px;font-family:inherit;color:var(--ink);background:#fff;}
+  .tool-row .rm{border:1px solid #cfcfd4;background:#fff;border-radius:7px;cursor:pointer;font-size:16px;line-height:1;color:var(--muted);}
+  .tool-row .rm:hover{color:var(--ink);border-color:var(--ink);}
+  .addtool{padding:6px 10px;border:1px dashed #b9bbc1;background:#fff;border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;color:var(--ink);}
+  .addtool:disabled,.tool-row :disabled{opacity:.45;cursor:not-allowed;}
+  #toolsBox.off{opacity:.5;}
+  .task-row.off .levels{opacity:.35;}
+  .task-row.off .levels button{cursor:help;}
+  .task-row label{flex:1;display:flex;flex-direction:column;cursor:pointer;line-height:1.25;}
+  .task-row .code{font-weight:700;font-size:13px;letter-spacing:0.01em;}
+  .task-row .desc{font-size:11px;color:var(--muted);}
+  .task-row .stm{font-size:9.5px;font-weight:600;color:#9a9ca3;letter-spacing:0.04em;margin-left:5px;}
+  .levels button:first-child{width:28px;}
+  .levels button:focus-visible{outline:2px solid var(--ink);outline-offset:1px;}
+
+  /* Guía flotante de los grados de uso. El title nativo del navegador no
+     sirve: tarda ~1 s en aparecer, no se puede estilar y en pantalla táctil
+     directamente no existe. Este aparece al instante, con el foco del
+     teclado también, y al tocar en móvil. */
+  #tip{position:fixed;z-index:99;max-width:260px;background:var(--ink);color:#fff;
+       padding:8px 10px;border-radius:7px;font-size:12px;line-height:1.4;
+       pointer-events:none;opacity:0;transform:translateY(3px);
+       transition:opacity .12s ease,transform .12s ease;
+       box-shadow:0 6px 22px rgba(0,0,0,.24);}
+  #tip.on{opacity:1;transform:none;}
+  #tip b{display:block;font-size:12.5px;margin-bottom:3px;}
+  #tip small{color:#b3b5bc;font-size:11px;display:block;}
+  #tip::after{content:'';position:absolute;left:var(--ax,50%);bottom:-5px;margin-left:-5px;
+              border:5px solid transparent;border-top-color:var(--ink);border-bottom:0;}
+  #tip.below::after{bottom:auto;top:-5px;border-top:0;border-bottom-color:var(--ink);}
+
+  /* Leyenda siempre visible: para orientarse de un vistazo, sin tener que
+     ir a buscar cada número con el mouse. */
+  .legend{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;
+          margin-top:10px;padding-top:9px;border-top:1px solid #eee;font-size:10.5px;color:var(--muted);}
+  .legend .lt{font-weight:700;text-transform:uppercase;letter-spacing:0.06em;font-size:9.5px;}
+  .legend .li{display:inline-flex;align-items:center;gap:4px;cursor:help;white-space:nowrap;}
+  .legend .li b{display:inline-flex;align-items:center;justify-content:center;
+                min-width:16px;height:16px;border:1px solid #cfcfd4;border-radius:4px;
+                font-size:10px;color:var(--ink);background:#fff;}
+  .legend .li:hover b{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .task-row.nodecl{background:#fafafb;border-radius:7px;padding:8px;margin-top:6px;border-bottom:none;}
+  .task-row.nodecl .lock{width:16px;text-align:center;color:#b9bbc1;flex-shrink:0;}
+  .task-row.nodecl .desc{color:#8a8c93;}
+  .tag{display:inline-block;font-size:8.5px;font-weight:700;letter-spacing:0.06em;background:#e6e6ea;color:#6b6d75;padding:1px 5px;border-radius:3px;margin-left:5px;vertical-align:1px;}
+  .levels{display:flex;gap:3px;}
+  .levels button{width:25px;height:25px;border:1px solid #cfcfd4;background:#fff;border-radius:6px;font-size:11.5px;cursor:pointer;color:var(--ink);font-family:inherit;}
+  .levels button.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+  input[type=checkbox]{width:16px;height:16px;accent-color:var(--ink);flex-shrink:0;}
+  .field{margin-bottom:13px;}
+  .field > label{display:block;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:5px;}
+  .field input[type=text],.field select{width:100%;padding:8px;border:1px solid #cfcfd4;border-radius:7px;font-size:13px;font-family:inherit;background:#fff;color:var(--ink);}
+  .check{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:12.5px;line-height:1.35;}
+  .check span small{display:block;color:var(--muted);font-size:11px;}
+  .preview-wrap{flex:1;display:flex;flex-direction:column;gap:12px;min-width:0;}
+  #badgeHost{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:26px;display:flex;justify-content:center;align-items:center;min-height:180px;overflow:auto;}
+  #badgeHost.dark{background:#1b1c20;}
+  #badgeHost svg{max-width:100%;height:auto;}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .actions button{flex:1;min-width:130px;padding:10px 12px;border-radius:8px;border:1px solid var(--ink);background:var(--ink);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .actions button.secondary{background:#fff;color:var(--ink);}
+  .actions button:disabled{opacity:.35;cursor:not-allowed;}
+  .meta{font-size:11.5px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap;}
+  .meta b{font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums;}
+  .note{font-size:11.5px;color:var(--muted);line-height:1.5;margin:10px 0 0;}
+  .empty-hint{font-size:13px;color:var(--muted);padding:34px;text-align:center;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <h1 data-i18n="appName"></h1>
+    <nav class="topnav">
+      <!-- Ajuste global de quien opera la herramienta: va acá arriba y no entre
+           los controles de la etiqueta, para que no se confunda con el idioma
+           que SÍ entra al artículo. Opciones construidas en JS desde LANGS. -->
+      <label class="sr-only" for="lang" data-i18n="lblLang"></label>
+      <select id="lang" class="langsel"></select>
+      <button type="button" class="navbtn" data-open="dlgManual" data-i18n="navManual"></button>
+      <button type="button" class="navbtn" data-open="dlgAbout" data-i18n="navAbout"></button>
+    </nav>
+  </div>
+  <p class="sub" style="font-size:14px;color:var(--ink);margin-bottom:10px" data-i18n="hdrTag"></p>
+  <p class="sub" data-i18n="hdrOpen"></p>
+  <p class="sub" style="margin-top:7px" data-i18n="hdrVocab"></p>
+  <p class="sub" style="margin-top:7px" data-i18n="hdrAxes"></p>
+</header>
+
+<div class="layout">
+  <div class="controls">
+    <div class="card">
+      <fieldset>
+        <legend data-i18n="legAxes"></legend>
+        <div id="taskList"></div>
+      </fieldset>
+
+      <fieldset id="toolsBox">
+        <legend data-i18n="legTools"></legend>
+        <div id="toolList"></div>
+        <button type="button" id="btnAddTool" class="addtool" data-i18n="btnAddTool"></button>
+        <p class="note" data-i18n="noteTools"></p>
+      </fieldset>
+
+      <!-- Lo que entra AL ARTÍCULO, junto. El otro eje de idioma vive en la
+           barra superior porque es de quien opera la herramienta. Los códigos
+           (AI:, ED, TR…) no dependen de ninguno de los dos: son invariantes. -->
+      <fieldset>
+        <legend data-i18n="legLabel"></legend>
+        <div class="field">
+          <label for="docLang" data-i18n="lblDocLang"></label>
+          <select id="docLang"></select>
+          <p class="note" data-i18n="noteDocLang"></p>
+        </div>
+        <div class="field" style="margin-bottom:2px">
+          <label for="qrUrl" data-i18n="lblQrUrl"></label>
+          <input type="text" id="qrUrl" value="https://investiga.uned.ac.cr/cienciaabierta" spellcheck="false">
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend data-i18n="legProd"></legend>
+        <label class="check"><input type="checkbox" id="optQrSafe" checked><span data-i18n="optQrSafe"></span></label>
+        <label class="check"><input type="checkbox" id="optEmbed" checked><span data-i18n="optEmbed"></span></label>
+        <label class="check"><input type="checkbox" id="optDark"><span data-i18n="optDark"></span></label>
+
+        <div class="field">
+          <label for="pngScale" data-i18n="lblScale"></label>
+          <select id="pngScale">
+            <option value="1" data-i18n="sc1"></option>
+            <option value="2" selected data-i18n="sc2"></option>
+            <option value="4" data-i18n="sc4"></option>
+          </select>
+        </div>
+      </fieldset>
+
+      <p class="note" style="border-left:3px solid var(--ink);padding-left:9px" data-i18n="noteCodes"></p>
+      <p class="note" style="border-left:3px solid #a32020;padding-left:9px" data-i18n="noteQr"></p>
+      <p class="note" data-i18n="noteForm"></p>
+      <p class="note" data-i18n="noteAxis2"></p>
+      <p class="note" id="fontNote"></p>
+    </div>
+  </div>
+
+  <div class="preview-wrap">
+    <div id="badgeHost"></div>
+    <div class="actions">
+      <button id="btnPng" data-i18n="btnPng"></button>
+      <button id="btnSvg" class="secondary" data-i18n="btnSvg"></button>
+      <button id="btnProse" class="secondary" aria-expanded="false" aria-controls="proseCard" data-i18n="btnProse"></button>
+    </div>
+
+    <div class="card prose" id="proseCard" hidden>
+      <div class="prose-head">
+        <h2 data-i18n="proseTitle"></h2>
+        <div class="prose-tools">
+          <span class="prose-lang" id="proseLangTag"></span>
+          <button type="button" id="btnCopy" class="navbtn" data-i18n="btnCopy"></button>
+        </div>
+      </div>
+      <div class="prose-box" id="proseBox"></div>
+      <p class="note" data-i18n="proseNote"></p>
+    </div>
+    <div class="card">
+      <div class="meta" id="meta"></div>
+    </div>
+  </div>
+</div>
+
+<footer class="foot" id="foot"></footer>
+
+<dialog id="dlgManual" class="dlg" aria-labelledby="manualTitle">
+  <div class="dlg-in"><div id="manualBody"></div></div>
+  <form method="dialog" class="dlg-foot"><button class="navbtn" data-i18n="close"></button></form>
+</dialog>
+<dialog id="dlgAbout" class="dlg" aria-labelledby="aboutTitle">
+  <div class="dlg-in"><div id="aboutBody"></div></div>
+  <form method="dialog" class="dlg-foot"><button class="navbtn" data-i18n="close"></button></form>
+</dialog>
+
+<script>
+/* =========================================================================
+   ETIQUETA DE DECLARACIÓN DE USO DE IA — motor de composición
+   -------------------------------------------------------------------------
+   Arquitectura en tres pasos, deliberadamente separados:
+     1. state      -> qué declaró el autor
+     2. strings    -> notación textual (Eje 1 + Eje 2)
+     3. layout     -> geometría medida (sin números mágicos)
+     4. render     -> string SVG puro, sin dependencia del DOM
+   El paso 3 mide el texto de verdad con getBBox() antes de decidir
+   posiciones, así que nada se traslapa por construcción: cada caja se
+   apila a partir de la tinta real de la anterior.
+   ========================================================================= */
+
+const NS = 'http://www.w3.org/2000/svg';
+
+/* --- Vocabulario (Eje 1) --------------------------------------------------
+   Fuente: preprint §4.1, que adopta las nueve actividades de STM (2025).
+   `stm` es el IDENTIFICADOR CANÓNICO (el número de actividad); el código de
+   dos letras es capa de despliegue, igual que en CRediT. El array está en
+   orden STM ascendente porque §4.4 obliga a componer en ese orden.
+   La actividad 9 no aparece: no es declarable (§4.1).
+   ------------------------------------------------------------------------ */
+const TASKS = [
+  {code:'N',  stm:null, exclusive:true, from:'No use', gloss:{es:'sin uso', pt:'sem uso'},
+   es:'Sin uso por encima del umbral declarable',
+   en:'No use above the disclosable threshold',
+   pt:'Sem uso acima do limiar declarável'},
+  /* (**) en la lámina de STM: «2023 STM Guidelines recommend that disclosure
+     is not necessary for this use of automated tools». Es el umbral del §4.5. */
+  {code:'ED', from:'Editing', gloss:{es:'edición', pt:'edição'}, stm:1, stmNote:{
+     es:'Las guías STM 2023 recomiendan que esta actividad NO requiera declaración. Es el umbral operativo del §4.5; el código queda disponible para declararla voluntariamente o para revistas que sitúen su umbral por debajo.',
+     en:'The 2023 STM Guidelines recommend that this activity NOT require disclosure. It is the operative threshold of §4.5; the code remains available for voluntary disclosure, or for journals that set their threshold lower.',
+     pt:'As diretrizes STM 2023 recomendam que esta atividade NÃO exija declaração. É o limiar operacional do §4.5; o código permanece disponível para declará-la voluntariamente ou para revistas que situem seu limiar abaixo.'},
+   es:'Refinamiento, corrección, edición o formato del manuscrito para mejorar la claridad del lenguaje',
+   en:'Refinement, correction, editing or formatting the manuscript to improve clarity of language',
+   pt:'Refinamento, correção, edição ou formatação do manuscrito para melhorar a clareza da linguagem'},
+  /* TG, no GE: la actividad 2 es generar texto del manuscrito, y TG sale de
+     «Text Generation» / «Texto Generado» — funciona en los dos idiomas, que
+     es lo que exige el §4.1 y lo que GE incumplía (no deriva ni de
+     «escritura» ni de «writing»).
+     Pendiente de decidir: GT tiene la misma lógica bilingüe («Generated
+     Text» / «Generación de Texto») y se despega mejor de TR, con el que TG
+     comparte inicial y aparece a menudo al lado: AI: TG+TR vs AI: GT+TR. */
+  {code:'TG', from:'Text Generation', gloss:{es:'generación de texto', pt:'geração de texto'}, stm:2,
+   es:'Escritura o redacción de contenido del manuscrito',
+   en:'Writing or drafting manuscript content',
+   pt:'Escrita ou redação de conteúdo do manuscrito'},
+  {code:'TR', from:'Translation', gloss:{es:'traducción', pt:'tradução'}, stm:3,
+   es:'Traducción del texto del manuscrito con fines de publicación',
+   en:'Translation of manuscript text for the purpose of publishing',
+   pt:'Tradução do texto do manuscrito para fins de publicação'},
+  {code:'DA', from:'Data', gloss:{es:'datos', pt:'dados'}, stm:4,
+   es:'Refinamiento o formato de los datos reportados en el manuscrito',
+   en:'Refining or formatting of data reported in the manuscript',
+   pt:'Refinamento ou formatação dos dados relatados no manuscrito'},
+  {code:'IM', from:'Images', gloss:{es:'imágenes', pt:'imagens'}, stm:5,
+   es:'Generación, refinamiento, corrección, edición o formato de imágenes, diagramas u otras figuras únicamente con fines ilustrativos',
+   en:'Generation, refinement, correction, editing or formatting of images, diagrams or other figures for illustrative purposes only',
+   pt:'Geração, refinamento, correção, edição ou formatação de imagens, diagramas ou outras figuras apenas para fins ilustrativos'},
+  {code:'VI', from:'Visualisations', gloss:{es:'visualizaciones', pt:'visualizações'}, stm:6,
+   es:'Generación, refinamiento, corrección, edición o formato de visualizaciones de datos o resultados de investigación',
+   en:'Generation, refinement, correction, editing or formatting of visualisations of research data or results',
+   pt:'Geração, refinamento, correção, edição ou formatação de visualizações de dados ou resultados de pesquisa'},
+  {code:'CO', from:'Code', gloss:{es:'código', pt:'código'}, stm:7,
+   es:'Refinamiento o formato del código reportado en el manuscrito enviado',
+   en:'Refinement or formatting of code reported in the submitted manuscript',
+   pt:'Refinamento ou formatação do código relatado no manuscrito submetido'},
+  /* RF se aparta a propósito de la traducción del §4.1, por dos razones que
+     conviene tener escritas:
+     · «Asistencia» era calco de «Assisting»; «Ayuda» es el español natural
+       (corrección sugerida por un investigador con experiencia, 2026-09-23);
+     · «gathering» en inglés abarca localizar las fuentes, no solo reunirlas;
+       «recopilación» a secas quedaba MÁS ESTRECHO que el original, así que
+       «recopilación y búsqueda» está más cerca de STM, no más lejos.
+     El inglés se deja literal como lo escribió STM: es la redacción canónica.
+     La divergencia está registrada en DIVERGENCIAS_41, en las pruebas, y hay
+     que replicarla en la tabla del §4.1 del preprint. */
+  {code:'RF', from:'References', gloss:{es:'referencias', pt:'referências'}, stm:8,
+   es:'Ayuda en la recopilación y búsqueda de referencias',
+   en:'Assisting with gathering references',
+   pt:'Ajuda na coleta e busca de referências',
+   scopeNote:{
+     es:'Alcance (lectura de este sistema, no texto de STM): cubre buscar y localizar las referencias, no solo reunirlas o darles formato. Si la herramienta propuso o encontró las fuentes, se declara acá.',
+     en:'Scope (this system’s reading, not STM text): covers searching for and locating references, not only collecting or formatting them. If the tool proposed or found the sources, declare it here.',
+     pt:'Alcance (leitura deste sistema, não texto da STM): cobre buscar e localizar as referências, não apenas reuni-las ou formatá-las. Se a ferramenta propôs ou encontrou as fontes, declara-se aqui.'}},
+  /* La actividad 9 aparece en la tabla del §4.1 pero NO es un valor
+     declarable: es la única que las guías de STM recomiendan prohibir.
+     Se muestra deshabilitada, no se omite, porque su ausencia de código
+     es información: explica por qué no hay dónde marcarla. */
+  /* (***) en la lámina de STM: «2023 STM Guidelines recommend prohibiting
+     this use of AI tools». Por eso no es declarable. */
+  {code:null, stm:9, declarable:false, stmNote:{
+     es:'Las guías STM 2023 recomiendan PROHIBIR este uso. No es un valor declarable: su tratamiento corresponde a la integridad editorial, no a la declaración (§4.1).',
+     en:'The 2023 STM Guidelines recommend PROHIBITING this use. It is not a disclosable value: it belongs to editorial integrity, not to disclosure (§4.1).',
+     pt:'As diretrizes STM 2023 recomendam PROIBIR este uso. Não é um valor declarável: seu tratamento cabe à integridade editorial, não à declaração (§4.1).'},
+   es:'No declarable. Presentación de cualquier tipo de contenido generado por herramientas de IA como si fuera dato o resultado de investigación original procedente de fuentes no maquinales',
+   en:'Presentation of any kind of content generated by AI tools as though it were original research data/results from non-machine sources',
+   pt:'Apresentação de qualquer tipo de conteúdo gerado por ferramentas de IA como se fosse dado ou resultado de pesquisa original proveniente de fontes não maquinais'},
+];
+
+const ORDER = TASKS.filter(t=>!t.exclusive && t.declarable!==false).map(t=>t.code);  // ya en orden STM
+
+/* --- Eje 2 — extensión del uso (preprint §4.2) ----------------------------
+   Codifica CUÁNTO del componente declarado procede de la herramienta.
+   NO es supervisión: §4.3 es explícito en que la verificación humana no es
+   un nivel sino una afirmación única aplicable a todo el bloque.
+   Es OPCIONAL: `IA-TR` es una declaración válida. Por eso el valor por
+   defecto es 0 = «no declarada», y no 1.
+   ------------------------------------------------------------------------ */
+const EXTENTS = {
+  0:{es:'no declarada',                               en:'not declared',
+     pt:'não declarada',
+     refEs:'',                                        refEn:'',
+     refPt:''},
+  1:{es:'Puntual: elementos aislados',                en:'Incidental: isolated elements',
+     pt:'Pontual: elementos isolados',
+     refEs:'menos de un cuarto',                      refEn:'less than a quarter',
+     refPt:'menos de um quarto'},
+  2:{es:'Parcial: una porción identificable',         en:'Partial: an identifiable portion',
+     pt:'Parcial: uma porção identificável',
+     refEs:'entre un cuarto y la mitad',              refEn:'between a quarter and a half',
+     refPt:'entre um quarto e a metade'},
+  3:{es:'Mayoritaria: la mayor parte del componente', en:'Majority: most of the component',
+     pt:'Majoritária: a maior parte do componente',
+     refEs:'entre la mitad y tres cuartos',           refEn:'between a half and three quarters',
+     refPt:'entre a metade e três quartos'},
+  4:{es:'Total: la totalidad del componente',         en:'Total: the whole component',
+     pt:'Total: a totalidade do componente',
+     refEs:'más de tres cuartos',                     refEn:'more than three quarters',
+     refPt:'mais de três quartos'},
+};
+const REFKEY = {es:'refEs', en:'refEn', pt:'refPt'};
+const refOf = lv => EXTENTS[lv][REFKEY[lang]];
+
+
+/* =========================== DICCIONARIO DE LA INTERFAZ =================
+   Todo texto visible sale de acá. Antes el selector de idioma solo cambiaba
+   las descripciones de las tareas y el resto quedaba en español fijo —
+   tooltips incluidos. Regla: si se ve, está en UI o en un campo bilingüe
+   del vocabulario; nada de literales sueltos en el DOM.
+   ====================================================================== */
+const UI = {
+  es:{
+    hdrTag:'<b>Declaración gráfica de uso de inteligencia artificial en manuscritos científicos</b><br><span style="color:var(--muted)">Construido sobre la clasificación de nueve actividades de <b>STM (2025)</b></span>',
+    hdrOpen:'Sistema de notación abierto, <b>propuesto para cualquier revista científica</b>. La etiqueta <b>no sustituye la declaración en prosa</b>: la acompaña y se genera del mismo acto declarativo, para que el dato sea comparable entre artículos, agregable en conjuntos grandes y transportable como metadato. <b>Se coloca en una página destacada del artículo</b> (habitualmente la primera) para que cualquier lector identifique de un vistazo el uso declarado. La adopción es gradual y <b>no exige que una revista modifique sus políticas vigentes</b>: puede incorporar primero la etiqueta visible, después el bloque de metadatos y después la generación automática de la prosa.',
+    hdrVocab:'<b>Vocabulario.</b> STM Association (2025), <i>Recommendations for a Classification of AI Use in Academic Manuscript Preparation</i>. Las nueve actividades se adoptan sin redefinirlas; ocho son declarables y la novena no, porque las guías de STM recomiendan prohibirla. El alcance es el de la fuente: solo la preparación del manuscrito, no el resto del proceso de investigación.',
+    hdrAxes:'<b>Dos ejes.</b> Tipo de tarea (Eje 1) y extensión del uso (Eje 2, opcional). La verificación humana no es un nivel: es una afirmación única que cubre todo lo declarado.',
+    legAxes:'Eje 1 · Tipo de tarea &nbsp;·&nbsp; Eje 2 · Extensión (opcional)',
+    lblLang:'Idioma de la interfaz',
+    lblDocLang:'Idioma de la etiqueta',
+    legLabel:'Contenido de la etiqueta',
+    noteDocLang:'Es el idioma del artículo, no el de quien usa la herramienta. Gobierna las descripciones dentro de la etiqueta y la prosa. <b>El código NO cambia</b>: <code>AI: ED+TR+CO</code> se escribe igual en cualquier idioma.',
+    lblQrUrl:'URL del QR (página explicativa)',
+    legProd:'Opciones de producción',
+    optQrSafe:'QR de alto contraste estándar<small>Módulos oscuros sobre placa blanca dentro del bloque negro.</small>',
+    optEmbed:'Incrustar tipografía en el SVG/PNG<small>Hace el archivo reproducible fuera de esta máquina.</small>',
+    optDark:'Previsualizar sobre fondo oscuro',
+    lblScale:'Escala del PNG',
+    sc1:'1× (pantalla)', sc2:'2× (retina / web)', sc4:'4× (impresión)',
+    noteCodes:'<b>Los códigos no se traducen; las descripciones sí.</b> <code>AI</code>, el «+» y los códigos de tarea (<code>ED</code>, <code>TR</code>, <code>CO</code>…) van siempre en inglés: son lo que se compara y se agrega entre revistas de cualquier país, y si se tradujeran, dos artículos que declaran exactamente lo mismo producirían cadenas distintas. Lo que sí sigue al <b>idioma de la etiqueta</b> es lo que la etiqueta dice en lengua natural —«Complementa la declaración en prosa del texto», «Más información», «Herramientas:»— y la prosa de la declaración.',
+    noteQr:'<b>El QR es provisional.</b> Apunta a una dirección de ejemplo hasta que exista la página explicativa del sistema. Lo que se descargue ahora sirve para valorar el diseño, no para imprimir: un QR impreso es irrevocable.',
+    noteForm:'<b>Forma de la etiqueta.</b> <code>AI</code> aparece una sola vez al inicio, seguido de «: », y los códigos se separan con «+»: <code>AI: ED+TR+CO</code>. Con extensión declarada: <code>AI: ED:1+TR:3+CO:2</code>.',
+    noteAxis2:'<b>Eje 2 — extensión (§4.2).</b> 1 puntual (&lt;¼) · 2 parcial (¼–½) · 3 mayoritaria (½–¾) · 4 total (&gt;¾). Las proporciones son orientación, no umbrales. «—» significa <b>extensión no declarada</b>, que es una declaración válida.',
+    btnPng:'Descargar PNG', btnSvg:'Descargar SVG',
+    metaCanon:'Cadena canónica', metaCanvas:'Lienzo',
+    hintEmpty:'Marcá al menos una tarea del Eje 1 (o «sin uso») para generar la etiqueta.',
+    tagNotDecl:'NO DECLARABLE',
+    tipNotDecl:'Extensión no declarada',
+    tipNotDeclSub:c=>`«AI: ${c}» sin nivel es una declaración válida (§4.2)`,
+    tipExtentSub:r=>`${r} del componente · proporción orientativa, no umbral`,
+    tipStm:n=>`Actividad ${n} de STM (2025)`,
+    tipStmSub:'El número es el identificador canónico; el código de dos letras es capa de despliegue, como en CRediT.',
+    tipCodeSub:'Las letras salen del término en inglés. El código es el mismo en cualquier idioma.',
+    tipNoStm:'Ajeno a la clasificación de STM',
+    tipNoStmSub:'N no describe una actividad: afirma que no hubo uso por encima del umbral declarable (§4.5).',
+    legendTitle:'Eje 2 · extensión', legendNotDecl:'no declarada',
+    fontOk:kb=>`Tipografía: Inter incrustada (${kb} KB en el SVG). El archivo exportado se ve igual en cualquier máquina.`,
+    fontFail:'Tipografía: sin red — se usa la del sistema. El diseño no se rompe, pero el SVG exportado dependerá de las fuentes de quien lo abra.',
+    fontLoad:'Tipografía: cargando…',
+    appName:'Sistema de etiquetado AI',
+    navManual:'Manual', navAbout:'Acerca de', close:'Cerrar',
+    btnProse:'Prosa de la declaración', proseTitle:'Declaración en prosa — borrador',
+    btnCopy:'Copiar', copied:'Copiado ✓', copyFail:'No se pudo copiar: selecciónelo a mano',
+    proseNote:'Borrador para pegar en la sección de declaraciones del manuscrito. <b>Complete lo que va entre corchetes</b>: la prosa es lo que cuenta el caso concreto, y eso solo lo sabe quien declara. Se genera de las mismas opciones que la etiqueta, así que ambas dicen lo mismo.',
+    legTools:'Herramientas y modelos (opcional)',
+    btnAddTool:'+ Agregar herramienta',
+    phToolName:'Herramienta (p. ej. ChatGPT)',
+    phToolModel:'Modelo o versión (p. ej. GPT-5)',
+    rmTool:'Quitar herramienta',
+    noteTools:'Se imprimen en la etiqueta, arriba a la derecha, bajo el código detallado. Hasta 6. Las filas vacías se ignoran, y con «sin uso» no se muestran.',
+    metaTools:'Herramientas',
+    docTitle:'Sistema de etiquetado AI — declaración gráfica de uso de IA',
+    qrNoLib:'Sin conexión: la librería del QR (CDN) no cargó. La etiqueta se compone igual, pero el QR sale vacío.',
+    qrTooLong:(b,c)=>`La URL ocupa ${b} bytes y el QR sólo admite ${c} con corrección nivel Q. La librería no avisa: truncaría la dirección en silencio y el QR llevaría a una URL cortada. Acortala.`,
+    qrDense:b=>`La URL ocupa ${b} bytes: el QR queda muy denso y puede no leerse impreso a tamaño de etiqueta. Conviene una URL corta y permanente.`,
+    qrFail:m=>'No se pudo generar el QR: '+m,
+    pngFail:m=>'No se pudo generar el PNG: '+m,
+  },
+  en:{
+    hdrTag:'<b>Visual declaration of artificial intelligence use in scientific manuscripts</b><br><span style="color:var(--muted)">Built on the <b>STM (2025)</b> classification of nine activities</span>',
+    hdrOpen:'An open notation system, <b>proposed for any scholarly journal</b>. The label <b>does not replace the prose declaration</b>: it accompanies it and is generated from the same declarative act, so that the record is comparable across articles, aggregable at scale and transportable as metadata. <b>It sits on a prominent page of the article</b> (usually the first) so that any reader identifies the declared use at a glance. Adoption is gradual and <b>does not require a journal to change its current policies</b>: it can start with the visible label, then the metadata block, then automatic generation of the prose.',
+    hdrVocab:'<b>Vocabulary.</b> STM Association (2025), <i>Recommendations for a Classification of AI Use in Academic Manuscript Preparation</i>. The nine activities are adopted without redefining them; eight are disclosable and the ninth is not, because the STM guidelines recommend prohibiting it. The scope is that of the source: manuscript preparation only, not the rest of the research process.',
+    hdrAxes:'<b>Two axes.</b> Task type (Axis 1) and extent of use (Axis 2, optional). Human verification is not a level: it is a single statement covering everything declared.',
+    legAxes:'Axis 1 · Task type &nbsp;·&nbsp; Axis 2 · Extent (optional)',
+    lblLang:'Interface language',
+    lblDocLang:'Label language',
+    legLabel:'Label content',
+    noteDocLang:'The language of the article, not of whoever uses the tool. It governs the descriptions inside the label and the prose. <b>The code does NOT change</b>: <code>AI: ED+TR+CO</code> is written the same in any language.',
+    lblQrUrl:'QR URL (explanatory page)',
+    legProd:'Production options',
+    optQrSafe:'Standard high-contrast QR<small>Dark modules on a white plate inside the black block.</small>',
+    optEmbed:'Embed the typeface in the SVG/PNG<small>Makes the exported file reproducible on any machine.</small>',
+    optDark:'Preview on a dark background',
+    lblScale:'PNG scale',
+    sc1:'1× (screen)', sc2:'2× (retina / web)', sc4:'4× (print)',
+    noteCodes:'<b>The codes are never translated; the descriptions are.</b> <code>AI</code>, the «+» and the task codes (<code>ED</code>, <code>TR</code>, <code>CO</code>…) are always in English: they are what gets compared and aggregated across journals in any country, and if they were translated, two articles declaring exactly the same thing would produce different strings. What does follow the <b>label language</b> is what the label says in natural language —«Complements the prose declaration in the text», «More info», «Tools:»— and the prose declaration.',
+    noteQr:'<b>The QR code is provisional.</b> It points to a placeholder address until the explanatory page exists. What you download now is for judging the design, not for printing: a printed QR cannot be revoked.',
+    noteForm:'<b>Label form.</b> <code>AI</code> appears once, at the start, followed by «: », and codes are joined with «+»: <code>AI: ED+TR+CO</code>. With declared extent: <code>AI: ED:1+TR:3+CO:2</code>.',
+    noteAxis2:'<b>Axis 2 — extent (§4.2).</b> 1 incidental (&lt;¼) · 2 partial (¼–½) · 3 majority (½–¾) · 4 total (&gt;¾). The proportions are guidance, not thresholds. «—» means <b>extent not declared</b>, which is a valid declaration.',
+    btnPng:'Download PNG', btnSvg:'Download SVG',
+    metaCanon:'Canonical string', metaCanvas:'Canvas',
+    hintEmpty:'Tick at least one Axis 1 task (or «no use») to generate the label.',
+    tagNotDecl:'NOT DISCLOSABLE',
+    tipNotDecl:'Extent not declared',
+    tipNotDeclSub:c=>`«AI: ${c}» without a level is a valid declaration (§4.2)`,
+    tipExtentSub:r=>`${r} of the component · guidance, not a threshold`,
+    tipStm:n=>`STM (2025) activity ${n}`,
+    tipStmSub:'The number is the canonical identifier; the two-letter code is a display layer, as in CRediT.',
+    tipCodeSub:'The letters come from the English term. The code is the same in any language.',
+    tipNoStm:'Outside the STM classification',
+    tipNoStmSub:'N does not describe an activity: it states that there was no use above the disclosable threshold (§4.5).',
+    legendTitle:'Axis 2 · extent', legendNotDecl:'not declared',
+    fontOk:kb=>`Typeface: Inter embedded (${kb} KB in the SVG). The exported file looks the same on any machine.`,
+    fontFail:'Typeface: offline — the system font is used. The layout does not break, but the exported SVG will depend on the reader’s fonts.',
+    fontLoad:'Typeface: loading…',
+    appName:'AI Labelling System',
+    navManual:'User guide', navAbout:'About', close:'Close',
+    btnProse:'Prose declaration', proseTitle:'Prose declaration — draft',
+    btnCopy:'Copy', copied:'Copied ✓', copyFail:'Could not copy: select it by hand',
+    proseNote:'A draft to paste into the manuscript\u2019s declarations section. <b>Complete whatever is in square brackets</b>: the prose is what tells the specific case, and only the declarer knows it. It is generated from the same options as the label, so both say the same thing.',
+    legTools:'Tools and models (optional)',
+    btnAddTool:'+ Add tool',
+    phToolName:'Tool (e.g. ChatGPT)',
+    phToolModel:'Model or version (e.g. GPT-5)',
+    rmTool:'Remove tool',
+    noteTools:'Printed on the label, top right, under the detailed code. Up to 6. Empty rows are ignored, and nothing is shown with «no use».',
+    metaTools:'Tools',
+    docTitle:'AI Labelling System — visual AI use declaration',
+    qrNoLib:'Offline: the QR library (CDN) did not load. The label is still composed, but the QR comes out empty.',
+    qrTooLong:(b,c)=>`The URL takes ${b} bytes and the QR only holds ${c} at error-correction level Q. The library gives no warning: it would silently truncate the address and the QR would lead to a cut-off URL. Shorten it.`,
+    qrDense:b=>`The URL takes ${b} bytes: the QR becomes very dense and may not scan when printed at label size. Use a short, permanent URL.`,
+    qrFail:m=>'Could not generate the QR: '+m,
+    pngFail:m=>'Could not generate the PNG: '+m,
+  },
+  pt:{
+    hdrTag:'<b>Declaração gráfica de uso de inteligência artificial em manuscritos científicos</b><br><span style="color:var(--muted)">Construído sobre a classificação de nove atividades da <b>STM (2025)</b></span>',
+    hdrOpen:'Sistema de notação aberto, <b>proposto para qualquer revista científica</b>. A etiqueta <b>não substitui a declaração em prosa</b>: acompanha-a e é gerada do mesmo ato declarativo, para que o dado seja comparável entre artigos, agregável em conjuntos grandes e transportável como metadado. <b>Coloca-se em uma página destacada do artigo</b> (habitualmente a primeira) para que qualquer leitor identifique de relance o uso declarado. A adoção é gradual e <b>não exige que uma revista modifique suas políticas vigentes</b>: pode incorporar primeiro a etiqueta visível, depois o bloco de metadados e depois a geração automática da prosa.',
+    hdrVocab:'<b>Vocabulário.</b> STM Association (2025), <i>Recommendations for a Classification of AI Use in Academic Manuscript Preparation</i>. As nove atividades são adotadas sem redefini-las; oito são declaráveis e a nona não, porque as diretrizes da STM recomendam proibi-la. O alcance é o da fonte: apenas a preparação do manuscrito, não o restante do processo de pesquisa.',
+    hdrAxes:'<b>Dois eixos.</b> Tipo de tarefa (Eixo 1) e extensão do uso (Eixo 2, opcional). A verificação humana não é um nível: é uma afirmação única que cobre tudo o que foi declarado.',
+    legAxes:'Eixo 1 · Tipo de tarefa &nbsp;·&nbsp; Eixo 2 · Extensão (opcional)',
+    lblLang:'Idioma da interface',
+    lblDocLang:'Idioma da etiqueta',
+    legLabel:'Conteúdo da etiqueta',
+    noteDocLang:'É o idioma do artigo, não o de quem usa a ferramenta. Governa as descrições dentro da etiqueta e a prosa. <b>O código NÃO muda</b>: <code>AI: ED+TR+CO</code> escreve-se igual em qualquer idioma.',
+    lblQrUrl:'URL do QR (página explicativa)',
+    legProd:'Opções de produção',
+    optQrSafe:'QR de alto contraste padrão<small>Módulos escuros sobre placa branca dentro do bloco preto.</small>',
+    optEmbed:'Incorporar a tipografia no SVG/PNG<small>Torna o arquivo exportado reproduzível em qualquer máquina.</small>',
+    optDark:'Pré-visualizar sobre fundo escuro',
+    lblScale:'Escala do PNG',
+    sc1:'1× (tela)', sc2:'2× (retina / web)', sc4:'4× (impressão)',
+    noteCodes:'<b>Os códigos não se traduzem; as descrições sim.</b> <code>AI</code>, o «+» e os códigos de tarefa (<code>ED</code>, <code>TR</code>, <code>CO</code>…) vão sempre em inglês: são o que se compara e se agrega entre revistas de qualquer país, e se fossem traduzidos, dois artigos que declaram exatamente o mesmo produziriam cadeias diferentes. O que segue o <b>idioma da etiqueta</b> é o que a etiqueta diz em língua natural —«Complementa a declaração em prosa do texto», «Mais informações», «Ferramentas:»— e a prosa da declaração.',
+    noteQr:'<b>O código QR é provisório.</b> Aponta para um endereço temporário até que a página explicativa exista. O que você baixa agora serve para julgar o desenho, não para imprimir: um QR impresso não pode ser revogado.',
+    noteForm:'<b>Forma da etiqueta.</b> <code>AI</code> aparece uma vez, no início, seguido de «: », e os códigos unem-se com «+»: <code>AI: ED+TR+CO</code>. Com extensão declarada: <code>AI: ED:1+TR:3+CO:2</code>.',
+    noteAxis2:'<b>Eixo 2 — extensão (§4.2).</b> 1 pontual (&lt;¼) · 2 parcial (¼–½) · 3 majoritária (½–¾) · 4 total (&gt;¾). As proporções são orientação, não limiares. «—» significa <b>extensão não declarada</b>, o que é uma declaração válida.',
+    btnPng:'Baixar PNG', btnSvg:'Baixar SVG',
+    metaCanon:'Cadeia canônica', metaCanvas:'Tela',
+    hintEmpty:'Marque ao menos uma tarefa do Eixo 1 (ou «sem uso») para gerar a etiqueta.',
+    tagNotDecl:'NÃO DECLARÁVEL',
+    tipNotDecl:'Extensão não declarada',
+    tipNotDeclSub:c=>`«AI: ${c}» sem nível é uma declaração válida (§4.2)`,
+    tipExtentSub:r=>`${r} do componente · orientação, não um limiar`,
+    tipStm:n=>`Atividade ${n} da STM (2025)`,
+    tipStmSub:'O número é o identificador canônico; o código de duas letras é camada de exibição, como no CRediT.',
+    tipCodeSub:'As letras vêm do termo em inglês. O código é o mesmo em qualquer idioma.',
+    tipNoStm:'Fora da classificação da STM',
+    tipNoStmSub:'N não descreve uma atividade: afirma que não houve uso acima do limiar declarável (§4.5).',
+    legendTitle:'Eixo 2 · extensão', legendNotDecl:'não declarada',
+    fontOk:kb=>`Tipografia: Inter incorporada (${kb} KB no SVG). O arquivo exportado fica igual em qualquer máquina.`,
+    fontFail:'Tipografia: sem conexão — usa-se a fonte do sistema. O layout não quebra, mas o SVG exportado dependerá das fontes de quem o abra.',
+    fontLoad:'Tipografia: carregando…',
+    appName:'Sistema de Etiquetagem AI',
+    navManual:'Manual de uso', navAbout:'Sobre', close:'Fechar',
+    btnProse:'Declaração em prosa', proseTitle:'Declaração em prosa — rascunho',
+    btnCopy:'Copiar', copied:'Copiado ✓', copyFail:'Não foi possível copiar: selecione à mão',
+    proseNote:'Um rascunho para colar na seção de declarações do manuscrito. <b>Complete o que estiver entre colchetes</b>: a prosa vale pelo que conta do caso concreto, e isso só quem declara sabe. É gerada a partir das mesmas opções da etiqueta, de modo que ambas dizem o mesmo.',
+    legTools:'Ferramentas e modelos (opcional)',
+    btnAddTool:'+ Adicionar ferramenta',
+    phToolName:'Ferramenta (p. ex. ChatGPT)',
+    phToolModel:'Modelo ou versão (p. ex. GPT-5)',
+    rmTool:'Remover ferramenta',
+    noteTools:'Impressas na etiqueta, acima à direita, sob o código detalhado. Até 6. Linhas vazias são ignoradas, e nada se mostra com «sem uso».',
+    metaTools:'Ferramentas',
+    docTitle:'Sistema de Etiquetagem AI — declaração gráfica de uso de IA',
+    qrNoLib:'Sem conexão: a biblioteca do QR (CDN) não carregou. A etiqueta compõe-se mesmo assim, mas o QR sai vazio.',
+    qrTooLong:(b,c)=>`A URL ocupa ${b} bytes e o QR só admite ${c} com correção de nível Q. A biblioteca não avisa: truncaria o endereço em silêncio e o QR levaria a uma URL cortada. Encurte-a.`,
+    qrDense:b=>`A URL ocupa ${b} bytes: o QR fica muito denso e pode não ser lido quando impresso no tamanho da etiqueta. Use uma URL curta e permanente.`,
+    qrFail:m=>'Não foi possível gerar o QR: '+m,
+    pngFail:m=>'Não foi possível gerar o PNG: '+m,
+  },
+};
+/* ===================== AUTORÍA, LICENCIA, MANUAL ======================
+   Los datos de autoría viven en un solo lugar. El manual y el «acerca de»
+   se construyen desde el vocabulario real (TASKS, EXTENTS): si mañana
+   cambia un código o una descripción, el manual cambia con él.
+   ====================================================================== */
+const APP = {
+  version : '19',
+  date    : {es:'23 de setiembre de 2026', en:'23 September 2026', pt:'23 de setembro de 2026'},
+  author  : 'Alexander Chinchilla Serrano',
+  citeAuthor : 'Chinchilla Serrano, A.',
+  orcid   : '0000-0001-9465-1522',
+  email   : 'fchinchillas@uned.ac.cr',
+  license : 'https://creativecommons.org/licenses/by/4.0/',   // contenido
+  mit     : 'https://opensource.org/license/mit',               // código
+  unit    : {es:'Unidad de Ciencia Abierta, Vicerrectoría de Investigación',
+             en:'Open Science Unit, Office of the Vice-Rector for Research',
+             pt:'Unidade de Ciência Aberta, Vice-Reitoria de Pesquisa'},
+  univ    : 'Universidad Estatal a Distancia (UNED), Costa Rica',
+};
+/* «ED · Editing» en inglés; «ED · Editing (edición)» en las demás lenguas.
+   El término inglés NO se sustituye por el local: es de donde sale la letra,
+   y cambiarlo sugeriría que el código podría derivarse de cada idioma, que es
+   justo lo contrario de lo que el sistema sostiene. */
+const fromLabel = t => t.from + (lang==='en' || !t.gloss ? '' : ` (${t.gloss[lang]})`);
+
+const orcidLink = () => `<a href="https://orcid.org/${APP.orcid}" target="_blank" rel="noopener">ORCID ${APP.orcid}</a>`;
+const mailLink  = () => `<a href="mailto:${APP.email}">${APP.email}</a>`;
+const licLink   = t  => `<a href="${APP.license}" target="_blank" rel="noopener">${t}</a>`;
+const mitLink   = t  => `<a href="${APP.mit}" target="_blank" rel="noopener">${t}</a>`;
+const MIT = `Copyright (c) 2026 Alexander Chinchilla Serrano
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.`;   // idéntico al de la cabecera del archivo
+
+/* Palabras sueltas del pie y de las cabeceras de tabla. Viven acá y no en UI
+   porque solo las usa este bloque; `w()` evita el binario es/en que había. */
+const W = {
+  version:{es:'versión', en:'version', pt:'versão'},
+  devBy  :{es:'Desarrollado por', en:'Developed by', pt:'Desenvolvido por'},
+  openSrc:{es:'Código abierto', en:'Open source', pt:'Código aberto'},
+  code   :{es:'código', en:'code', pt:'código'},
+  content:{es:'contenido y diseño', en:'content and design', pt:'conteúdo e desenho'},
+  thCode :{es:'Código', en:'Code', pt:'Código'},
+  thFrom :{es:'Viene de', en:'From', pt:'Vem de'},
+  thDesc :{es:'Descripción', en:'Description', pt:'Descrição'},
+  thLevel:{es:'Nivel', en:'Level', pt:'Nível'},
+  thMean :{es:'Significado', en:'Meaning', pt:'Significado'},
+  thGuide:{es:'Referencia', en:'Guide', pt:'Referência'},
+  valid  :{es:'declaración válida', en:'valid declaration', pt:'declaração válida'},
+};
+const w = k => W[k][lang];
+
+function footerHTML(){
+  const sep = '<span class="sep">·</span>';
+  return `<b>${esc(U.appName)}</b> ${w('version')} ${APP.version}${sep}`
+    + `${w('devBy')} <b>${APP.author}</b>${sep}${orcidLink()}${sep}${mailLink()}<br>`
+    + `${APP.unit[lang]}, ${APP.univ}<br>`
+    + `${w('openSrc')}: `
+    + `<span class="lic">MIT</span> ${mitLink(w('code'))} `
+    + `<span class="lic">CC BY 4.0</span> ${licLink(w('content'))}${sep}`
+    + `<button type="button" data-open="dlgManual">${U.navManual}</button>${sep}`
+    + `<button type="button" data-open="dlgAbout">${U.navAbout}</button>`;
+}
+
+function codesTable(){
+  const rows = TASKS.map(t=>{
+    const code = t.code ? `<code>${t.code}</code>` : '—';
+    const stm  = t.stm ?? '—';
+    // la actividad 9 lleva la marca en ambos idiomas (en español venía dentro del texto)
+    const desc = (t.declarable===false
+      ? `<b>${U.tagNotDecl}.</b> ${esc(t[lang].replace(/^No declarable\.\s*/,''))}`
+      : esc(t[lang]))
+      + (t.scopeNote ? `<br><small>${esc(t.scopeNote[lang])}</small>` : '');
+    return `<tr><td>${code}</td><td>${t.from ? `<i>${esc(fromLabel(t))}</i>` : '—'}</td><td>${stm}</td><td>${desc}</td></tr>`;
+  }).join('');
+  return `<table><thead><tr><th>${w('thCode')}</th><th>${w('thFrom')}</th><th>STM</th><th>${w('thDesc')}</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function extentTable(){
+  const rows = [0,1,2,3,4].map(lv=>{
+    const E = EXTENTS[lv];
+    return `<tr><td>${lv===0?'—':lv}</td><td>${esc(E[lang])}</td><td>${esc(refOf(lv) || w('valid'))}</td></tr>`;
+  }).join('');
+  return `<table><thead><tr><th>${w('thLevel')}</th><th>${w('thMean')}</th><th>${w('thGuide')}</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function manualHTML(){
+  if(lang==='en') return `
+<h2 id="manualTitle">User guide</h2>
+<p class="lead">The AI Labelling System produces a graphic label that summarises, at a glance, how artificial intelligence was used in a manuscript. The label <b>complements</b> the prose declaration requested by the journal: it does not replace it.</p>
+<h3>1. How to create the label</h3>
+<ol>
+<li><b>Tick the tasks</b> where AI was used (Axis 1). If there was no use above the disclosable threshold, keep <b>N</b> ticked: it is the starting option.</li>
+<li><b>Optional: state the extent</b> of each task (Axis 2) with buttons 1 to 4. «—» means you do not state it, which is a valid declaration. Hover over each number to see what it means.</li>
+<li><b>Optional: add the tools and models</b> you used (up to 6). Empty rows are ignored.</li>
+<li>Choose the <b>label language</b>: the language of the article. It sets the descriptions inside the label and the language of the prose. It is independent of the interface language, and it does not touch the codes.</li>
+<li>Enter the <b>QR URL</b>: the page that explains the system or the journal's policy.</li>
+<li><b>Download</b> the label as PNG (image) or SVG (vector).</li>
+</ol>
+<h3>2. How to read the label</h3>
+<ul>
+<li><b>Title</b> (<code>AI: ED+TR</code>): the declared tasks.</li>
+<li><b>Top line</b> (<code>AI: ED:1+TR:3</code>): the same string with each task's extent; if none was stated it says so, in the label language.</li>
+<li><b>Tools line</b>: the tools and models, when given.</li>
+<li><b>Bottom phrase</b>: a reminder that the label complements the prose declaration.</li>
+<li><b>QR code</b>: links to the explanation of the system.</li>
+</ul>
+<h3>3. Notation rules</h3>
+<ul>
+<li><code>AI</code> appears once, at the start, followed by «: ».</li>
+<li>Codes are joined with «+», without spaces, always in the order of the STM classification, not in the order they were ticked.</li>
+<li>The extent is attached to its code (<code>ED:1</code>) and is left out when it is not stated.</li>
+<li><code>AI: N</code> excludes every other task.</li>
+<li><b>The codes are never translated.</b> <code>AI</code>, the «+» and the task codes are always in English, so the same declaration yields the same string in any country. The descriptions inside the label — and the prose — do follow the label language.</li>
+</ul>
+<h3>4. Codes</h3>
+${codesTable()}
+<h3>5. Extent of use (optional)</h3>
+${extentTable()}
+<p>The proportions are guidance, not strict thresholds.</p>
+<h3>6. Where and how to place it</h3>
+<ul>
+<li>On a prominent page of the article, usually the first.</li>
+<li>Alongside the prose declaration, which remains required when the journal asks for it: it names the tool, describes the use and records human verification.</li>
+<li>Use the <b>SVG</b> for layout and the <b>4× PNG</b> for print. Never distort the label: always scale it proportionally.</li>
+<li>In print, keep the QR code at least about 2 cm wide so a phone can read it.</li>
+</ul>
+<h3>7. Frequently asked questions</h3>
+<p><b>Does the label replace the written declaration?</b> No. It accompanies it.</p>
+<p><b>What about human verification?</b> It is not a level on the scale: whoever declares is understood to have reviewed everything incorporated and to take responsibility for the content.</p>
+<p><b>Why is activity 9 not available?</b> Presenting AI-generated content as original data from non-machine sources is not something to disclose: the STM guidelines recommend prohibiting it.</p>
+<p><b>Must a spell checker be declared?</b> Not necessarily. STM recommends that activity 1 need not be disclosed; the ED code remains available for voluntary disclosure or for journals with a stricter threshold.</p>`;
+
+  if(lang==='pt') return `
+<h2 id="manualTitle">Manual de uso</h2>
+<p class="lead">O Sistema de Etiquetagem AI gera uma etiqueta gráfica que resume, de relance, como a inteligência artificial foi usada em um manuscrito. A etiqueta <b>complementa</b> a declaração em prosa que a revista pede: não a substitui.</p>
+<h3>1. Como gerar a etiqueta</h3>
+<ol>
+<li><b>Marque as tarefas</b> em que usou IA (Eixo 1). Se não houve uso acima do limiar declarável, deixe <b>N</b> marcada: é a opção inicial.</li>
+<li><b>Opcional: indique a extensão</b> de cada tarefa (Eixo 2) com os botões 1 a 4. «—» significa que você não a declara, e é uma declaração válida. Passe o cursor sobre cada número para ver o que significa.</li>
+<li><b>Opcional: acrescente as ferramentas e modelos</b> que usou (até 6). Linhas vazias são ignoradas.</li>
+<li>Escolha o <b>idioma da etiqueta</b>: o idioma do artigo. Fixa as descrições dentro da etiqueta e a língua da prosa. É independente do idioma da interface, e não toca nos códigos.</li>
+<li>Escreva a <b>URL do QR</b>: a página que explica o sistema ou a política da revista.</li>
+<li><b>Baixe</b> a etiqueta em PNG (imagem) ou SVG (vetorial).</li>
+</ol>
+<h3>2. Como ler a etiqueta</h3>
+<ul>
+<li><b>Título</b> (<code>AI: ED+TR</code>): as tarefas declaradas.</li>
+<li><b>Linha superior</b> (<code>AI: ED:1+TR:3</code>): a mesma cadeia com a extensão de cada tarefa; se nenhuma foi declarada, a etiqueta o diz, no idioma da etiqueta.</li>
+<li><b>Linha de ferramentas</b>: as ferramentas e modelos, quando indicados.</li>
+<li><b>Frase inferior</b>: lembra que a etiqueta complementa a declaração em prosa.</li>
+<li><b>Código QR</b>: leva à explicação do sistema.</li>
+</ul>
+<h3>3. Regras da notação</h3>
+<ul>
+<li><code>AI</code> aparece uma única vez, no início, seguido de «: ».</li>
+<li>Os códigos separam-se com «+», sem espaços, e sempre na ordem da classificação da STM, não na ordem em que foram marcados.</li>
+<li>A extensão vai colada ao seu código (<code>ED:1</code>) e omite-se quando não é declarada.</li>
+<li><code>AI: N</code> exclui qualquer outra tarefa.</li>
+<li><b>Os códigos não se traduzem.</b> <code>AI</code>, o «+» e os códigos de tarefa vão sempre em inglês, de modo que a mesma declaração produz a mesma cadeia em qualquer país. As descrições dentro da etiqueta —e a prosa— seguem o idioma da etiqueta.</li>
+</ul>
+<h3>4. Códigos</h3>
+${codesTable()}
+<h3>5. Extensão do uso (opcional)</h3>
+${extentTable()}
+<p>As proporções são orientação, não limiares estritos.</p>
+<h3>6. Onde e como colocá-la</h3>
+<ul>
+<li>Em uma página destacada do artigo, habitualmente a primeira.</li>
+<li>Junto à declaração em prosa, que continua necessária quando a revista a pede: nomeia a ferramenta, descreve o uso e registra a verificação humana.</li>
+<li>Use o <b>SVG</b> para diagramar e o <b>PNG 4×</b> para impressão. Não deforme a etiqueta: escale-a sempre em proporção.</li>
+<li>Impressa, procure que o código QR não fique abaixo de uns 2 cm de lado, para que possa ser lido com o telefone.</li>
+</ul>
+<h3>7. Perguntas frequentes</h3>
+<p><b>A etiqueta substitui a declaração escrita?</b> Não. Acompanha-a.</p>
+<p><b>E a verificação humana?</b> Não é um nível da escala: entende-se que quem declara revisou tudo o que foi incorporado e assume a responsabilidade pelo conteúdo.</p>
+<p><b>Por que não se pode marcar a atividade 9?</b> Apresentar conteúdo gerado por IA como se fosse dado original de fontes não maquinais não se declara: as diretrizes da STM recomendam proibi-lo.</p>
+<p><b>É preciso declarar o corretor ortográfico?</b> Não necessariamente. A STM recomenda que a atividade 1 não exija declaração; o código ED permanece disponível para quem queira declará-la ou para revistas com um limiar mais exigente.</p>`;
+
+  return `
+<h2 id="manualTitle">Manual de uso</h2>
+<p class="lead">El Sistema de etiquetado AI genera una etiqueta gráfica que resume, de un vistazo, cómo se usó la inteligencia artificial en un manuscrito. La etiqueta <b>complementa</b> la declaración en prosa que pide la revista: no la reemplaza.</p>
+<h3>1. Cómo generar la etiqueta</h3>
+<ol>
+<li><b>Marque las tareas</b> en las que usó IA (Eje 1). Si no hubo uso por encima del umbral declarable, deje marcada <b>N</b>: es la opción inicial.</li>
+<li><b>Opcional: indique la extensión</b> de cada tarea (Eje 2) con los botones 1 a 4. «—» significa que no la declara, y es una declaración válida. Pase el cursor sobre cada número para ver qué significa.</li>
+<li><b>Opcional: agregue las herramientas y modelos</b> que usó (hasta 6). Las filas vacías se ignoran.</li>
+<li>Escoja el <b>idioma de la etiqueta</b>: el idioma del artículo. Fija las descripciones dentro de la etiqueta y la lengua de la prosa. Es independiente del idioma de la interfaz, y no toca los códigos.</li>
+<li>Escriba la <b>URL del QR</b>: la página que explica el sistema o la política de la revista.</li>
+<li><b>Descargue</b> la etiqueta en PNG (imagen) o SVG (vectorial).</li>
+</ol>
+<h3>2. Cómo leer la etiqueta</h3>
+<ul>
+<li><b>Título</b> (<code>AI: ED+TR</code>): las tareas declaradas.</li>
+<li><b>Línea superior</b> (<code>AI: ED:1+TR:3</code>): la misma cadena con la extensión de cada tarea; si no se declaró ninguna, lo dice, en el idioma de la etiqueta.</li>
+<li><b>Línea de herramientas</b>: las herramientas y modelos, si se indicaron.</li>
+<li><b>Frase inferior</b>: recuerda que la etiqueta complementa la declaración en prosa.</li>
+<li><b>Código QR</b>: lleva a la explicación del sistema.</li>
+</ul>
+<h3>3. Reglas de la notación</h3>
+<ul>
+<li><code>AI</code> aparece una sola vez, al inicio, seguido de «: ».</li>
+<li>Los códigos se separan con «+», sin espacios, y siempre en el orden de la clasificación de STM, no en el orden en que se marcaron.</li>
+<li>La extensión va pegada a su código (<code>ED:1</code>) y se omite cuando no se declara.</li>
+<li><code>AI: N</code> excluye cualquier otra tarea.</li>
+<li><b>Los códigos no se traducen.</b> <code>AI</code>, el «+» y los códigos de tarea van siempre en inglés, de modo que la misma declaración produce la misma cadena en cualquier país. Las descripciones dentro de la etiqueta —y la prosa— sí siguen al idioma de la etiqueta.</li>
+</ul>
+<h3>4. Códigos</h3>
+${codesTable()}
+<h3>5. Extensión del uso (opcional)</h3>
+${extentTable()}
+<p>Las proporciones son orientación, no umbrales estrictos.</p>
+<h3>6. Dónde y cómo colocarla</h3>
+<ul>
+<li>En una página destacada del artículo, habitualmente la primera.</li>
+<li>Junto a la declaración en prosa, que sigue siendo necesaria cuando la revista la pide: nombra la herramienta, describe el uso y registra la verificación humana.</li>
+<li>Use el <b>SVG</b> para maquetar y el <b>PNG 4×</b> para impresión. No deforme la etiqueta: escálela siempre en proporción.</li>
+<li>Impresa, procure que el código QR no quede por debajo de unos 2 cm de lado, para que se pueda leer con el teléfono.</li>
+</ul>
+<h3>7. Preguntas frecuentes</h3>
+<p><b>¿La etiqueta reemplaza la declaración escrita?</b> No. La acompaña.</p>
+<p><b>¿Y la verificación humana?</b> No es un nivel de la escala: se entiende que quien declara revisó todo lo incorporado y asume la responsabilidad del contenido.</p>
+<p><b>¿Por qué no se puede marcar la actividad 9?</b> Presentar contenido generado por IA como si fuera un dato original de fuentes no maquinales no se declara: las guías de STM recomiendan prohibirlo.</p>
+<p><b>¿Hay que declarar el corrector ortográfico?</b> No necesariamente. STM recomienda que la actividad 1 no requiera declaración; el código ED queda disponible para quien quiera declararla o para revistas con un umbral más exigente.</p>`;
+}
+
+function aboutHTML(){
+  // APA 7, formato de software
+  const CITE = {
+    en:`${APP.citeAuthor} (2026). <i>${U.appName}</i> (Version ${APP.version}) [Computer software]. Open Science Unit, Universidad Estatal a Distancia.`,
+    es:`${APP.citeAuthor} (2026). <i>${U.appName}</i> (Versión ${APP.version}) [Software]. Unidad de Ciencia Abierta, Universidad Estatal a Distancia.`,
+    pt:`${APP.citeAuthor} (2026). <i>${U.appName}</i> (Versão ${APP.version}) [Software]. Unidade de Ciência Aberta, Universidad Estatal a Distancia.`,
+  };
+  const cite = CITE[lang];
+  if(lang==='en') return `
+<h2 id="aboutTitle">About</h2>
+<p><b>${U.appName}</b> · version ${APP.version} · ${APP.date.en}</p>
+<p class="lead">An open tool for producing standardised graphic labels that declare the use of artificial intelligence in scientific manuscripts.</p>
+<h3>Author</h3>
+<p>Developed by <b>${APP.author}</b><br>${orcidLink()}<br>${mailLink()}<br>${APP.unit.en}<br>${APP.univ}</p>
+<h3>Licences</h3>
+<p>Two licences, each for what it was designed for:</p>
+<ul>
+<li><b>Code — MIT.</b> The HTML, CSS and JavaScript are under the ${mitLink('MIT licence')}: you may use, copy, modify and redistribute them, including commercially, as long as the copyright notice and the licence text are kept.</li>
+<li><b>Content — CC BY 4.0.</b> The notation, the texts, this guide, the label design and the logo are under the ${licLink('Creative Commons Attribution 4.0 International licence')}: you may share and adapt them for any purpose, giving appropriate credit, linking to the licence and indicating whether changes were made.</li>
+</ul>
+<p>Creative Commons licences are not intended for software, which is why the code carries its own licence.</p>
+<details><summary>MIT licence text</summary><pre class="lic-text">${esc(MIT)}</pre></details>
+<h3>Open source</h3>
+<p>The whole system is this single HTML file: its source code is in plain view and can be read, copied, modified and hosted with no server and no installation. It includes an automated test suite, run from the browser console with <code>window.__app.runSelfTest()</code>.</p>
+<h3>How to cite</h3>
+<p class="cite">${cite}</p>
+<h3>Language of the label</h3>
+<p><b>The code is invariant: it is always in English.</b> The <code>AI</code> prefix, the «+» separator and the task codes (<code>ED</code>, <code>TG</code>, <code>TR</code>, <code>DA</code>, <code>IM</code>, <code>VI</code>, <code>CO</code>, <code>RF</code>, <code>N</code>) do not change with any language setting. That is the whole point of a code: two articles that declare the same use must produce the same string, in Costa Rica or in Brazil, so that it can be searched, compared and aggregated. What <i>does</i> follow the label language is the natural-language text — the closing phrase, «More info», the tools line and the notice when the extent is not declared — and the prose declaration.</p>
+<h3>Sources and third-party components</h3>
+<ul>
+<li>Activity classification: STM Association (2025), <i>Recommendations for a Classification of AI Use in Academic Manuscript Preparation</i>. Cited with attribution; not covered by this licence.</li>
+<li>QR codes: the QRious library (GPL-3.0 licence), loaded from a CDN.</li>
+<li>Typeface: Inter (SIL Open Font License 1.1), loaded from a CDN.</li>
+</ul>
+<h3>Disclaimer</h3>
+<p>A support tool. It does not replace any journal's editorial policies or the prose declaration. The content of each label is the responsibility of whoever generates it.</p>`;
+
+  if(lang==='pt') return `
+<h2 id="aboutTitle">Sobre</h2>
+<p><b>${U.appName}</b> · versão ${APP.version} · ${APP.date.pt}</p>
+<p class="lead">Ferramenta aberta para gerar etiquetas gráficas normalizadas de declaração de uso de inteligência artificial em manuscritos científicos.</p>
+<h3>Autoria</h3>
+<p>Desenvolvido por <b>${APP.author}</b><br>${orcidLink()}<br>${mailLink()}<br>${APP.unit.pt}<br>${APP.univ}</p>
+<h3>Licenças</h3>
+<p>Duas licenças, cada uma para aquilo que foi pensada:</p>
+<ul>
+<li><b>Código — MIT.</b> O HTML, o CSS e o JavaScript estão sob a ${mitLink('licença MIT')}: você pode usá-los, copiá-los, modificá-los e redistribuí-los, inclusive com fins comerciais, desde que conserve o aviso de direitos autorais e o texto da licença.</li>
+<li><b>Conteúdo — CC BY 4.0.</b> A notação, os textos, este manual, o desenho da etiqueta e o logotipo estão sob a ${licLink('licença Creative Commons Atribuição 4.0 Internacional')}: você pode compartilhá-los e adaptá-los com qualquer finalidade, reconhecendo a autoria, indicando a licença e informando se fez alterações.</li>
+</ul>
+<p>As licenças Creative Commons não são pensadas para software; por isso o código leva uma licença própria.</p>
+<details><summary>Texto da licença MIT</summary><pre class="lic-text">${esc(MIT)}</pre></details>
+<h3>Código aberto</h3>
+<p>Todo o sistema é este único arquivo HTML: o código-fonte está à vista e pode ser lido, copiado, modificado e hospedado sem servidor nem instalação. Inclui uma bateria de testes automáticos, executada no console do navegador com <code>window.__app.runSelfTest()</code>.</p>
+<h3>Como citar</h3>
+<p class="cite">${cite}</p>
+<h3>Idioma da etiqueta</h3>
+<p><b>O código é invariante: vai sempre em inglês.</b> O prefixo <code>AI</code>, o separador «+» e os códigos de tarefa (<code>ED</code>, <code>TG</code>, <code>TR</code>, <code>DA</code>, <code>IM</code>, <code>VI</code>, <code>CO</code>, <code>RF</code>, <code>N</code>) não mudam com nenhuma opção de idioma. Essa é a razão de ser de um código: dois artigos que declaram o mesmo uso têm de produzir a mesma cadeia, na Costa Rica ou no Brasil, para que se possa buscar, comparar e agregar. O que <i>sim</i> segue o idioma da etiqueta é o texto em língua natural —a frase de fecho, «Mais informações», a linha de ferramentas e o aviso de extensão não declarada— e a prosa da declaração.</p>
+<h3>Fontes e componentes de terceiros</h3>
+<ul>
+<li>Classificação de atividades: STM Association (2025), <i>Recommendations for a Classification of AI Use in Academic Manuscript Preparation</i>. Citada com atribuição; não fica coberta por esta licença.</li>
+<li>Códigos QR: biblioteca QRious (licença GPL-3.0), carregada de CDN.</li>
+<li>Tipografia: Inter (SIL Open Font License 1.1), carregada de CDN.</li>
+</ul>
+<h3>Aviso</h3>
+<p>Ferramenta de apoio. Não substitui as políticas editoriais de cada revista nem a declaração em prosa. O conteúdo de cada etiqueta é responsabilidade de quem a gera.</p>`;
+
+  return `
+<h2 id="aboutTitle">Acerca de</h2>
+<p><b>${U.appName}</b> · versión ${APP.version} · ${APP.date.es}</p>
+<p class="lead">Herramienta abierta para generar etiquetas gráficas normalizadas de declaración de uso de inteligencia artificial en manuscritos científicos.</p>
+<h3>Autoría</h3>
+<p>Desarrollado por <b>${APP.author}</b><br>${orcidLink()}<br>${mailLink()}<br>${APP.unit.es}<br>${APP.univ}</p>
+<h3>Licencias</h3>
+<p>Dos licencias, cada una para lo que fue pensada:</p>
+<ul>
+<li><b>Código — MIT.</b> El HTML, el CSS y el JavaScript están bajo la ${mitLink('licencia MIT')}: puede usarlos, copiarlos, modificarlos y redistribuirlos, incluso con fines comerciales, siempre que conserve el aviso de derechos de autor y el texto de la licencia.</li>
+<li><b>Contenido — CC BY 4.0.</b> La notación, los textos, este manual, el diseño de la etiqueta y el logotipo están bajo la ${licLink('licencia Creative Commons Atribución 4.0 Internacional')}: puede compartirlos y adaptarlos con cualquier fin, reconociendo la autoría, enlazando la licencia e indicando si hizo cambios.</li>
+</ul>
+<p>Las licencias Creative Commons no están pensadas para software; por eso el código lleva una licencia propia.</p>
+<details><summary>Texto de la licencia MIT</summary><pre class="lic-text">${esc(MIT)}</pre></details>
+<h3>Código abierto</h3>
+<p>Todo el sistema es este único archivo HTML: el código fuente está a la vista y se puede leer, copiar, modificar y alojar sin servidor ni instalación. Incluye una batería de pruebas automáticas, que se ejecuta desde la consola del navegador con <code>window.__app.runSelfTest()</code>.</p>
+<h3>Cómo citar</h3>
+<p class="cite">${cite}</p>
+<h3>Idioma de la etiqueta</h3>
+<p><b>El código es invariante: va siempre en inglés.</b> El prefijo <code>AI</code>, el separador «+» y los códigos de tarea (<code>ED</code>, <code>TG</code>, <code>TR</code>, <code>DA</code>, <code>IM</code>, <code>VI</code>, <code>CO</code>, <code>RF</code>, <code>N</code>) no cambian con ninguna opción de idioma. Esa es la razón de ser de un código: dos artículos que declaran el mismo uso tienen que producir la misma cadena, en Costa Rica o en Brasil, para que se pueda buscar, comparar y agregar. Lo que <i>sí</i> sigue al idioma de la etiqueta es el texto en lengua natural —la frase de cierre, «Más información», la línea de herramientas y el aviso de extensión no declarada— y la prosa de la declaración.</p>
+<h3>Fuentes y componentes de terceros</h3>
+<ul>
+<li>Clasificación de actividades: STM Association (2025), <i>Recommendations for a Classification of AI Use in Academic Manuscript Preparation</i>. Se cita con atribución; no queda cubierta por esta licencia.</li>
+<li>Códigos QR: biblioteca QRious (licencia GPL-3.0), cargada desde CDN.</li>
+<li>Tipografía: Inter (SIL Open Font License 1.1), cargada desde CDN.</li>
+</ul>
+<h3>Aviso</h3>
+<p>Herramienta de apoyo. No sustituye las políticas editoriales de cada revista ni la declaración en prosa. El contenido de cada etiqueta es responsabilidad de quien la genera.</p>`;
+}
+
+let U = UI.en;   // por defecto inglés; el arranque lo re-lee del selector
+
+function applyLang(){
+  U = UI[lang];
+  document.documentElement.lang = lang;
+  document.title = U.docTitle;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const v = U[el.getAttribute('data-i18n')];
+    if(v !== undefined) el.innerHTML = v;
+  });
+  $('foot').innerHTML = footerHTML();
+  $('manualBody').innerHTML = manualHTML();
+  $('aboutBody').innerHTML = aboutHTML();
+  if(fontState.kind) $('fontNote').textContent =
+    fontState.kind==='ok' ? U.fontOk(fontState.kb) : U.fontFail;
+  else $('fontNote').textContent = U.fontLoad;
+}
+
+/* --- Cadenas de la etiqueta -----------------------------------------------
+   EL CÓDIGO VA SIEMPRE EN INGLÉS; las descripciones no (2026-09-23).
+   Invariante: el prefijo `AI`, el «: », el «+» y los códigos de tarea. Eso
+   es lo que viaja con el artículo a bases de datos, agregadores y servicios
+   de metadatos, y su valor entero depende de que dos revistas que declaran
+   lo mismo produzcan la MISMA cadena — si se tradujera, dejaría de ser un
+   código y pasaría a ser una frase.
+   Traducible: lo que la etiqueta dice en lengua natural (la frase de
+   complementariedad, «More info», el rótulo de herramientas y el aviso de
+   extensión no declarada). Sigue a `docLang`, el idioma de la ETIQUETA,
+   porque se imprime dentro del artículo — no a `lang`, que es el de quien
+   opera la herramienta.
+
+   FORMA (decidida 2026-09-14):  AI: ED+TR+CO
+   · el prefijo `AI` aparece UNA sola vez, al inicio
+   · siempre seguido de dos puntos y un espacio, «: »
+   · los códigos se separan con «+», sin espacios
+
+   El «+» y no el guion: el guion se parte en los saltos de línea de un PDF
+   a dos columnas (y ahí ya no se sabe si separaba o partía), los
+   procesadores de texto lo reescriben solos como raya, y en el §4.4 el
+   guion ya cumple otra función —unir prefijo y código—, de modo que
+   haría dos trabajos opuestos. El «+» además se lee como suma, que es lo
+   que la declaración significa: usos concurrentes.
+   ------------------------------------------------------------------------ */
+/* INVARIANTE en todos los idiomas. Esto es el CÓDIGO de la etiqueta: lo que
+   se compara, se agrega y se busca entre revistas de cualquier país. Si se
+   tradujera, dos revistas que declaran lo mismo producirían cadenas distintas
+   y la etiqueta perdería su única razón de ser. */
+const BADGE = {
+  prefix  : 'AI: ',
+  sep     : '+',
+  toolsSep: ' · ',          // no «+»: ese signo ya separa códigos
+};
+
+/* TRADUCIBLE. Esto son DESCRIPCIONES, no código: dicen en lengua natural qué
+   es la etiqueta. Siguen al idioma de la ETIQUETA (docLang), no al de la
+   interfaz, porque se imprimen dentro del artículo.
+   «declaration» sustituye a «Standard Declaration»: dice qué ES la etiqueta
+   respecto de la declaración que ya pide la revista — la complementa, no la
+   reemplaza. */
+const BADGE_L = {
+  es:{ declaration:'Complementa la declaración en prosa del texto',
+       toolsLead:'Herramientas: ', moreInfo:'Más información',
+       noUse:'SIN USO POR ENCIMA DEL UMBRAL', noExtent:'EXTENSIÓN NO DECLARADA' },
+  en:{ declaration:'Complements the prose declaration in the text',
+       toolsLead:'Tools: ', moreInfo:'More info',
+       noUse:'NO USE ABOVE THRESHOLD', noExtent:'EXTENT NOT DECLARED' },
+  pt:{ declaration:'Complementa a declaração em prosa do texto',
+       toolsLead:'Ferramentas: ', moreInfo:'Mais informações',
+       noUse:'SEM USO ACIMA DO LIMIAR', noExtent:'EXTENSÃO NÃO DECLARADA' },
+};
+/* El motor de composición solo conoce `T`: se recompone al cambiar docLang. */
+let T = Object.assign({}, BADGE, BADGE_L.en);
+function applyDocLang(){ T = Object.assign({}, BADGE, BADGE_L[docLang]); }
+
+/* --- Tokens de diseño --------------------------------------------------
+   Todo en unidades SVG. 1 unidad = 1 px a 1×. Las proporciones salen del
+   mockup aprobado (cápsula ~4.5:1, ícono ocupando casi el alto interno).
+   ---------------------------------------------------------------------- */
+const D = {
+  outPad:11, rOut:28, rCard:18,          // marco negro y radios
+  cardPadX:20, cardPadY:16,
+  icon:142, iconGap:22,
+  titleSize:68, titleWeight:700, titleLS:-1.5, titleMin:30,
+  detailsSize:21, detailsWeight:500,
+  declSize:17, declWeight:500, declLS:0.1,   // la frase es más larga que «Standard Declaration»: baja de cuerpo
+  toolsSize:15, toolsWeight:400,
+  gapDetailsTools:7, toolsLineGap:4, toolsMinW:300,
+  toolsMax:6, toolNameMax:30, toolModelMax:30,   // topes: la etiqueta es un distintivo, no un inventario
+  miSize:23, miWeight:600,               // "More info"
+  ruleW:3, dotR:6.5,
+  gapDetailsBlock:12, gapTitleRule:14, gapRuleDecl:11,
+  qrPad:18, qrGap:11, qrSafePad:9,       // qrSafePad = placa blanca alrededor del QR
+  ax3BandH:26, ax3StripW:36, ax3Gap:10,
+  maxCardW:1500,                          // antes de encoger el título
+  fg:'#101114', bg:'#ffffff',
+};
+
+const FONT_FAMILY = "'Etiqueta Inter','Inter','Helvetica Neue',Helvetica,Arial,sans-serif";
+
+/* =========================== 1. ESTADO ================================= */
+let state = {};                 // code -> extensión 0..4 (0 = no declarada). La clave existe = tarea marcada
+let fonts = {ready:false, faces:[]};
+let fontState = {kind:null, kb:0};
+/* Herramientas y modelos: opcional y múltiple. Filas vacías se ignoran. */
+let toolRows = [{name:'', model:''}];
+const clean = v => String(v||'').replace(/\s+/g,' ').trim();
+function toolItems(){
+  return toolRows.map(r=>({n:clean(r.name), m:clean(r.model)}))
+                 .filter(r=>r.n)
+                 .map(r=> r.m ? `${r.n} (${r.m})` : r.n);
+}   // para volver a rotular el aviso al cambiar de idioma
+/* Idiomas PRESENTES en los diccionarios frente a idiomas OFRECIDOS en la
+   interfaz. El portugués está traducido y probado, pero no se ofrece: las
+   descripciones de STM en portugués son traducción propia, sin fuente
+   autorizada, y no se han revisado con alguien nativo (aplazado por el
+   usuario el 2026-09-23). Se reactiva metiendo 'pt' en LANGS — nada más.
+   Se mantiene dentro de LANG_ALL a propósito, para que las pruebas de
+   completitud lo sigan cubriendo y la traducción no se pudra mientras
+   espera revisión. */
+const LANG_ALL  = ['es','en','pt'];
+const LANGS     = ['es','en'];
+const LANGNAME  = {es:'Español', en:'English', pt:'Português'};
+
+/* DOS EJES DE IDIOMA, deliberadamente separados (decidido 2026-09-23):
+   · lang    — idioma de la INTERFAZ: para quien opera la herramienta.
+   · docLang — idioma de la ETIQUETA (el del artículo): gobierna a la vez las descripciones de
+               la etiqueta y la prosa, porque las dos cosas entran al mismo
+               artículo y no pueden ir en lenguas distintas.
+   Lo que NO depende de ninguno de los dos son los códigos (`AI: `, `+`, ED,
+   TG, TR…): son invariantes en inglés por diseño, porque son lo que se
+   compara y se agrega entre revistas de cualquier país. */
+let lang    = 'en';
+let docLang = 'en';
+
+/* =========================== 2. STRINGS ================================
+   Una sola función produce las dos cadenas, del mismo acto declarativo —
+   que es el principio de diseño del §3 del preprint: la prosa, la etiqueta
+   y los metadatos salen de una sola captura, para que no puedan divergir.
+   ====================================================================== */
+function selectedCodes(){ return ORDER.filter(c => c in state); }   // ya en orden STM
+
+/* ======================== PROSA DE LA DECLARACIÓN =======================
+   La segunda de las tres salidas del §5 del preprint. Sale del MISMO estado
+   que la etiqueta (una sola captura, §3): etiqueta y prosa no pueden
+   contradecirse porque no hay dos fuentes.
+
+   Es un BORRADOR a propósito. La prosa vale por lo que cuenta del caso
+   concreto —qué se hizo y en qué secciones— y eso solo lo sabe quien
+   declara. Esos huecos se marcan entre corchetes en vez de rellenarse con
+   algo genérico que invite a pegarlo tal cual.
+
+   Devuelve segmentos {t, ph}: ph = marcador que el autor debe completar.
+   ====================================================================== */
+const PROSE = {
+  es:{
+    none   : 'Las personas autoras declaran que en la preparación de este manuscrito no se utilizaron herramientas de inteligencia artificial por encima del umbral declarable.',
+    lead1  : 'En la preparación de este manuscrito se utilizaron herramientas de inteligencia artificial para la siguiente tarea: ',
+    leadN  : 'En la preparación de este manuscrito se utilizaron herramientas de inteligencia artificial para las siguientes tareas: ',
+    extent : lv => `extensión ${lv}`,
+    tools  : 'Herramientas utilizadas: ',
+    toolPh : '[Indique la herramienta y su versión, p. ej. ChatGPT (GPT-5).]',
+    whatPh : '[Describa brevemente qué se hizo con cada herramienta y en qué secciones del manuscrito.]',
+    verify : 'Todo el contenido generado o modificado con estas herramientas fue revisado por las personas autoras, quienes verificaron su pertinencia y veracidad y asumen la responsabilidad plena por el contenido final.',
+    label  : 'Etiqueta de declaración: ',
+  },
+  en:{
+    none   : 'The authors declare that no artificial intelligence tools were used in the preparation of this manuscript above the disclosable threshold.',
+    lead1  : 'Artificial intelligence tools were used in the preparation of this manuscript for the following task: ',
+    leadN  : 'Artificial intelligence tools were used in the preparation of this manuscript for the following tasks: ',
+    extent : lv => `${lv} extent`,
+    tools  : 'Tools used: ',
+    toolPh : '[State the tool and its version, e.g. ChatGPT (GPT-5).]',
+    whatPh : '[Briefly describe what was done with each tool and in which sections of the manuscript.]',
+    verify : 'All content generated or modified with these tools was reviewed by the authors, who verified its relevance and accuracy and take full responsibility for the final content.',
+    label  : 'Declaration label: ',
+  },
+  pt:{
+    none   : 'Os autores declaram que na preparação deste manuscrito não foram utilizadas ferramentas de inteligência artificial acima do limiar declarável.',
+    lead1  : 'Na preparação deste manuscrito foram utilizadas ferramentas de inteligência artificial para a seguinte tarefa: ',
+    leadN  : 'Na preparação deste manuscrito foram utilizadas ferramentas de inteligência artificial para as seguintes tarefas: ',
+    extent : lv => `extensão ${lv}`,
+    tools  : 'Ferramentas utilizadas: ',
+    toolPh : '[Indique a ferramenta e sua versão, p. ex. ChatGPT (GPT-5).]',
+    whatPh : '[Descreva brevemente o que foi feito com cada ferramenta e em quais seções do manuscrito.]',
+    verify : 'Todo o conteúdo gerado ou modificado com estas ferramentas foi revisado pelos autores, que verificaram sua pertinência e veracidade e assumem a responsabilidade plena pelo conteúdo final.',
+    label  : 'Etiqueta de declaração: ',
+  },
+};
+const lcFirst = t => t.charAt(0).toLowerCase() + t.slice(1);
+
+/* «A y B», «A, B y C» — y «e» ante palabra que empieza por el sonido /i/
+   (ChatGPT e Illustrator). En inglés, coma serial (APA): «A, B, and C».
+   En portugués, «e» sin alternancia y SIN coma serial: «A, B e C». */
+function joinList(arr, pl){
+  if(arr.length < 2) return arr.join('');
+  const last = arr[arr.length-1], rest = arr.slice(0,-1);
+  if(pl==='en') return arr.length===2 ? `${rest[0]} and ${last}` : `${rest.join(', ')}, and ${last}`;
+  if(pl==='pt') return `${rest.join(', ')} e ${last}`;
+  const y = /^h?i(?![aeouáéóú])/i.test(last) ? 'e' : 'y';
+  return `${rest.join(', ')} ${y} ${last}`;
+}
+
+function proseSegments(pl){
+  const P = PROSE[pl];
+  const s = badgeStrings();
+  if(!s) return [];
+  if(state.N) return [{t:P.none}, {t:' '+P.label + s.canonical + '.'}];
+
+  /* Las tareas llevan comas internas («refinamiento, corrección, edición o
+     formato…»): separarlas con comas las haría ilegibles. Con más de una se
+     enumeran (a), (b)… y se separan con punto y coma. */
+  const items = s.codes.map(c=>{
+    const t = TASKS.find(x=>x.code===c);
+    const lv = state[c] || 0;
+    const ext = lv ? ` (${P.extent(EXTENTS[lv][pl].split(':')[0].toLowerCase())})` : '';
+    return lcFirst(t[pl]) + ext;
+  });
+  const tareas = items.length===1
+    ? P.lead1 + items[0] + '.'
+    : P.leadN + items.map((x,i)=>`(${String.fromCharCode(97+i)}) ${x}`).join('; ') + '.';
+
+  const seg = [{t:tareas}, {t:' '}];
+  if(s.tools.length) seg.push({t:P.tools + joinList(s.tools, pl) + '.'});
+  else               seg.push({t:P.toolPh, ph:true});
+  seg.push({t:' '}, {t:P.whatPh, ph:true}, {t:' '}, {t:P.verify}, {t:' '+P.label + s.canonical + '.'});
+  return seg;
+}
+const proseText = pl => proseSegments(pl).map(x=>x.t).join('');
+const proseHTML = pl => proseSegments(pl).map(x=> x.ph ? `<mark class="ph">${esc(x.t)}</mark>` : esc(x.t)).join('');
+
+function badgeStrings(){
+  const P = BADGE.prefix, S = BADGE.sep;
+  if(state.N) return {title:P+'N', details:T.noUse, canonical:P+'N', codes:['N'], tools:[]};
+  const codes = selectedCodes();
+  if(!codes.length) return null;
+
+  // Título: prefijo una vez + códigos unidos por «+».      AI: ED+TR+CO
+  const title = P + codes.join(S);
+
+  // Cadena canónica: lo mismo, con la extensión pegada al código que la
+  // declaró. La extensión se OMITE cuando no se declara (§4.2).
+  const canonical = P + codes.map(c => c + (state[c] ? ':' + state[c] : '')).join(S);
+
+  // La línea de detalle solo aporta si hay alguna extensión; si no, lo dice.
+  // Hacer visible la ausencia de dato es el mismo argumento del §4.5 sobre N.
+  const anyExtent = codes.some(c => state[c] > 0);
+  return {title, details: anyExtent ? canonical : T.noExtent, canonical, codes, tools: toolItems()};
+}
+
+/* =========================== MEDICIÓN ==================================
+   Dos instrumentos, porque miden cosas distintas:
+
+   · ANCHO  -> getBBox() sobre un <text> SVG real. Es la única medida que
+     coincide con lo que el navegador va a dibujar en el SVG exportado
+     (incluye letter-spacing y el avance del último glifo).
+   · ALTO   -> canvas.measureText().actualBoundingBox*, que sí da la TINTA
+     real. getBBox() de texto en Chrome devuelve la caja de la fuente
+     (ascender+descender del em), no la tinta: como acá todo es
+     versalita/dígito, eso metía ~30 unidades de aire fantasma arriba y
+     abajo y dejaba la etiqueta rechoncha frente al mockup.
+
+   Además el alto se mide contra CADENAS DE REFERENCIA fijas, no contra el
+   texto real. Eso hace que TODAS las etiquetas del sistema tengan el mismo
+   alto: AI:N y AI:TR-ED-BI-DA-CO-GE-IM se alinean en una misma línea de
+   una página. Solo varía el ancho.
+   ====================================================================== */
+const measSvg = document.createElementNS(NS,'svg');
+measSvg.setAttribute('width','10'); measSvg.setAttribute('height','10');
+Object.assign(measSvg.style,{position:'absolute',left:'-10000px',top:'0',overflow:'hidden'});
+const measText = document.createElementNS(NS,'text');
+measSvg.appendChild(measText);
+document.body.appendChild(measSvg);
+const measCtx = document.createElement('canvas').getContext('2d');
+
+/* Cadenas de referencia: mismo perfil de tinta que cualquier valor real. */
+/* Extremos verticales que puede traer CUALQUIER idioma latino: mayúscula
+   acentuada (Á y Õ suben por encima de la altura de caja), ascendentes,
+   descendentes, dígitos y paréntesis. No es texto visible: es un patrón. */
+const INK = 'ÁÕ1bdfhkl(gjpqy)';
+
+/* Referencia métrica — NO es el texto real.
+   La altura de cada franja se reserva midiendo ESTA cadena y no lo que va a
+   imprimirse, para que todas las etiquetas midan lo mismo y se alineen en la
+   página. Ahora que las descripciones se traducen, la referencia TIENE que
+   ser independiente del idioma: si midiera el texto real, una etiqueta en
+   portugués y una en inglés dejarían de tener la misma altura, y una revista
+   que publica en dos lenguas las vería descuadradas uña junto a otra.
+   Antes esto medía las cadenas inglesas fijas, que no llevaban acentos; con
+   «EXTENSIÓN NO DECLARADA» o «Mais informações» eso se habría quedado corto
+   por arriba. El título es la excepción: solo lleva códigos ASCII, así que se
+   mide con su forma real. */
+const REF = {
+  title  : 'AI: N+',                    // versalitas, dos puntos, signo más
+  details: INK,
+  decl   : INK,
+  tools  : INK,
+  mi     : INK,
+};
+
+function widthOf(str, size, weight, ls){
+  measText.setAttribute('font-family', FONT_FAMILY);
+  measText.setAttribute('font-size', size);
+  measText.setAttribute('font-weight', weight);
+  measText.setAttribute('letter-spacing', ls||0);
+  measText.textContent = str;
+  return measText.getBBox().width;
+}
+
+function inkOf(refStr, size, weight){
+  measCtx.font = weight + ' ' + size + 'px ' + FONT_FAMILY;
+  const m = measCtx.measureText(refStr);
+  const a = m.actualBoundingBoxAscent, d = m.actualBoundingBoxDescent;
+  if(typeof a !== 'number' || !isFinite(a))          // navegador sin soporte
+    return {ascent:size*0.72, descent:size*0.02, h:size*0.74};
+  return {ascent:a, descent:Math.max(0,d), h:a+Math.max(0,d)};
+}
+
+/* =========================== 3. LAYOUT =================================
+   Devuelve un objeto geométrico puro. Reglas:
+   · El ancho lo manda el contenido, nunca al revés  -> no hay traslape.
+   · El alto lo manda el ícono o la columna de texto, lo que sea mayor.
+   · El bloque del QR se dimensiona DESPUÉS, a partir del alto ya resuelto,
+     y su ancho es max(QR, "More info") + padding -> se ajusta al contenido.
+   ====================================================================== */
+/* Reparte la lista en renglones que caben en `maxW`, sin partir nunca una
+   herramienta. Dos pasos:
+   1. el reparto codicioso fija CUÁNTOS renglones hacen falta;
+   2. entre todos los repartos con ese número de renglones se elige el que
+      minimiza el renglón más largo. Así 6 herramientas quedan 2-2-2 y no
+      2-3-1 con una huérfana al final. Con ≤6 elementos hay como mucho 10
+      combinaciones: la búsqueda exhaustiva es instantánea. */
+function packTools(items, maxW){
+  if(!items.length) return [];
+  const W = t => widthOf(t, D.toolsSize, D.toolsWeight, 0);
+  const text = (grupo, primero) => (primero ? T.toolsLead : '') + grupo.join(BADGE.toolsSep);
+
+  let n = 1, cur = [];
+  items.forEach(it=>{
+    const cand = [...cur, it];
+    if(cur.length && W(text(cand, n===1)) > maxW){ n++; cur = [it]; }
+    else cur = cand;
+  });
+
+  let best = null;
+  const probar = grupos => {
+    const lines = grupos.map((g,i)=>{ const t = text(g, i===0); return {t, w:W(t)}; });
+    const peor = Math.max(...lines.map(l=>l.w));
+    if(!best || peor < best.peor) best = {peor, lines};
+  };
+  const recorrer = (desde, quedan, acc) => {
+    if(quedan===1){ probar([...acc, items.slice(desde)]); return; }
+    for(let hasta = desde+1; hasta <= items.length-(quedan-1); hasta++)
+      recorrer(hasta, quedan-1, [...acc, items.slice(desde, hasta)]);
+  };
+  recorrer(0, n, []);
+  return best.lines;
+}
+
+function computeLayout(s, opts){
+  const ax3 = (opts && opts.ax3) || 'none';
+  const qrSafe = !opts || opts.qrSafe !== false;
+
+  // alturas de tinta: contra referencias fijas -> alto constante del sistema
+  const vDetails = inkOf(REF.details, D.detailsSize, D.detailsWeight);
+  const vDecl    = inkOf(REF.decl,    D.declSize,    D.declWeight);
+  const vMi      = inkOf(REF.mi,      D.miSize,      D.miWeight);
+
+  const wDetails = widthOf(s.details, D.detailsSize, D.detailsWeight, 0);
+  const wDecl    = widthOf(T.declaration, D.declSize, D.declWeight, D.declLS);
+  const wMi      = widthOf(T.moreInfo, D.miSize, D.miWeight, 0);
+
+  // -- título: encoge de a 2 pt si la cápsula se pasa de maxCardW ----------
+  let titleSize = D.titleSize, wTitle, vTitle, colW, colLeft, colRight, shrunk = false;
+  for(;;){
+    wTitle = widthOf(s.title, titleSize, D.titleWeight, D.titleLS);
+    vTitle = inkOf(REF.title, titleSize, D.titleWeight);
+    colLeft  = Math.min(-D.dotR, wTitle/2 - wDecl/2);
+    colRight = Math.max(wTitle + D.dotR, wTitle/2 + wDecl/2);
+    if(wDetails > colRight - colLeft) colRight = colLeft + wDetails;  // DETAILS ensancha si hace falta
+    colW = colRight - colLeft;
+    if(D.cardPadX*2 + D.icon + D.iconGap + colW <= D.maxCardW || titleSize <= D.titleMin) break;
+    titleSize -= 2; shrunk = true;
+  }
+
+  // -- alturas ------------------------------------------------------------
+  // herramientas: renglones del ancho de la columna (con un mínimo, para que
+  // una etiqueta de título corto no parta la lista en tiras)
+  const toolLines = packTools(s.tools || [], Math.max(colW, D.toolsMinW));
+  const wTools = toolLines.reduce((m,l)=>Math.max(m,l.w), 0);
+  if(wTools > colW){ colRight = colLeft + wTools; colW = wTools; }
+  const vTools = inkOf(REF.tools, D.toolsSize, D.toolsWeight);
+  const toolsH = toolLines.length
+    ? D.gapDetailsTools + toolLines.length*vTools.h + (toolLines.length-1)*D.toolsLineGap : 0;
+
+  const blockH = vTitle.h + D.gapTitleRule + D.ruleW + D.gapRuleDecl + vDecl.h;
+  const bandH  = (ax3==='band') ? D.ax3BandH + D.ax3Gap : 0;
+  const contentH = vDetails.h + toolsH + D.gapDetailsBlock + blockH + bandH;
+
+  const cardInnerH = Math.max(D.icon, contentH);
+  const cardH = cardInnerH + D.cardPadY*2;
+  const H = cardH + D.outPad*2;
+
+  // -- anchos -------------------------------------------------------------
+  const cardX = D.outPad, cardY = D.outPad;
+  const cardW = D.cardPadX*2 + D.icon + D.iconGap + colW;
+
+  // -- bloque QR: se dimensiona con el alto ya resuelto --------------------
+  const qrOuter = Math.max(40, H - D.qrPad*2 - vMi.h - D.qrGap);
+  const qrRegionW = Math.max(qrOuter, wMi) + D.qrPad*2;
+
+  const stripW = (ax3==='strip') ? D.ax3StripW : 0;
+  const W = cardX + cardW + stripW + qrRegionW;
+
+  // -- posiciones ---------------------------------------------------------
+  const innerX = cardX + D.cardPadX;
+  const innerY = cardY + D.cardPadY;
+  const iconX = innerX;
+  const iconY = innerY + (cardInnerH - D.icon)/2;
+  const titleX = innerX + D.icon + D.iconGap - colLeft;
+
+  const detailsBaseline = innerY + vDetails.ascent;
+  const detailsEndX = cardX + cardW - D.cardPadX;
+
+  const toolsBaselines = toolLines.map((l,i)=> innerY + vDetails.h + D.gapDetailsTools
+                                          + vTools.ascent + i*(vTools.h + D.toolsLineGap));
+  const blockTop0 = innerY + vDetails.h + toolsH + D.gapDetailsBlock;
+  const blockBot0 = innerY + cardInnerH - bandH;
+  const blockTop  = blockTop0 + Math.max(0, (blockBot0 - blockTop0 - blockH)/2);
+
+  const titleBaseline = blockTop + vTitle.ascent;
+  const ruleY = blockTop + vTitle.h + D.gapTitleRule + D.ruleW/2;
+  const declBaseline = blockTop + vTitle.h + D.gapTitleRule + D.ruleW + D.gapRuleDecl + vDecl.ascent;
+
+  const qrRegionX = cardX + cardW + stripW;
+  const qrOuterX = qrRegionX + (qrRegionW - qrOuter)/2;
+  const qrOuterY = D.qrPad;
+  const qrInset = qrSafe ? D.qrSafePad : 0;
+  const miBaseline = qrOuterY + qrOuter + D.qrGap + vMi.ascent;
+  const miCx = qrRegionX + qrRegionW/2;
+
+  const ax3Zone = ax3==='band'
+    ? {mode:'band', x:titleX + colLeft, y:innerY + cardInnerH - D.ax3BandH, w:colW, h:D.ax3BandH}
+    : ax3==='strip'
+      ? {mode:'strip', x:cardX + cardW + 5, y:D.outPad + 4, w:stripW - 10, h:H - D.outPad*2 - 8}
+      : {mode:'none'};
+
+  return {
+    W, H, cardX, cardY, cardW, cardH, cardInnerH,
+    iconX, iconY, iconSize:D.icon,
+    titleX, titleBaseline, titleSize, titleW:wTitle, titleShrunk:shrunk,
+    detailsEndX, detailsBaseline, detailsW:wDetails,
+    toolLines, toolsBaselines,
+    ruleY, ruleX0:titleX, ruleX1:titleX + wTitle,
+    declBaseline, declCx:titleX + wTitle/2, declW:wDecl,
+    qrRegionX, qrRegionW, qrOuter, qrOuterX, qrOuterY, qrInset,
+    miBaseline, miCx, miW:wMi,
+    ax3Zone, strings:s,
+  };
+}
+
+/* ====================== ÍCONO DE MARCA (vectorial) =====================
+   Sistema local 0–100, escalado al tamaño pedido: un solo juego de curvas
+   que sirve igual a 24 px que a 4×.
+   Lectura: anillo abierto (conocimiento en proceso, no cerrado) + eje
+   vertical que parte el mismo cerebro en dos lecturas: izquierda orgánica
+   (giros continuos, trazo modulado), derecha técnica (mismo contorno pero
+   relleno de nodos y trazas ortogonales). No son dos objetos pegados: es
+   un contorno espejado, que es justo el argumento del sistema —la misma
+   autoría, dos naturalezas.
+   ====================================================================== */
+function f(n){ return Math.round(n*1000)/1000; }
+function polar(cx,cy,r,deg){ const a=deg*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; }
+function arcPath(cx,cy,r,a0,a1){
+  const [x0,y0]=polar(cx,cy,r,a0), [x1,y1]=polar(cx,cy,r,a1);
+  const large = ((a1-a0)%360+360)%360 > 180 ? 1 : 0;
+  return `M${f(x0)} ${f(y0)}A${f(r)} ${f(r)} 0 ${large} 1 ${f(x1)} ${f(y1)}`;
+}
+
+function brandIcon(size, color, detail, twoTone){
+  const s = size/100;
+  /* Coordenadas tomadas del PNG de marca (logo centrado en ~(960,950) con
+     radio ~830 px) y normalizadas a un sistema 0–100 con centro en (50,50).
+     No es un dibujo «parecido»: es el mismo trazado reconstruido en vector,
+     porque el original es un raster generado y sus bordes son blandos —
+     inservibles para imprimir a 4× o para recortar contra un fondo.
+
+     Lecturas estructurales del original que hay que conservar:
+     · el anillo se abre ARRIBA y ABAJO (no a los lados) y es BITONO;
+     · el hemisferio izquierdo es un contorno CERRADO de lóbulos cuyo lado
+       derecho es recto: ese lado recto ES la línea media;
+     · el derecho NO tiene contorno: es una espina con ganchos arriba y
+       abajo, de la que salen trazas hacia anillos huecos, más anillos
+       sueltos sin conectar. Orgánico contenido / técnico disperso. */
+  const ink  = color || '#1b2430';
+  const gray = twoTone ? '#4a4b53' : ink;
+  const small = (detail === 'simple') || (detail !== 'full' && size < 48);
+
+  const SW = small
+    ? {ring:4.4, lobe:4.2, spine:4.2, trace:3.8, node:3.4}
+    : {ring:3.4, lobe:3.2, spine:3.2, trace:2.8, node:2.6};
+
+  /* Hemisferio izquierdo: contorno cerrado. La Z final traza la recta
+     vertical de vuelta al inicio, que es la línea media. */
+  const lobe = 'M47 16'
+             + 'C41 15 35.5 17.5 33.5 22.5'
+             + 'C27.5 22 23 26.5 24 32'
+             + 'C18.5 34.5 16 41 19 46'
+             + 'C15 50.5 15.5 57.5 20 61'
+             + 'C18 67 21.5 73.5 27.5 75'
+             + 'C29 80 33.5 84.5 39.5 84'
+             + 'C42 85.5 45 85.5 47 84'
+             + 'Z';
+
+  const dots  = [[39.2,36.4,4.2],[31,48.9,4.0],[38.6,61.9,4.0]];
+  const rings = [[63.6,23.2,3.3],[57,37.3,3.0],[71.4,37.3,4.1],
+                 [59.8,49.5,3.0],[73.8,54.3,3.8],[67.1,70.1,3.3]];
+
+  const g = [];
+  // anillo bitono, abierto arriba y abajo
+  g.push(`<path d="${arcPath(50,50,45,95,265)}" fill="none" stroke="${ink}" stroke-width="${SW.ring}"/>`);
+  g.push(`<path d="${arcPath(50,50,45,275,445)}" fill="none" stroke="${gray}" stroke-width="${SW.ring}"/>`);
+  // hemisferio izquierdo
+  g.push(`<path d="${lobe}" fill="none" stroke="${ink}" stroke-width="${SW.lobe}" stroke-linejoin="round"/>`);
+  // espina derecha con gancho arriba y abajo
+  g.push(`<path d="M60 18.2C55.5 18 52.2 21.5 52.2 28V72C52.2 78.5 55.5 82 60 81.8" fill="none" stroke="${ink}" stroke-width="${SW.spine}" stroke-linecap="round" stroke-linejoin="round"/>`);
+  g.push(`<path d="M60 18.2L61.4 20.6" fill="none" stroke="${ink}" stroke-width="${SW.trace}" stroke-linecap="round"/>`);
+
+  if(!small){
+    g.push(`<path d="M39.2 36.4L31 48.9" fill="none" stroke="${ink}" stroke-width="${SW.trace}" stroke-linecap="round"/>`);
+    g.push(`<path d="M38.6 61.9H47" fill="none" stroke="${ink}" stroke-width="${SW.trace}" stroke-linecap="round"/>`);
+    dots.forEach(([x,y,r])=> g.push(`<circle cx="${x}" cy="${y}" r="${r}" fill="${ink}"/>`));
+    g.push(`<path d="M52.2 60.3H59.8L64.2 67.6" fill="none" stroke="${ink}" stroke-width="${SW.trace}" stroke-linecap="round" stroke-linejoin="round"/>`);
+    g.push(`<path d="M62.1 51.6L64.6 54" fill="none" stroke="${ink}" stroke-width="${SW.trace}" stroke-linecap="round"/>`);
+    g.push(`<path d="M50.6 41.2H52.2" fill="none" stroke="${ink}" stroke-width="${SW.trace}" stroke-linecap="round"/>`);
+    rings.forEach(([x,y,r])=> g.push(`<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${ink}" stroke-width="${SW.node}"/>`));
+  }else{
+    g.push(`<circle cx="39.2" cy="36.4" r="5" fill="${ink}"/>`);
+    g.push(`<circle cx="36" cy="58" r="5" fill="${ink}"/>`);
+    [[63.6,23.2,4.1],[71.4,37.3,4.9],[67.1,70.1,4.1]].forEach(([x,y,r])=>
+      g.push(`<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${ink}" stroke-width="${SW.node}"/>`));
+  }
+  return `<g transform="scale(${f(s)})">${g.join('')}</g>`;
+}
+
+/* =========================== 4. RENDER ================================= */
+function esc(s){
+  // también comillas: el texto libre de las herramientas acaba dentro de aria-label="…"
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                  .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function fontFaceCss(){
+  if(!fonts.ready || !fonts.faces.length) return '';
+  return fonts.faces.map(fc =>
+    `@font-face{font-family:'Etiqueta Inter';font-style:normal;font-weight:${fc.weight};font-display:block;`
+    + `src:url(data:font/woff2;base64,${fc.b64}) format('woff2');}`
+  ).join('');
+}
+
+function renderSVG(L, qrHref, opts){
+  const o = opts||{};
+  const embed = o.embed !== false;
+  const fg = D.fg, bg = D.bg;
+  const defs = embed ? `<defs><style type="text/css">${fontFaceCss()}</style></defs>` : '';
+  const FF = `font-family="${FONT_FAMILY}"`;
+
+  // QR: placa blanca (estándar) o invertido (mockup). Van juntos en un
+  // grupo porque son una sola pieza lógica.
+  const qi = L.qrInset;
+  const qrArt = `<g data-role="qr">`
+    + (qi > 0 ? `<rect x="${f(L.qrOuterX)}" y="${f(L.qrOuterY)}" width="${f(L.qrOuter)}" height="${f(L.qrOuter)}" rx="6" fill="#ffffff"/>` : '')
+    + `<image x="${f(L.qrOuterX+qi)}" y="${f(L.qrOuterY+qi)}" width="${f(L.qrOuter-qi*2)}" height="${f(L.qrOuter-qi*2)}" href="${qrHref}" preserveAspectRatio="none"/>`
+    + `</g>`;
+
+  const z = L.ax3Zone;
+  const ax3Art = z.mode==='none' ? '' :
+    `<g data-role="ax3" opacity="0.55">`
+    + `<rect x="${f(z.x)}" y="${f(z.y)}" width="${f(z.w)}" height="${f(z.h)}" rx="6" fill="none" stroke="${z.mode==='strip'?'#ffffff':fg}" stroke-width="1.6" stroke-dasharray="5 4"/>`
+    + (z.mode==='band'
+        ? `<text x="${f(z.x + z.w/2)}" y="${f(z.y + z.h/2 + 3.5)}" text-anchor="middle" ${FF} font-size="10" font-weight="600" letter-spacing="1.2" fill="${fg}">EJE 3 · RESERVADO</text>`
+        : '')
+    + `</g>`;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${f(L.W)}" height="${f(L.H)}" viewBox="0 0 ${f(L.W)} ${f(L.H)}" role="img" aria-label="${esc(L.strings.title)} — ${esc(L.strings.details)}${(L.strings.tools||[]).length ? ' — '+esc(T.toolsLead+L.strings.tools.join('; ')) : ''}" text-rendering="geometricPrecision">
+${defs}
+<rect data-role="outer" x="0" y="0" width="${f(L.W)}" height="${f(L.H)}" rx="${D.rOut}" fill="${fg}"/>
+<rect data-role="card" x="${f(L.cardX)}" y="${f(L.cardY)}" width="${f(L.cardW)}" height="${f(L.cardH)}" rx="${D.rCard}" fill="${bg}"/>
+<g data-role="icon" transform="translate(${f(L.iconX)},${f(L.iconY)})">${brandIcon(L.iconSize, o.twoTone ? null : fg, null, o.twoTone)}</g>
+<text data-role="details" x="${f(L.detailsEndX)}" y="${f(L.detailsBaseline)}" text-anchor="end" ${FF} font-size="${D.detailsSize}" font-weight="${D.detailsWeight}" fill="${fg}">${esc(L.strings.details)}</text>
+${(L.toolLines||[]).map((l,k)=>`<text data-role="tools" x="${f(L.detailsEndX)}" y="${f(L.toolsBaselines[k])}" text-anchor="end" ${FF} font-size="${D.toolsSize}" font-weight="${D.toolsWeight}" fill="${fg}">${esc(l.t)}</text>`).join('')}
+<text data-role="title" x="${f(L.titleX)}" y="${f(L.titleBaseline)}" ${FF} font-size="${f(L.titleSize)}" font-weight="${D.titleWeight}" letter-spacing="${D.titleLS}" fill="${fg}">${esc(L.strings.title)}</text>
+<g data-role="rule"><line x1="${f(L.ruleX0)}" y1="${f(L.ruleY)}" x2="${f(L.ruleX1)}" y2="${f(L.ruleY)}" stroke="${fg}" stroke-width="${D.ruleW}" stroke-linecap="round"/><circle cx="${f(L.ruleX0)}" cy="${f(L.ruleY)}" r="${D.dotR}" fill="${fg}"/><circle cx="${f(L.ruleX1)}" cy="${f(L.ruleY)}" r="${D.dotR}" fill="${fg}"/></g>
+<text data-role="decl" x="${f(L.declCx)}" y="${f(L.declBaseline)}" text-anchor="middle" ${FF} font-size="${D.declSize}" font-weight="${D.declWeight}" letter-spacing="${D.declLS}" fill="${fg}">${esc(T.declaration)}</text>
+${qrArt}
+<text data-role="moreinfo" x="${f(L.miCx)}" y="${f(L.miBaseline)}" text-anchor="middle" ${FF} font-size="${D.miSize}" font-weight="${D.miWeight}" fill="#ffffff">${esc(T.moreInfo)}</text>
+${ax3Art}
+</svg>`;
+}
+
+/* ============================ QR =======================================
+   Nivel Q de corrección de errores (recupera ~25%): la etiqueta va a
+   terminar impresa y fotocopiada, no solo en pantalla. Zona de silencio
+   al 10% del lado, holgada a propósito: un QR pegado al borde del bloque
+   negro no lo lee ni el mejor escáner.
+
+   Todo esto puede fallar por razones ajenas al código (sin red -> QRious
+   no cargó; URL larguísima -> no hay versión de QR que la codifique).
+   En ese caso NO se rompe la etiqueta: se dibuja una placa vacía y se
+   avisa. Una etiqueta sin QR es un problema; una app en blanco, dos.
+   ====================================================================== */
+let qrWarning = '';
+
+/* Capacidad real del QR en modo byte, versión 40, corrección Q. Hace falta
+   comprobarla A MANO: verificado en este navegador, QRious NO lanza error
+   al pasarse — TRUNCA EN SILENCIO. Con 1663, 1700, 2000 y 3000 caracteres
+   devuelve exactamente la misma imagen. O sea: una URL larga produciría un
+   QR que escanea a una dirección cortada, sin ningún aviso. Un QR impreso
+   es irreversible; eso no se puede dejar pasar. */
+const QR_CAPACITY_Q = 1663;
+/* Umbral de densidad para impresión: a ~25 mm de lado y con el piso
+   práctico de 0.5 mm por módulo, caben unos 50 módulos -> versión 8–9 ->
+   alrededor de 150 bytes en nivel Q. Más allá el QR sigue siendo válido
+   pero deja de leerse bien en papel. */
+const QR_PRINT_ADVISORY = 150;
+
+function qrDataUrl(url, safe){
+  qrWarning = '';
+  const size = 520;
+  const blank = (msg)=>{
+    qrWarning = msg;
+    const c = document.createElement('canvas');
+    c.width = c.height = size;
+    const x = c.getContext('2d');
+    x.fillStyle = safe ? '#ffffff' : D.fg;
+    x.fillRect(0,0,size,size);
+    x.strokeStyle = safe ? D.fg : '#ffffff';
+    x.lineWidth = 6; x.setLineDash([14,12]);
+    x.strokeRect(30,30,size-60,size-60);
+    return c.toDataURL('image/png');
+  };
+  if(typeof QRious === 'undefined') return blank(U.qrNoLib);
+  const bytes = new TextEncoder().encode(url).length;
+  if(bytes > QR_CAPACITY_Q)
+    return blank(U.qrTooLong(bytes, QR_CAPACITY_Q));
+  try{
+    const c = document.createElement('canvas');
+    new QRious({
+      element: c, value: url, size,
+      padding: Math.round(size*0.10),
+      level: 'Q',
+      background: safe ? '#ffffff' : D.fg,
+      foreground: safe ? D.fg : '#ffffff',
+    });
+    const data = c.toDataURL('image/png');
+    if(bytes > QR_PRINT_ADVISORY)
+      qrWarning = U.qrDense(bytes);
+    return data;
+  }catch(e){
+    return blank(U.qrFail(e.message));
+  }
+}
+
+/* ======================= TIPOGRAFÍA INCRUSTADA =========================
+   Inter: grotesca neutra de altura-x alta y dígitos inequívocos. Importa
+   porque lo que se lee acá es una CADENA DE CÓDIGO (AI:TR-ED-GE, niveles
+   1–4), no prosa: hace falta que 1/l/I y 0/O no se confundan al tamaño
+   chico del detalle. Se incrusta en el SVG para que el archivo exportado
+   no dependa de las fuentes de quien lo abra.
+   ====================================================================== */
+const FONT_URLS = [
+  {weight:500, url:'https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/files/inter-latin-500-normal.woff2'},
+  {weight:600, url:'https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/files/inter-latin-600-normal.woff2'},
+  {weight:700, url:'https://cdn.jsdelivr.net/npm/@fontsource/inter@5.0.16/files/inter-latin-700-normal.woff2'},
+];
+
+function b64(bytes){
+  let s=''; const CH=0x8000;
+  for(let i=0;i<bytes.length;i+=CH) s += String.fromCharCode.apply(null, bytes.subarray(i,i+CH));
+  return btoa(s);
+}
+
+async function loadFonts(){
+  const note = document.getElementById('fontNote');
+  try{
+    const res = await Promise.all(FONT_URLS.map(async fu=>{
+      const r = await fetch(fu.url, {mode:'cors'});
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return {weight:fu.weight, b64:b64(new Uint8Array(await r.arrayBuffer()))};
+    }));
+    fonts.faces = res;
+    const st = document.createElement('style');
+    st.textContent = fontFaceCssFrom(res);
+    document.head.appendChild(st);
+    await Promise.all(res.map(fc=>document.fonts.load(`${fc.weight} 40px 'Etiqueta Inter'`)));
+    await document.fonts.ready;
+    fonts.ready = true;
+    fontState = {kind:'ok', kb: Math.round(res.reduce((a,b)=>a+b.b64.length,0)/1024)};
+    note.textContent = U.fontOk(fontState.kb);
+  }catch(e){
+    fonts.ready = false;
+    fontState = {kind:'fail', kb:0};
+    note.textContent = U.fontFail;
+  }
+  render();
+}
+function fontFaceCssFrom(faces){
+  return faces.map(fc=>`@font-face{font-family:'Etiqueta Inter';font-style:normal;font-weight:${fc.weight};font-display:block;src:url(data:font/woff2;base64,${fc.b64}) format('woff2');}`).join('');
+}
+
+/* ============================ UI ======================================= */
+const $ = id=>document.getElementById(id);
+const taskListEl = $('taskList');
+
+function buildControls(){
+  taskListEl.innerHTML = '';
+  TASKS.forEach(t=>{
+    if(t.declarable === false){                       // actividad 9: informativa
+      const r = document.createElement('div');
+      r.className = 'task-row nodecl';
+      r.innerHTML = `<span class="lock">—</span><label style="cursor:default">`
+                  + `<span class="code" data-tip="${esc(U.tipStm(9))}" data-tip-sub="${esc(t.stmNote[lang])}">STM 9 <span class="tag">${U.tagNotDecl}</span></span>`
+                  + `<span class="desc">${t[lang]}</span></label>`;
+      taskListEl.appendChild(r);
+      return;
+    }
+    const on = (t.code in state);
+    const row = document.createElement('div');
+    row.className = 'task-row' + (on ? '' : ' off');
+
+    const cb = document.createElement('input');
+    cb.type='checkbox'; cb.id='cb_'+t.code; cb.checked=on;
+    cb.addEventListener('change', ()=>onToggle(t.code, cb.checked));
+
+    const label = document.createElement('label');
+    label.setAttribute('for', cb.id);
+    const stm = t.stm
+      ? `<span class="stm" data-tip="${U.tipStm(t.stm)}" data-tip-sub="${esc(t.stmNote ? t.stmNote[lang] : (t.scopeNote ? t.scopeNote[lang] : U.tipStmSub))}">STM ${t.stm}${t.stmNote?' *':(t.scopeNote?' †':'')}</span>`
+      : `<span class="stm" data-tip="${esc(U.tipNoStm)}" data-tip-sub="${esc(U.tipNoStmSub)}">—</span>`;
+    /* La guía va sobre las LETRAS. El chip STM lleva la suya y queda dentro
+       de este span: `closest('[data-tip]')` resuelve al más interno, así que
+       cada mitad muestra lo suyo sin estorbarse. */
+    label.innerHTML = `<span class="code" data-tip="${esc(t.code + ' · ' + fromLabel(t))}" data-tip-sub="${esc(U.tipCodeSub)}">${t.code} ${stm}</span>`
+                    + `<span class="desc">${t[lang]}</span>`;
+    row.append(cb, label);
+
+    if(!t.exclusive){
+      /* Eje 2 OPCIONAL (§4.2): «—» es el valor por defecto y significa
+         extensión no declarada. La versión anterior forzaba :1 al marcar,
+         o sea inventaba una declaración de «menos de un cuarto» que la
+         persona autora nunca hizo. */
+      const levels = document.createElement('div');
+      levels.className='levels';
+      [0,1,2,3,4].forEach(lv=>{
+        const b = document.createElement('button');
+        const E = EXTENTS[lv];
+        b.type='button';
+        b.textContent = lv===0 ? '—' : lv;
+        const head = lv===0 ? U.tipNotDecl : `${lv} · ${E[lang]}`;
+        const sub  = lv===0 ? U.tipNotDeclSub(t.code) : U.tipExtentSub(refOf(lv));
+        b.setAttribute('data-tip', head);
+        b.setAttribute('data-tip-sub', sub);
+        b.setAttribute('aria-label', `${head}. ${sub}`);
+        b.classList.toggle('active', (state[t.code]||0)===lv);
+        b.addEventListener('click', ()=>{
+          if(!(t.code in state)) return;
+          state[t.code]=lv; buildControls(); render();
+        });
+        levels.appendChild(b);
+      });
+      row.appendChild(levels);
+    }
+    taskListEl.appendChild(row);
+  });
+
+  // leyenda de la escala, siempre a la vista
+  const leg = document.createElement('div');
+  leg.className = 'legend';
+  leg.innerHTML = `<span class="lt">${U.legendTitle}</span>`
+    + [0,1,2,3,4].map(lv=>{
+        const E = EXTENTS[lv];
+        const head = lv===0 ? U.tipNotDecl : `${lv} · ${E[lang]}`;
+        const sub  = lv===0 ? U.tipNotDeclSub('ED') : U.tipExtentSub(refOf(lv));
+        const short = lv===0 ? U.legendNotDecl : E[lang].split(':')[0].toLowerCase();
+        return `<span class="li" tabindex="0" data-tip="${esc(head)}" data-tip-sub="${esc(sub)}">`
+             + `<b>${lv===0?'—':lv}</b>${short}</span>`;
+      }).join('');
+  taskListEl.appendChild(leg);
+}
+
+/* Filas de herramientas. Se reconstruyen al agregar/quitar y al cambiar de
+   idioma, pero NO en cada tecla: si no, el campo perdería el foco. */
+function buildTools(){
+  const box = $('toolList');
+  box.innerHTML = '';
+  const off = !!state.N;                                     // con «sin uso» no hay herramientas que declarar
+  toolRows.forEach((r,i)=>{
+    const row = document.createElement('div');
+    row.className = 'tool-row';
+    const mk = (key, max, ph) => {
+      const inp = document.createElement('input');
+      inp.type = 'text'; inp.maxLength = max; inp.value = r[key];
+      inp.placeholder = ph; inp.setAttribute('aria-label', ph); inp.disabled = off;
+      inp.addEventListener('input', ()=>{ r[key] = inp.value; render(); });
+      return inp;
+    };
+    const rm = document.createElement('button');
+    rm.type='button'; rm.className='rm'; rm.textContent='×'; rm.disabled = off;
+    rm.title = U.rmTool; rm.setAttribute('aria-label', U.rmTool);
+    rm.addEventListener('click', ()=>{ toolRows.splice(i,1); buildTools(); render(); });
+    row.append(mk('name', D.toolNameMax, U.phToolName), mk('model', D.toolModelMax, U.phToolModel), rm);
+    box.appendChild(row);
+  });
+  $('btnAddTool').disabled = off || toolRows.length >= D.toolsMax;
+  $('toolsBox').classList.toggle('off', off);
+}
+
+function onToggle(code, checked){
+  if(code==='N'){
+    state = checked ? {N:true} : {};
+  }else{
+    if(checked){ delete state.N; state[code]=0; }   // 0 = extensión no declarada
+    else delete state[code];
+  }
+  buildControls(); buildTools(); render();
+}
+
+let current = {svg:'', L:null, name:'etiqueta'};
+
+function currentOpts(){
+  return {
+    ax3    : 'none',                    // el motor lo sigue soportando; sin control en esta versión
+    qrSafe : $('optQrSafe').checked,
+    embed  : $('optEmbed').checked,
+    twoTone: false,
+  };
+}
+
+function render(){
+  const host = $('badgeHost');
+  host.classList.toggle('dark', $('optDark').checked);
+  lang = $('lang').value;
+  const s = badgeStrings();
+  if(!s){
+    host.innerHTML = `<div class="empty-hint">${U.hintEmpty}</div>`;
+    current = {svg:'', L:null, name:'etiqueta'};
+    $('btnPng').disabled = $('btnSvg').disabled = true;
+    $('meta').innerHTML = '';
+    renderProse();
+    return;
+  }
+  $('btnPng').disabled = $('btnSvg').disabled = false;
+
+  const opts = currentOpts();
+  const L = computeLayout(s, opts);
+  const url = ($('qrUrl').value || '').trim() || 'https://investiga.uned.ac.cr/cienciaabierta';
+  const svg = renderSVG(L, qrDataUrl(url, opts.qrSafe), opts);
+
+  host.innerHTML = svg;
+  current = {svg, L, name: s.canonical.replace(/[^A-Za-z0-9]+/g,'-').replace(/^-|-$/g,'')};
+
+  $('meta').innerHTML =
+      `<span>${U.metaCanon} <b>${esc(s.canonical)}</b></span>`
+    + `<span>${U.metaCanvas} <b>${Math.round(L.W)} × ${Math.round(L.H)} px</b></span>`
+    + (s.tools.length ? `<span>${U.metaTools} <b>${esc(s.tools.join('; '))}</b></span>` : '')
+    + (qrWarning ? `<span style="color:#a32020;flex-basis:100%">⚠ ${esc(qrWarning)}</span>` : '');
+  renderProse();
+}
+
+/* La prosa ya no elige idioma por su cuenta: lo toma de docLang, igual que
+   las descripciones de la etiqueta. Un solo control para las dos salidas,
+   porque van al mismo artículo — con selectores separados se podía generar
+   una etiqueta en portugués con una prosa en inglés para el mismo
+   manuscrito, que es justo la incoherencia que el §3 quiere evitar. */
+function renderProse(){
+  $('proseBox').innerHTML = badgeStrings() ? proseHTML(docLang) : '';
+  $('proseBox').lang = docLang;
+  $('proseLangTag').textContent = LANGNAME[docLang];
+}
+
+/* ========================= EXPORTACIÓN ================================= */
+function svgToDataUri(svg){
+  return 'data:image/svg+xml;base64,' + b64(new TextEncoder().encode(svg));
+}
+function download(href, name){
+  const a = document.createElement('a');
+  a.href = href; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
+$('btnSvg').addEventListener('click', ()=>{
+  if(!current.svg) return;
+  // Blob y no data: URI — con la tipografía incrustada el archivo pasa de
+  // 100 KB y algunos navegadores cortan las descargas data: largas.
+  const u = URL.createObjectURL(new Blob([current.svg], {type:'image/svg+xml;charset=utf-8'}));
+  download(u, `${current.name}.svg`);
+  setTimeout(()=>URL.revokeObjectURL(u), 4000);
+});
+
+function renderPng(svg, L, scale){
+  return new Promise((resolve,reject)=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const cv = document.createElement('canvas');
+      cv.width = Math.round(L.W*scale);
+      cv.height = Math.round(L.H*scale);
+      const ctx = cv.getContext('2d');
+      ctx.setTransform(scale,0,0,scale,0,0);
+      ctx.drawImage(img, 0, 0, L.W, L.H);
+      resolve(cv);
+    };
+    img.onerror = ()=>reject(new Error('el SVG no se pudo rasterizar'));
+    img.src = svgToDataUri(svg);
+  });
+}
+
+$('btnPng').addEventListener('click', async ()=>{
+  if(!current.svg) return;
+  const scale = parseInt($('pngScale').value,10);
+  try{
+    const cv = await renderPng(current.svg, current.L, scale);
+    cv.toBlob(b=>{
+      const u = URL.createObjectURL(b);
+      download(u, `${current.name}@${scale}x.png`);
+      setTimeout(()=>URL.revokeObjectURL(u), 4000);
+    });
+  }catch(e){ alert(U.pngFail(e.message)); }
+});
+
+/* ============================ PRUEBAS ==================================
+   ARNÉS DE DESARROLLO. No tiene interfaz: se ejecuta desde la consola con
+       window.__app.runSelfTest()
+   y escribe el resultado ahí. Se conserva dentro del archivo a propósito —
+   es HTML único, no hay dónde más ponerlo, y sin él cualquier cambio futuro
+   viajaría sin verificar. No se ejecuta solo, así que no afecta en nada a
+   quien abre la página.
+   ======================================================================
+   No son decorativas: montan el SVG en el DOM y miden CAJAS DE TINTA
+   reales (no cajas de fuente, que llevan aire arriba y abajo y darían
+   falsos positivos). Lo que se verifica es lo que se ve.
+   Además no basta con "no se tocan": se exige HOLGURA MÍNIMA, porque dos
+   elementos a 0.3 unidades no se traslapan pero se ven pegados.
+   ====================================================================== */
+const MIN_CLEARANCE = 3;   // unidades SVG de aire exigidas entre piezas
+
+/* Caja absoluta (en unidades del lienzo) de cualquier elemento. getBBox()
+   devuelve coordenadas del espacio local; hay que pasarlas por la CTM. */
+function absBox(el){
+  const b = el.getBBox();
+  const m = el.getCTM();
+  if(!m) return {x:b.x, y:b.y, width:b.width, height:b.height};
+  const pts = [[b.x,b.y],[b.x+b.width,b.y],[b.x,b.y+b.height],[b.x+b.width,b.y+b.height]]
+    .map(([x,y])=>({x:m.a*x+m.c*y+m.e, y:m.b*x+m.d*y+m.f}));
+  const xs = pts.map(p=>p.x), ys = pts.map(p=>p.y);
+  return {x:Math.min(...xs), y:Math.min(...ys), width:Math.max(...xs)-Math.min(...xs), height:Math.max(...ys)-Math.min(...ys)};
+}
+
+/* Caja de TINTA de un <text>: ancho por getBBox (avance real, con
+   letter-spacing), alto por canvas.actualBoundingBox* sobre su cadena. */
+function inkBox(el){
+  const b = absBox(el);
+  const size = parseFloat(el.getAttribute('font-size'));
+  const weight = el.getAttribute('font-weight') || 400;
+  const ink = inkOf(el.textContent, size, weight);
+  const baseline = parseFloat(el.getAttribute('y'));
+  return {x:b.x, width:b.width, y:baseline - ink.ascent, height:ink.h};
+}
+
+function unionBox(a,b){
+  const x=Math.min(a.x,b.x), y=Math.min(a.y,b.y);
+  return {x, y, width:Math.max(a.x+a.width, b.x+b.width)-x, height:Math.max(a.y+a.height, b.y+b.height)-y};
+}
+function inspect(svgString){
+  const holder = document.createElement('div');
+  Object.assign(holder.style,{position:'absolute',left:'-20000px',top:'0'});
+  holder.innerHTML = svgString;
+  document.body.appendChild(holder);
+  const svg = holder.querySelector('svg');
+  const out = {};
+  svg.querySelectorAll('[data-role]').forEach(el=>{
+    const role = el.getAttribute('data-role');
+    const box = (el.tagName.toLowerCase()==='text') ? inkBox(el) : absBox(el);
+    out[role] = out[role] ? unionBox(out[role], box) : box;   // p. ej. varios renglones de herramientas
+  });
+  holder.remove();
+  return out;
+}
+
+function gap(a,b){                       // separación mínima; <0 = traslape
+  const dx = Math.max(a.x - (b.x+b.width), b.x - (a.x+a.width));
+  const dy = Math.max(a.y - (b.y+b.height), b.y - (a.y+a.height));
+  return Math.max(dx, dy);
+}
+function inside(inner, outer, tol){
+  tol = tol||0.5;
+  return inner.x >= outer.x-tol && inner.y >= outer.y-tol
+      && inner.x+inner.width  <= outer.x+outer.width +tol
+      && inner.y+inner.height <= outer.y+outer.height+tol;
+}
+
+function runSelfTest(){
+  const log = [];
+  let pass=0, fail=0, tightest={g:1e9, what:''};
+  const ok = (c,msg)=>{ c?pass++:fail++; log.push(`<span class="${c?'p':'f'}">${c?'OK  ':'FAIL'}</span> ${msg}`); };
+
+  const saved = JSON.parse(JSON.stringify(state));
+  const savedTools = JSON.parse(JSON.stringify(toolRows));
+  toolRows = [];
+
+  // universo de casos
+  const cases = [{N:true}];
+  ORDER.forEach(c=>cases.push({[c]:0}));                           // cada código, sin extensión
+  ORDER.forEach(c=>cases.push({[c]:4}));                           // cada código, extensión máxima
+  cases.push({ED:1, TR:3, RF:2});                                  // el ejemplo del §4.4
+  cases.push({ED:0, TR:0, RF:0});                                  // varios sin extensión
+  cases.push({ED:2, GE:0, TR:4});                                  // mezcla declarada / no declarada
+  cases.push(Object.fromEntries(ORDER.map((c,i)=>[c,i%5])));       // los 8, mezclado
+  cases.push(Object.fromEntries(ORDER.map(c=>[c,4])));             // los 8, todos en 4
+  cases.push(Object.fromEntries(ORDER.map(c=>[c,0])));             // los 8, ninguno declarado
+  const modes = ['none','band','strip'];
+  const qrModes = [true,false];
+
+  // piezas que deben respetar holgura entre sí
+  const PIECES = ['icon','details','tools','title','rule','decl','qr','moreinfo'];
+  let heights = new Set();
+
+  cases.forEach(cs=>{
+    state = cs;
+    const s = badgeStrings();
+    modes.forEach(mode=>{
+      qrModes.forEach(qrSafe=>{
+        const opts = {ax3:mode, qrSafe, embed:false};
+        const L = computeLayout(s, opts);
+        const svg = renderSVG(L, qrDataUrl('https://investiga.uned.ac.cr/cienciaabierta', qrSafe), opts);
+        const tag = `${s.title} [${mode}/${qrSafe?'qr-std':'qr-inv'}]`;
+        const R = inspect(svg);
+        if(mode==='none' && qrSafe) heights.add(Math.round(L.H));
+
+        // 1. holgura mínima entre todas las piezas
+        let worst = {g:1e9, what:''};
+        for(let i=0;i<PIECES.length;i++)
+          for(let j=i+1;j<PIECES.length;j++){
+            const A=R[PIECES[i]], B=R[PIECES[j]];
+            if(!A||!B) continue;
+            const d = gap(A,B);
+            if(d < worst.g) worst = {g:d, what:`${PIECES[i]}↔${PIECES[j]}`};
+          }
+        if(worst.g < tightest.g) tightest = {g:worst.g, what:`${tag} ${worst.what}`};
+        ok(worst.g >= MIN_CLEARANCE, `${tag} — holgura mínima ${worst.g.toFixed(1)}u en ${worst.what} (exigido ${MIN_CLEARANCE})`);
+
+        // 2. lo de la cápsula, dentro de la cápsula
+        const esc2 = ['icon','details','tools','title','rule','decl'].filter(k=>R[k] && !inside(R[k], R.card));
+        ok(esc2.length===0, `${tag} — contenido dentro de la cápsula${esc2.length?': se sale '+esc2.join(', '):''}`);
+
+        // 3. el bloque QR, fuera de la cápsula y dentro del lienzo
+        ok(R.qr.x >= R.card.x + R.card.width - 0.5, `${tag} — QR fuera de la cápsula`);
+        ok(inside(R.qr, R.outer) && inside(R.moreinfo, R.outer), `${tag} — bloque QR dentro del lienzo`);
+        ok(R.moreinfo.x >= L.qrRegionX-0.5 && R.moreinfo.x+R.moreinfo.width <= L.qrRegionX+L.qrRegionW+0.5,
+           `${tag} — «More info» dentro de su bloque`);
+
+        // 4. nada se sale del lienzo
+        const fuera = Object.keys(R).filter(k=>k!=='outer' && !inside(R[k], R.outer));
+        ok(fuera.length===0, `${tag} — nada se sale del lienzo${fuera.length?': '+fuera.join(', '):''}`);
+
+        // 5. la zona del Eje 3 no pisa ninguna pieza
+        if(mode!=='none'){
+          const choques = PIECES.filter(k=>R[k] && gap(R[k], R.ax3) < 0);
+          ok(choques.length===0, `${tag} — zona Eje 3 libre${choques.length?': choca con '+choques.join(', '):''}`);
+        }
+
+        // 6. XML bien formado
+        const doc = new DOMParser().parseFromString(svg,'image/svg+xml');
+        ok(!doc.querySelector('parsererror'), `${tag} — SVG bien formado`);
+      });
+    });
+  });
+
+  /* 6bis. HERRAMIENTAS. Texto libre del usuario que entra en la etiqueta:
+     puede ser largo, múltiple o traer caracteres que rompen el XML. */
+  const toolSets = [
+    {nom:'una', rows:[{name:'ChatGPT', model:'GPT-5'}]},
+    {nom:'tres', rows:[{name:'ChatGPT', model:'GPT-5'},{name:'DeepL Pro', model:''},{name:'Grammarly', model:''}]},
+    {nom:'seis al máximo', rows:Array.from({length:6},(_,i)=>({
+        name:('Herramienta'+i+'xxxxxxxxxxxxxxxxxxxx').slice(0,30),
+        model:('Modelo-'+i+'-yyyyyyyyyyyyyyyyyyyyyy').slice(0,30)}))},
+    {nom:'caracteres peligrosos', rows:[{name:'A<b>&"c\'d', model:'x"y<z'}]},
+  ];
+  const toolCases = [{ED:0}, {ED:1,TR:3,RF:2}, Object.fromEntries(ORDER.map(c=>[c,4]))];
+  toolSets.forEach(ts=>{
+    toolRows = ts.rows;
+    toolCases.forEach(cs=>{
+      state = cs;
+      ['none','band'].forEach(mode=>{
+        const opts = {ax3:mode, qrSafe:true, embed:false};
+        const s2 = badgeStrings();
+        const L = computeLayout(s2, opts);
+        const svg = renderSVG(L, qrDataUrl('https://investiga.uned.ac.cr/cienciaabierta', true), opts);
+        const tag = `herramientas «${ts.nom}» · ${s2.title} [${mode}]`;
+        const doc = new DOMParser().parseFromString(svg,'image/svg+xml');
+        ok(!doc.querySelector('parsererror'), `${tag} — SVG bien formado`);
+        const R = inspect(svg);
+        let worst = {g:1e9, what:''};
+        for(let i=0;i<PIECES.length;i++) for(let j=i+1;j<PIECES.length;j++){
+          const A=R[PIECES[i]], B=R[PIECES[j]]; if(!A||!B) continue;
+          const d=gap(A,B); if(d<worst.g) worst={g:d, what:`${PIECES[i]}↔${PIECES[j]}`};
+        }
+        ok(worst.g >= MIN_CLEARANCE, `${tag} — holgura ${worst.g.toFixed(1)}u en ${worst.what}`);
+        ok(R.tools && inside(R.tools, R.card), `${tag} — las herramientas caben dentro de la cápsula`);
+        ok(L.W <= D.maxCardW + 400, `${tag} — el ancho no se dispara (${Math.round(L.W)} u)`);
+      });
+    });
+  });
+  toolRows = toolSets[2].rows; state = {ED:0};
+  ok(computeLayout(badgeStrings(),{}).toolLines.length >= 2, 'una lista larga se reparte en varios renglones');
+  /* Lo que se equilibra es el ANCHO, no la cantidad de elementos: en texto
+     alineado a la derecha, una huérfana es un renglón mucho más corto que el
+     resto. El reparto codicioso daba aquí 2-3-1 con «Perplexity» sola
+     (≈¼ del renglón más largo). */
+  toolRows = [['ChatGPT','GPT-5'],['Claude','Opus 5'],['DeepL','Pro'],['Grammarly','Premium'],['Elicit',''],['Perplexity','']]
+             .map(([name,model])=>({name, model})); state = {ED:0,TR:0};
+  { const tl = computeLayout(badgeStrings(),{}).toolLines;
+    const w = tl.map(l=>l.w);
+    ok(tl.length>=2 && Math.min(...w) >= 0.5*Math.max(...w),
+       `el reparto no deja huérfanas: renglón más corto = ${Math.round(100*Math.min(...w)/Math.max(...w))}% del más largo`); }
+  toolRows = toolSets[3].rows; state = {ED:0};
+  { const svg = renderSVG(computeLayout(badgeStrings(),{}), 'data:,', {embed:false});
+    ok(svg.includes('A&lt;b&gt;&amp;&quot;c&#39;d'), 'el texto libre se escapa en el SVG');
+    ok(!/aria-label="[^"]*"c/.test(svg), 'y no rompe el atributo aria-label'); }
+  toolRows = [{name:'ChatGPT', model:''},{name:'DeepL', model:'Pro'}]; state = {ED:0};
+  ok(badgeStrings().tools.join('|')==='ChatGPT|DeepL (Pro)', 'formato: «herramienta (modelo)», modelo opcional');
+  ok(computeLayout(badgeStrings(),{}).toolLines[0].t.startsWith('Tools: '), 'la lista arranca con «Tools: »');
+  toolRows = [{name:'   ', model:'GPT-5'},{name:'', model:''}];
+  ok(badgeStrings().tools.length===0, 'filas sin nombre no se imprimen');
+  toolRows = [{name:'ChatGPT', model:'GPT-5'}]; state = {N:true};
+  ok(badgeStrings().tools.length===0, 'con «sin uso» (N) no se imprimen herramientas');
+  toolRows = [];
+
+  // 7bis. alto constante: las etiquetas se alinean entre sí en una página
+  ok(heights.size===1, `alto uniforme en todo el vocabulario: ${[...heights].join(', ')} u`);
+
+  // 8. reglas de la notación (preprint §4.1, §4.4, §4.5)
+  const P = BADGE.prefix;                       // 'AI: '
+  state = {N:true};
+  ok(badgeStrings().canonical==='AI: N', 'N produce la cadena «AI: N»');
+  ok(badgeStrings().details===T.noUse, 'N no muestra extensión: es una afirmación de no uso, no un nivel');
+  state = {}; onToggleSilently('TG',true); onToggleSilently('N',true);
+  ok(JSON.stringify(state)==='{"N":true}', 'N es excluyente: borra las demás tareas (§4.4)');
+  state = {}; onToggleSilently('N',true); onToggleSilently('TR',true);
+  ok(!state.N && state.TR===0, 'marcar una tarea desactiva N y NO inventa extensión (arranca en 0)');
+
+  // FORMA DE LA ETIQUETA: AI una sola vez, «: », códigos unidos por «+»
+  state = {RF:2, ED:1, TR:3};
+  ok(badgeStrings().codes.join(',')==='ED,TR,RF', 'los códigos se ordenan por actividad STM, no por clic');
+  ok(badgeStrings().title==='AI: ED+TR+RF', 'título: AI una sola vez y códigos separados por «+»');
+  ok(badgeStrings().canonical==='AI: ED:1+TR:3+RF:2', 'cadena canónica con las extensiones pegadas a su código');
+  const cs = badgeStrings().canonical;
+  ok((cs.match(/AI/g)||[]).length===1, '«AI» aparece exactamente una vez en toda la cadena');
+  ok(cs.startsWith('AI: '), 'después de AI van siempre dos puntos y un espacio');
+  ok(!cs.includes('-'), 'no queda ningún guion separando códigos');
+  ok(!/\+\s|\s\+/.test(cs), 'el «+» va pegado, sin espacios alrededor');
+  const stmSeq = badgeStrings().codes.map(c=>TASKS.find(t=>t.code===c).stm);
+  ok(stmSeq.every((v,i,arr)=>i===0||arr[i-1]<v), 'la secuencia de actividades STM es estrictamente ascendente');
+
+  // la extensión es opcional y se OMITE cuando no se declara (§4.2)
+  state = {ED:0, TR:0};
+  ok(badgeStrings().canonical==='AI: ED+TR', 'sin extensión la cadena omite los dos puntos del nivel');
+  ok(badgeStrings().details===T.noExtent, 'la ausencia de extensión se hace visible, no se disimula');
+  state = {ED:2, TR:0};
+  ok(badgeStrings().canonical==='AI: ED:2+TR', 'mezcla: solo lleva extensión la tarea que la declaró');
+  state = Object.fromEntries(ORDER.map(c=>[c,0]));
+  ok(badgeStrings().title==='AI: ED+TG+TR+DA+IM+VI+CO+RF', 'las ocho actividades en una sola cadena');
+
+  // vocabulario completo: las ocho actividades declarables de STM
+  ok(ORDER.length===8, 'el vocabulario tiene las ocho actividades declarables (la 9 no lo es)');
+  ok(ORDER.join(',')==='ED,TG,TR,DA,IM,VI,CO,RF', 'los códigos están en orden STM 1–8');
+  ok(TASKS.filter(t=>t.stm).every((t,i)=>t.stm===i+1), 'las nueve actividades STM están, en orden y sin huecos');
+  ok(TASKS.filter(t=>t.declarable===false).length===1, 'la actividad 9 figura pero como no declarable');
+  ok(TASKS.find(t=>t.stm===9).code===null, 'la actividad 9 no tiene código de dos letras');
+  ok(!ORDER.includes(null) && ORDER.every(c=>/^[A-Z]{2}$/.test(c)), 'todos los códigos declarables son dos versalitas');
+  ok(TASKS.every(t=>t.es && t.en), 'cada actividad tiene descripción en ambos idiomas');
+  ok(TASKS.find(t=>t.stm===2).code==='TG', 'la actividad 2 usa el código TG (no GE)');
+  ok(TASKS.find(t=>t.stm===2).es==='Escritura o redacción de contenido del manuscrito',
+     'TG reproduce literalmente la actividad 2 de la tabla del §4.1');
+  ok(TASKS.find(t=>t.stm===1).en.includes('or formatting'),
+     'el inglés de la actividad 1 conserva «or formatting», que la tabla en español recorta');
+  ok(TASKS.find(t=>t.stm===5).en.endsWith('for illustrative purposes only'),
+     'el inglés de la actividad 5 conserva el «only» final');
+  ok(TASKS.find(t=>t.stm===7).en.includes('submitted manuscript'),
+     'el inglés de la actividad 7 dice «submitted manuscript», que la tabla en español recorta');
+  ok(TASKS.find(t=>t.stm===9).en.includes('from non-machine sources'),
+     'el inglés de la actividad 9 conserva «from non-machine sources», que es el matiz que la define');
+  ok(TASKS.filter(t=>t.stmNote).map(t=>t.stm).join(',')==='1,9',
+     'las notas al pie de STM están donde corresponden: umbral en la 1, prohibición en la 9');
+  ok(TASKS.find(t=>t.stm===7).es==='Refinamiento o formato del código reportado en el manuscrito enviado',
+     'CO es código (STM 7), no contenido — se descarta la versión de la infografía');
+
+  // la etiqueta es invariable: siempre inglés, pase lo que pase con el panel
+  const prevLang = lang;
+  state={TR:3};
+  lang='en'; const inEn = badgeStrings().canonical;
+  lang='es'; const inEs = badgeStrings().canonical;
+  lang=prevLang;
+  ok(inEn==='AI: TR:3' && inEs==='AI: TR:3', 'la etiqueta no cambia con el idioma del panel: siempre AI');
+  /* Invariancia del CÓDIGO frente al idioma de la etiqueta: es la propiedad
+     de la que depende que la etiqueta se pueda comparar y agregar. */
+  { const prevDoc = docLang;
+    const canon = {}, descr = {};
+    LANG_ALL.forEach(l=>{ docLang=l; applyDocLang();
+      canon[l] = badgeStrings().canonical; descr[l] = T.declaration; });
+    docLang = prevDoc; applyDocLang();
+    ok(new Set(Object.values(canon)).size===1 && canon.en==='AI: TR:3',
+       `el código no cambia con el idioma de la etiqueta: misma cadena en ${LANG_ALL.join(', ')}`);
+    ok(new Set(Object.values(descr)).size===LANG_ALL.length,
+       'las descripciones sí cambian con el idioma de la etiqueta: un texto distinto por idioma');
+    ok(descr.en==='Complements the prose declaration in the text',
+       'la frase de complementariedad en inglés es la del sistema');
+    LANG_ALL.filter(l=>l!=='en').forEach(l=>{
+      ok(!/^AI: /.test(descr[l]) && BADGE_L[l].noUse===BADGE_L[l].noUse.toUpperCase(),
+         `${l}: la descripción no invade el código y el aviso de no uso va en versalitas`);
+    });
+  }
+
+  /* Altura constante ENTRE IDIOMAS. Es el motivo por el que la referencia
+     métrica (INK) no puede ser el texto real: una revista que publica en dos
+     lenguas pondría dos etiquetas descuadradas una junto a otra. Se prueba
+     con casos que ejercitan las tres franjas traducibles: la frase de cierre,
+     el aviso de extensión no declarada y el de no uso. */
+  { const prevDoc = docLang, prevSt = JSON.parse(JSON.stringify(state));
+    const casos = [{N:true}, {ED:1,TR:3,CO:2}, {ED:0,TR:0}, {TG:4}];
+    let choques = [];
+    casos.forEach(cs=>{
+      const alturas = {}, codigos = {};
+      LANG_ALL.forEach(l=>{
+        docLang=l; applyDocLang(); state=JSON.parse(JSON.stringify(cs));
+        const st = badgeStrings(), L = computeLayout(st);
+        alturas[l] = +L.H.toFixed(3); codigos[l] = st.title+'|'+st.canonical;
+      });
+      const nom = Object.keys(cs).join('+');
+      if(new Set(Object.values(alturas)).size!==1) choques.push(`alto ${nom}: ${JSON.stringify(alturas)}`);
+      if(new Set(Object.values(codigos)).size!==1) choques.push(`código ${nom}: ${JSON.stringify(codigos)}`);
+    });
+    docLang=prevDoc; applyDocLang(); state=prevSt;
+    ok(choques.length===0,
+       `la etiqueta mide igual y codifica igual en es/en/pt${choques.length?': '+choques.join(' · '):''}`);
+  }
+
+  state = {};
+  ok(badgeStrings()===null, 'sin selección no se genera etiqueta');
+
+  // 9. el título encoge en vez de desbordar
+  state = Object.fromEntries(ORDER.map(c=>[c,4]));
+  const Lmax = computeLayout(badgeStrings(), {ax3:'none'});
+  ok(Lmax.cardW <= D.maxCardW + 0.5, `la cápsula nunca pasa de ${D.maxCardW} u (máx real ${Math.round(Lmax.cardW)} u)`);
+
+  /* 9bis. COBERTURA DEL IDIOMA. Esta batería existe porque se coló un fallo
+     real: el selector cambiaba las descripciones de las tareas y dejaba en
+     español fijo los tooltips, los rótulos y los avisos. Un texto sin
+     traducir no rompe nada, así que ninguna prueba lo notaba. Ahora sí. */
+  const IDIOMAS = LANG_ALL;
+  const usadas = [...document.querySelectorAll('[data-i18n]')].map(e=>e.getAttribute('data-i18n'));
+  const huerfanas = usadas.filter(k=>IDIOMAS.some(l=>UI[l][k]===undefined));
+  ok(huerfanas.length===0, `toda clave data-i18n del DOM existe en todos los idiomas${huerfanas.length?': faltan '+huerfanas.join(', '):''}`);
+  { const juegos = IDIOMAS.map(l=>Object.keys(UI[l]).sort().join('|'));
+    ok(new Set(juegos).size===1, 'todos los diccionarios tienen exactamente las mismas claves'); }
+
+  ok(TASKS.every(t=>IDIOMAS.every(l=>t[l])), 'cada actividad tiene descripción en todos los idiomas');
+  /* De dónde salen las letras. No se traduce: el código deriva del inglés, y
+     decirlo en inglés es parte del argumento de que es invariante. */
+  { const sinOrigen = TASKS.filter(t=>t.code && !t.from).map(t=>t.code);
+    ok(sinOrigen.length===0, `cada código declara de qué término inglés viene${sinOrigen.length?': faltan '+sinOrigen.join(', '):''}`);
+    const malos = TASKS.filter(t=>t.code && t.from)
+      .filter(t=>t.from.replace(/[^A-Za-z]/g,'').toUpperCase().indexOf(t.code[0])!==0);
+    ok(malos.length===0, `la primera letra del código coincide con su término de origen${malos.length?': '+malos.map(t=>t.code+'/'+t.from).join(', '):''}`);
+    const tabla = document.createElement('div'); tabla.innerHTML = codesTable();
+    ok([...tabla.querySelectorAll('tbody tr')].every(tr=>tr.children.length===4),
+       'la tabla del manual lleva la columna de origen');
+    ok(tabla.textContent.includes('Text Generation') && tabla.textContent.includes('References'),
+       'el manual muestra de dónde vienen TG y RF');
+    const sinGlosa = TASKS.filter(t=>t.code && (!t.gloss || IDIOMAS.filter(l=>l!=='en').some(l=>!t.gloss[l]))).map(t=>t.code);
+    ok(sinGlosa.length===0, `cada código tiene glosa en las lenguas que no son el inglés${sinGlosa.length?': faltan '+sinGlosa.join(', '):''}`);
+    const prevL2 = lang;
+    lang='en'; U=UI.en; const enTxt = fromLabel(TASKS.find(t=>t.code==='TG'));
+    lang='es'; U=UI.es; const esTxt = fromLabel(TASKS.find(t=>t.code==='TG'));
+    lang=prevL2; U=UI[prevL2];
+    ok(enTxt==='Text Generation' && esTxt==='Text Generation (generación de texto)',
+       'en inglés se muestra el término solo; en las demás lenguas, con su glosa'); }
+  ok(Object.values(EXTENTS).every(e=>IDIOMAS.every(l=>e[l] && e[REFKEY[l]]!==undefined)),
+     'cada grado de extensión tiene etiqueta y referencia en todos los idiomas');
+  ok(TASKS.filter(t=>t.stmNote).every(t=>IDIOMAS.every(l=>t.stmNote[l])),
+     'las notas al pie de STM están en todos los idiomas');
+  ok(IDIOMAS.every(l=>PROSE[l] && Object.keys(PROSE.en).every(k=>PROSE[l][k]!==undefined)),
+     'la prosa tiene todas sus piezas en todos los idiomas');
+  ok(IDIOMAS.every(l=>BADGE_L[l] && Object.keys(BADGE_L.en).every(k=>BADGE_L[l][k])),
+     'las descripciones de la etiqueta existen en todos los idiomas');
+
+  /* El portugués está traducido y probado pero RETIRADO de la interfaz hasta
+     que alguien nativo revise las descripciones de STM (aplazado 2026-09-23).
+     Esto fija las dos mitades de la decisión, para que no se reactive por
+     descuido ni se quede a medias. */
+  ok(LANGS.every(l=>LANG_ALL.includes(l)), 'todo idioma ofrecido existe en los diccionarios');
+  ['lang','docLang'].forEach(id=>{
+    const ofrecidos = [...$(id).options].map(o=>o.value);
+    ok(ofrecidos.join(',')===LANGS.join(','), `el selector #${id} ofrece exactamente LANGS (${LANGS.join(', ')})`);
+  });
+  ok(LANGS.includes(lang) && LANGS.includes(docLang), 'ningún eje quedó en un idioma que no se ofrece');
+
+  /* Prueba de fuego: en inglés, ningún texto visible debe llevar marcas del
+     español. Se buscan palabras que solo existen en la versión castellana. */
+  const marcasEs = ['Extensión','declarada','Actividad','Idioma','Descargar','tarea','Herramienta','Quitar','Modelo o versión',
+                    'no umbral','identificador canónico','Lienzo','Cadena canónica'];
+  const prevLang2 = $('lang').value;
+  /* Fija el idioma sin pasar por el <select>: así el portugués se sigue
+     probando entero aunque la interfaz no lo ofrezca. */
+  const irA = l => { lang=l; if([...$('lang').options].some(o=>o.value===l)) $('lang').value=l;
+                     applyLang(); buildControls(); render(); };
+  irA('en');
+  const textos = [];
+  document.querySelectorAll('.controls, header, .actions, .meta, #foot, #manualBody, #aboutBody').forEach(n=>textos.push(n.textContent));
+  document.querySelectorAll('#proseCard [data-i18n]').forEach(n=>textos.push(n.textContent));   // el marco del panel; el texto de la prosa tiene su propio idioma
+  document.querySelectorAll('[data-tip]').forEach(n=>{
+    textos.push(n.getAttribute('data-tip')||'', n.getAttribute('data-tip-sub')||'');
+  });
+  buildTools();
+  document.querySelectorAll('#toolList input, #toolList button').forEach(n=>{
+    textos.push(n.getAttribute('placeholder')||'', n.getAttribute('aria-label')||'');
+  });
+  const sucias = marcasEs.filter(m => textos.join(' ').includes(m));
+  ok(sucias.length===0, `en inglés no queda texto en español${sucias.length?': '+sucias.join(', '):''}`);
+
+  const tipsEn = [...document.querySelectorAll('.levels button')].map(b=>b.getAttribute('data-tip')+' '+b.getAttribute('data-tip-sub'));
+  ok(tipsEn.some(t=>t.includes('Extent not declared')) && tipsEn.some(t=>t.includes('less than a quarter')),
+     'las guías de los números se traducen, incluidas las proporciones');
+  ok(document.querySelector('.legend .lt').textContent==='Axis 2 · extent', 'la leyenda de la escala se traduce');
+  /* Hace falta un estado con ALGUNA tarea sin marcar: al llegar aquí venían
+     todas seleccionadas y no había ninguna fila apagada que inspeccionar. */
+  { state={ED:1}; buildControls();
+    const apagada=document.querySelector('.task-row.off .levels button');
+    ok(!!apagada, 'hay una fila sin marcar sobre la que comprobar la guía');
+    ok(apagada && getComputedStyle(apagada.parentElement).pointerEvents!=='none',
+       'la guía de los grados se puede consultar aunque la tarea no esté marcada'); }
+
+  /* Ida y vuelta por los TRES idiomas. Antes esto asumía que el idioma base
+     era el español; ahora el arranque es en inglés, así que cada destino se
+     fija de forma explícita en vez de confiar en el estado previo. */
+  irA('es');
+  ok(document.querySelector('.legend .lt').textContent==='Eje 2 · extensión', 'vuelve al español al cambiar de vuelta');
+  irA('pt');
+  ok(document.querySelector('.legend .lt').textContent==='Eixo 2 · extensão', 'y cambia a portugués');
+  { const marcasEn = ['Download','Task','Remove','Interface language','Canonical string'];
+    const t2 = [];
+    document.querySelectorAll('.controls, header, .actions, .meta, #foot, #manualBody, #aboutBody').forEach(n=>t2.push(n.textContent));
+    const sucias2 = marcasEn.filter(m => t2.join(' ').includes(m));
+    ok(sucias2.length===0, `en portugués no queda texto en inglés${sucias2.length?': '+sucias2.join(', '):''}`); }
+  irA(prevLang2);
+
+  /* 9bis-b. COHERENCIA APP ↔ PREPRINT. La tabla de abajo se extrajo del
+     §4.1 de «preprint-etiquetas-ia (5).docx» con los cambios aceptados. Si
+     alguien toca una descripción en un lado y no en el otro, esto falla.
+     DIVERGENCIAS_41 lista lo que la app dice DISTINTO a propósito: no se
+     actualiza la tabla para hacer callar la prueba, se declara la diferencia
+     y se exige el texto nuevo exacto. Cada entrada acá es deuda pendiente
+     con el preprint. */
+  { const PREPRINT_41 = {"N": {"code": "N", "desc": "Sin uso por encima del umbral declarable"}, "1": {"code": "ED", "desc": "Refinamiento, corrección, edición o formato del manuscrito para mejorar la claridad del lenguaje"}, "2": {"code": "TG", "desc": "Escritura o redacción de contenido del manuscrito"}, "3": {"code": "TR", "desc": "Traducción del texto del manuscrito con fines de publicación"}, "4": {"code": "DA", "desc": "Refinamiento o formato de los datos reportados en el manuscrito"}, "5": {"code": "IM", "desc": "Generación, refinamiento, corrección, edición o formato de imágenes, diagramas u otras figuras únicamente con fines ilustrativos"}, "6": {"code": "VI", "desc": "Generación, refinamiento, corrección, edición o formato de visualizaciones de datos o resultados de investigación"}, "7": {"code": "CO", "desc": "Refinamiento o formato del código reportado en el manuscrito enviado"}, "8": {"code": "RF", "desc": "Asistencia en la recopilación de referencias"}, "9": {"code": "—", "desc": "No declarable. Presentación de cualquier tipo de contenido generado por herramientas de IA como si fuera dato o resultado de investigación original procedente de fuentes no maquinales"}};
+    /* actividad -> {app, porque}. Pendiente de replicar en el preprint. */
+    const DIVERGENCIAS_41 = {
+      "8": {app:'Ayuda en la recopilación y búsqueda de referencias',
+            porque:'«Ayuda» en vez del calco «Asistencia», y «búsqueda» porque «gathering» abarca localizar las fuentes'},
+    };
+    const difs = [], malas = [];
+    Object.entries(PREPRINT_41).forEach(([k,v])=>{
+      const t = k==='N' ? TASKS.find(x=>x.code==='N') : TASKS.find(x=>String(x.stm)===k);
+      if(!t || (t.code||'—')!==v.code){ difs.push(k); return; }
+      const esperado = DIVERGENCIAS_41[k] ? DIVERGENCIAS_41[k].app : v.desc;
+      if(t.es!==esperado) (DIVERGENCIAS_41[k] ? malas : difs).push(k);
+    });
+    ok(difs.length===0, `las filas de la app coinciden con la tabla del §4.1 del preprint${difs.length?': difieren '+difs.join(', '):''}`);
+    ok(malas.length===0, `las divergencias declaradas dicen exactamente lo previsto${malas.length?': '+malas.join(', '):''}`);
+    ok(Object.keys(DIVERGENCIAS_41).length===1,
+       `hay ${Object.keys(DIVERGENCIAS_41).length} divergencia(s) declarada(s) con el §4.1, pendiente(s) de replicar en el preprint`);
+    ok(TASKS.filter(t=>t.scopeNote).every(t=>LANG_ALL.every(l=>t.scopeNote[l]) && t.scopeNote.es!==t.es),
+       'las notas de alcance existen en todos los idiomas y no se confunden con la descripción'); }
+
+  ok(TASKS.filter(t=>t.stmNote).every(t=>/^Las guías STM 2023/.test(t.stmNote.es) && /^The 2023 STM Guidelines/.test(t.stmNote.en) && t.stmNote.es!==t.es),
+     'las notas al pie de STM siguen siendo notas y no se confunden con las descripciones');
+
+  /* 9quater. COHERENCIA ETIQUETA ↔ PROSA. La prosa no se compara «a ojo»:
+     para cada combinación se reconstruye, desde la prosa, lo que dice la
+     etiqueta —qué tareas, en qué orden, con qué extensión, qué herramientas—
+     y se exige que coincida. 300 combinaciones pseudoaleatorias con semilla
+     fija (reproducibles) × 2 idiomas, más los casos borde. */
+  { let semilla = 20260921;
+    const rnd = () => (semilla = (semilla*1103515245 + 12345) % 2147483648) / 2147483648;
+    const nombres = [['ChatGPT','GPT-5'],['Claude','Opus 5'],['DeepL','Pro'],['Grammarly',''],['Illustrator','2026'],['Elicit','']];
+    let incoherencias = [], casos = 0;
+    for(let k=0; k<300; k++){
+      state = {};
+      ORDER.forEach(c=>{ if(rnd()<0.35) state[c] = Math.floor(rnd()*5); });
+      if(!Object.keys(state).length) state = {N:true};
+      toolRows = nombres.filter(()=>rnd()<0.3).map(([name,model])=>({name,model}));
+      const s2 = badgeStrings();
+      ['es','en'].forEach(pl=>{
+        casos++;
+        const txt = proseText(pl), P = PROSE[pl];
+        const err = m => incoherencias.push(`${s2.canonical} [${pl}]: ${m}`);
+        // 1. la prosa cita la cadena exacta de la etiqueta
+        if(!txt.includes(P.label + s2.canonical + '.')) err('no cita la cadena de la etiqueta');
+        if(state.N){
+          if(!txt.startsWith(P.none)) err('N sin la declaración negativa');
+          if(txt.includes(P.tools) || txt.includes('[')) err('N con herramientas o marcadores');
+          return;
+        }
+        // 2. mismas tareas, en el mismo orden (el de la etiqueta = orden STM)
+        const pos = s2.codes.map(c=> txt.indexOf(lcFirst(TASKS.find(t=>t.code===c)[pl])));
+        if(pos.some(x=>x<0)) err('falta la descripción de alguna tarea de la etiqueta');
+        if(pos.some((x,i)=>i && x<=pos[i-1])) err('tareas en otro orden que la etiqueta');
+        const otras = ORDER.filter(c=>!s2.codes.includes(c))
+                           .filter(c=> txt.includes(lcFirst(TASKS.find(t=>t.code===c)[pl])));
+        if(otras.length) err('menciona tareas que la etiqueta no declara: '+otras.join(','));
+        // 3. una entrada enumerada por tarea
+        const enumeradas = (txt.match(/\([a-h]\) /g)||[]).length;
+        if(s2.codes.length>1 && enumeradas!==s2.codes.length) err(`enumera ${enumeradas} tareas y la etiqueta tiene ${s2.codes.length}`);
+        // 4. extensión: exactamente la declarada, ni una más
+        s2.codes.forEach((c,i)=>{
+          const lv = state[c]||0;
+          const desde = pos[i], hasta = i+1<pos.length ? pos[i+1] : txt.length;
+          const tramo = txt.slice(desde, hasta);
+          const esperado = lv ? P.extent(EXTENTS[lv][pl].split(':')[0].toLowerCase()) : null;
+          const hay = [1,2,3,4].filter(n=> tramo.includes('('+P.extent(EXTENTS[n][pl].split(':')[0].toLowerCase())+')'));
+          if(lv && (hay.length!==1 || !tramo.includes('('+esperado+')'))) err(`${c}: la extensión no coincide con :${lv}`);
+          if(!lv && hay.length) err(`${c}: la prosa inventa una extensión que no se declaró`);
+        });
+        // 5. herramientas: las mismas que la etiqueta, o el marcador si no hay
+        if(s2.tools.length){
+          if(!txt.includes(P.tools + joinList(s2.tools, pl) + '.')) err('las herramientas no coinciden con las de la etiqueta');
+          if(txt.includes(P.toolPh)) err('pide herramienta aunque ya se indicó');
+        } else if(!txt.includes(P.toolPh)) err('sin herramientas y sin el marcador que las pide');
+        // 6. verificación humana, siempre
+        if(!txt.includes(P.verify)) err('falta la afirmación de verificación humana');
+      });
+    }
+    ok(incoherencias.length===0, `etiqueta y prosa coherentes en ${casos} casos (300 combinaciones × 2 idiomas)${incoherencias.length ? ' — '+incoherencias.slice(0,3).join(' | ') : ''}`);
+  }
+
+  // casos borde, uno por uno
+  toolRows=[]; state={N:true};
+  ok(proseText('es')==='Las personas autoras declaran que en la preparación de este manuscrito no se utilizaron herramientas de inteligencia artificial por encima del umbral declarable. Etiqueta de declaración: AI: N.',
+     'prosa de N: declaración negativa completa, sin huecos');
+  state={RF:2, ED:1}; toolRows=[];
+  /* Los fragmentos salen del vocabulario, no escritos a mano: con el texto
+     literal, cambiar una descripción hacía fallar la prueba del ORDEN, que no
+     es lo que esta prueba vigila. */
+  { const frag = c => lcFirst(TASKS.find(t=>t.code===c).es);
+    const txt = proseText('es');
+    ok(txt.indexOf(frag('ED')) >= 0 && txt.indexOf(frag('RF')) >= 0
+       && txt.indexOf(frag('ED')) < txt.indexOf(frag('RF')),
+       'la prosa sigue el orden STM aunque se marque al revés, igual que la etiqueta'); }
+  state={TR:3};
+  ok(proseText('es').includes('para la siguiente tarea: traducción') && !/\(a\)/.test(proseText('es')),
+     'una sola tarea: singular y sin enumerar');
+  state={ED:0, TR:0};
+  ok(!proseText('es').includes('(extensión'), 'sin extensión declarada, la prosa no la menciona');
+  toolRows=[{name:'ChatGPT',model:''},{name:'Illustrator',model:''}];
+  ok(proseText('es').includes('ChatGPT e Illustrator'), 'español: «e» ante sonido /i/');
+  toolRows=[{name:'ChatGPT',model:'GPT-5'},{name:'DeepL',model:''},{name:'Elicit',model:''}];
+  ok(proseText('en').includes('ChatGPT (GPT-5), DeepL, and Elicit'), 'inglés: coma serial');
+  toolRows=[{name:'A<b>"c',model:''}]; state={ED:1};
+  ok(proseHTML('es').includes('A&lt;b&gt;&quot;c') && proseText('es').includes('A<b>"c'),
+     'la prosa escapa el texto libre en pantalla y lo conserva literal al copiar');
+  toolRows=[]; state={ED:1};
+  ok((proseHTML('es').match(/<mark class="ph">/g)||[]).length===2, 'los dos huecos a completar se marcan en pantalla');
+  toolRows=[];
+
+  /* 9ter. AUTORÍA, LICENCIA Y DOCUMENTACIÓN */
+  ok(!/Alexander/.test(UI.es.appName + UI.en.appName), 'el nombre del sistema ya no lleva «Alexander»');
+  { const cab = document.documentElement.previousSibling;
+    ok(cab && cab.nodeType===8 && cab.nodeValue.includes('MIT License') && cab.nodeValue.includes(MIT.slice(0,60)),
+       'el archivo lleva la licencia MIT en su cabecera, idéntica a la del acerca de');
+    /* La cabecera venía diciendo «v15» con la app en la 19: nadie la miraba
+       porque ninguna prueba la ataba a APP.version. Ahora sí. */
+    ok(cab && new RegExp(`—\\s*v${APP.version}\\b`).test(cab.nodeValue),
+       `la versión de la cabecera del archivo coincide con APP.version (v${APP.version})`); }
+  ok(UI.es.appName==='Sistema de etiquetado AI' && UI.en.appName==='AI Labelling System', 'el nombre es «Sistema de etiquetado AI» / «AI Labelling System»');
+  { const pie = $('foot').innerHTML;
+    ok(pie.includes(APP.author) && pie.includes(APP.orcid) && pie.includes('mailto:'+APP.email),
+       'el pie acredita autoría, ORCID y correo');
+    ok(pie.includes('CC BY 4.0') && pie.includes(APP.license), 'el pie declara CC BY 4.0 para el contenido y enlaza la licencia');
+    ok(pie.includes('>MIT<') && pie.includes(APP.mit), 'el pie declara MIT para el código y enlaza la licencia');
+    ok(pie.includes('fchinchillas@uned.ac.cr') && !pie.includes('gmail'), 'el pie usa el correo institucional');
+    ok(pie.includes('Universidad Estatal a Distancia'), 'el pie nombra la institución');
+    ok($('foot').querySelectorAll('[data-open]').length===2, 'el pie da acceso al manual y al acerca de'); }
+  ['es','en'].forEach(lg=>{
+    const pl=lang; lang=lg; U=UI[lg];
+    const m = document.createElement('div'); m.innerHTML = manualHTML();
+    const a = document.createElement('div'); a.innerHTML = aboutHTML();
+    ok(m.querySelectorAll('table')[0].querySelectorAll('tbody tr').length === TASKS.length,
+       `manual (${lg}): la tabla de códigos sale del vocabulario real (${TASKS.length} filas)`);
+    ok(m.querySelectorAll('table')[1].querySelectorAll('tbody tr').length === 5,
+       `manual (${lg}): la escala de extensión tiene sus 5 valores`);
+    ok(m.textContent.includes('AI: N') && m.textContent.includes('+'), `manual (${lg}): explica las reglas de la notación`);
+    { const fila9 = [...m.querySelectorAll('table')[0].querySelectorAll('tbody tr')].pop().textContent;
+      const veces = fila9.toLowerCase().split(UI[lg].tagNotDecl.toLowerCase()).length - 1;
+      ok(veces===1,
+         `manual (${lg}): la actividad 9 se marca como no declarable, una sola vez`); }
+    ok(a.innerHTML.includes(APP.license) && a.innerHTML.includes(APP.mit) && a.innerHTML.includes('GPL-3.0') && a.innerHTML.includes('SIL Open Font License 1.1'),
+       `acerca de (${lg}): licencias propias (MIT + CC BY) y de terceros`);
+    ok(a.textContent.includes('Permission is hereby granted, free of charge'), `acerca de (${lg}): incluye el texto completo de la licencia MIT`);
+    ok(/Chinchilla Serrano, A\. \(2026\)/.test(a.textContent), `acerca de (${lg}): trae la cita en APA 7`);
+    ok(a.textContent.includes('STM Association (2025)'), `acerca de (${lg}): atribuye la clasificación a STM`);
+    lang=pl; U=UI[pl];
+  });
+  { const d=$('dlgManual'); d.showModal(); const abierto=d.open; d.close();
+    ok(abierto && !d.open, 'el manual se abre y se cierra'); }
+  { const d=$('dlgAbout'); d.showModal(); const abierto=d.open; d.close();
+    ok(abierto && !d.open, 'el acerca de se abre y se cierra'); }
+
+  // 10. guardas del QR (el fallo silencioso de la librería)
+  qrDataUrl('https://investiga.uned.ac.cr/cienciaabierta', true);
+  ok(qrWarning==='', 'URL corta: QR sin advertencias');
+  /* Los avisos se comprueban por CONDUCTA y en los tres idiomas, no por su
+     texto castellano: antes bastaba con cambiar el idioma por defecto para
+     que estas dos pruebas pasaran a verde sin que nadie tocara la guarda. */
+  { const prevL = lang;
+    LANG_ALL.forEach(l=>{
+      lang = l; U = UI[l];
+      qrDataUrl('https://investiga.uned.ac.cr/'+'a'.repeat(200), true);
+      const denso = qrWarning;
+      qrDataUrl('https://investiga.uned.ac.cr/'+'a'.repeat(2000), true);
+      const pasado = qrWarning;
+      ok(denso!=='' && denso===U.qrDense(denso.match(/\d+/)[0]),
+         `${l}: URL densa avisa que puede no leerse impresa`);
+      ok(pasado!=='' && pasado!==denso,
+         `${l}: URL sobre capacidad se bloquea en vez de truncar en silencio`);
+    });
+    lang = prevL; U = UI[prevL]; }
+  { const pl=lang; lang='en'; U=UI.en;
+    qrDataUrl('https://investiga.uned.ac.cr/'+'a'.repeat(2000), true);
+    ok(/Shorten it/.test(qrWarning), 'los avisos del QR también se traducen');
+    lang=pl; U=UI[pl]; }
+  qrDataUrl('https://investiga.uned.ac.cr/cienciaabierta', true);
+  ok(qrWarning==='', 'la advertencia se limpia al volver a una URL válida');
+
+  // 11. exportación real
+  state = {TR:1, ED:2, GE:1};
+  const Lx = computeLayout(badgeStrings(), {ax3:'none', qrSafe:true});
+  const svgx = renderSVG(Lx, qrDataUrl('https://investiga.uned.ac.cr/cienciaabierta', true), {embed:true});
+  ok(svgx.length>200 && svgx.startsWith('<svg'), 'SVG exportable generado');
+  ok(!fonts.ready || svgx.includes('@font-face'), 'la tipografía va incrustada en el SVG exportado');
+
+  renderPng(svgx, Lx, 2).then(cv=>{
+    const c2 = cv.getContext('2d');
+    const px = c2.getImageData(Math.round(cv.width*0.5), Math.round(cv.height*0.5), 1, 1).data;
+    const okPng = cv.width===Math.round(Lx.W*2) && cv.height===Math.round(Lx.H*2) && px[3]>0;
+    log.push(`<span class="${okPng?'p':'f'}">${okPng?'OK  ':'FAIL'}</span> PNG 2× rasterizado (${cv.width}×${cv.height}, píxel central opaco)`);
+    finish(okPng?1:0, okPng?0:1);
+  }).catch(e=>{
+    log.push(`<span class="f">FAIL</span> PNG 2×: ${e.message}`);
+    finish(0,1);
+  });
+
+  function finish(p,f2){
+    pass+=p; fail+=f2;
+    const limpio = log.map(l=>l.replace(/<[^>]+>/g,''));
+    console.log(`${pass} pruebas OK · ${fail} fallidas\n`
+      + `punto más apretado del sistema: ${tightest.g.toFixed(1)} u — ${tightest.what}\n`
+      + '─'.repeat(52) + '\n' + limpio.join('\n'));
+    state = saved;                       // dejar la app como estaba antes de las pruebas
+    toolRows = savedTools; buildTools();
+    lang = $('lang').value; applyLang();
+    buildControls(); render();
+    window.__testResult = {pass, fail, tightest, lines: limpio};
+  }
+}
+function onToggleSilently(code, checked){
+  if(code==='N'){ state = checked ? {N:true} : {}; }
+  else if(checked){ delete state.N; state[code]=0; }
+  else delete state[code];
+}
+
+/* ====================== GUÍA FLOTANTE (tooltip) ========================
+   Un solo elemento reutilizado para todo lo que lleve data-tip. Se muestra
+   con el mouse, con el foco del teclado y al tocar, y se recoloca para no
+   salirse de la pantalla: si no cabe arriba, baja y la flecha se da vuelta.
+   ====================================================================== */
+const tipEl = document.createElement('div');
+tipEl.id = 'tip';
+document.body.appendChild(tipEl);
+let tipFor = null;
+
+function showTip(el){
+  const head = el.getAttribute('data-tip');
+  if(!head) return;
+  const sub = el.getAttribute('data-tip-sub');
+  tipEl.innerHTML = `<b>${esc(head)}</b>` + (sub ? `<small>${esc(sub)}</small>` : '');
+  tipEl.classList.add('on');
+  const r = el.getBoundingClientRect();
+  const w = tipEl.offsetWidth, h = tipEl.offsetHeight;
+  let x = Math.max(8, Math.min(r.left + r.width/2 - w/2, innerWidth - w - 8));
+  let y = r.top - h - 9;
+  if(y < 8){ y = r.bottom + 9; tipEl.classList.add('below'); }
+  else tipEl.classList.remove('below');
+  tipEl.style.left = x + 'px';
+  tipEl.style.top  = y + 'px';
+  tipEl.style.setProperty('--ax', (r.left + r.width/2 - x) + 'px');
+  tipFor = el;
+}
+function hideTip(){ tipEl.classList.remove('on'); tipFor = null; }
+
+document.addEventListener('mouseover', e=>{
+  const el = e.target.closest('[data-tip]');
+  if(el){ if(el !== tipFor) showTip(el); }
+  else if(tipFor) hideTip();
+});
+document.addEventListener('focusin',  e=>{ const el=e.target.closest('[data-tip]'); if(el) showTip(el); });
+document.addEventListener('focusout', hideTip);
+document.addEventListener('click',    e=>{ const el=e.target.closest('[data-tip]'); if(el) showTip(el); });  // táctil
+window.addEventListener('scroll', hideTip, true);
+window.addEventListener('resize', hideTip);
+
+/* ============================ ARRANQUE ================================= */
+['qrUrl'].forEach(id=>$(id).addEventListener('input', render));
+$('pngScale').addEventListener('change', render);
+$('lang').addEventListener('change', ()=>{ lang = $('lang').value; applyLang(); buildControls(); buildTools(); render(); });
+// Manual y «acerca de»: cualquier elemento con data-open abre su panel.
+// <dialog> nativo: Esc cierra y el foco queda atrapado dentro sin código extra.
+document.addEventListener('click', e=>{
+  const b = e.target.closest('[data-open]');
+  if(!b) return;
+  e.preventDefault(); hideTip();
+  const d = $(b.getAttribute('data-open'));
+  d.showModal(); d.querySelector('.dlg-in').scrollTop = 0;
+});
+document.querySelectorAll('dialog.dlg').forEach(d=>
+  d.addEventListener('click', e=>{ if(e.target === d) d.close(); }));   // clic fuera del panel = cerrar
+$('btnProse').addEventListener('click', ()=>{
+  const card = $('proseCard'), abrir = card.hidden;
+  card.hidden = !abrir;
+  $('btnProse').setAttribute('aria-expanded', String(abrir));
+  if(abrir){ renderProse(); card.scrollIntoView({behavior:'smooth', block:'nearest'}); }
+});
+$('docLang').addEventListener('change', ()=>{
+  docLang = $('docLang').value; applyDocLang(); render(); renderProse();
+});
+$('btnCopy').addEventListener('click', async ()=>{
+  const txt = proseText(docLang), b = $('btnCopy');
+  let ok = false;
+  try{ await navigator.clipboard.writeText(txt); ok = true; }
+  catch(e){                                   // file:// u origen no seguro: vía clásica
+    const ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ ok = document.execCommand('copy'); }catch(_){}
+    ta.remove();
+  }
+  b.textContent = ok ? U.copied : U.copyFail;
+  setTimeout(()=>{ b.textContent = U.btnCopy; }, 1800);
+});
+$('btnAddTool').addEventListener('click', ()=>{
+  if(toolRows.length >= D.toolsMax) return;
+  toolRows.push({name:'', model:''});
+  buildTools();
+  const filas = $('toolList').querySelectorAll('.tool-row');
+  filas[filas.length-1].querySelector('input').focus();
+});
+['optQrSafe','optEmbed','optDark'].forEach(id=>$(id).addEventListener('change', render));
+
+function buildLangOptions(){
+  [['lang', lang], ['docLang', docLang]].forEach(([id, val])=>{
+    $(id).innerHTML = LANGS.map(l =>
+      `<option value="${l}"${l===val?' selected':''}>${LANGNAME[l]}</option>`).join('');
+  });
+}
+
+state = {N:true};   // arranca en la declaración negativa: quien no usó IA no marca nada
+/* Si el idioma por defecto dejara de ofrecerse, se cae al primero disponible
+   en vez de quedar en un selector vacío. */
+if(!LANGS.includes(lang))    lang    = LANGS.includes('en') ? 'en' : LANGS[0];
+if(!LANGS.includes(docLang)) docLang = lang;
+buildLangOptions();
+applyDocLang();
+applyLang();
+buildControls();
+buildTools();
+render();
+loadFonts();
+
+window.__app = {computeLayout, renderSVG, badgeStrings, runSelfTest, get state(){return state;}, set state(v){state=v;}};
+</script>
+</body>
+</html>

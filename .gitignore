@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+.AppleDouble
+# archivos de bloqueo de Word / LibreOffice
+~$*
+.~lock.*
+# borradores y material que no se publica
+*.docx
+Prepints*/

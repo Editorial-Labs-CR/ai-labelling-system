@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "AI Labelling System"
+abstract: >-
+  Open notation system and single-file web tool that produces a graphic label
+  and a matching prose declaration of artificial intelligence use in scientific
+  manuscripts, built on the STM (2025) classification of nine activities.
+authors:
+  - family-names: "Chinchilla Serrano"
+    given-names: "Alexander"
+    orcid: "https://orcid.org/0000-0001-9465-1522"
+    email: "fchinchillas@uned.ac.cr"
+    affiliation: >-
+      Unidad de Ciencia Abierta, Vicerrectoría de Investigación,
+      Universidad Estatal a Distancia (UNED), Costa Rica
+institution:
+  name: >-
+    Vicerrectoría de Investigación, Universidad Estatal a Distancia (UNED),
+    Costa Rica
+version: "19"
+date-released: "2026-09-23"
+license:
+  - MIT
+  - CC-BY-4.0
+repository-code: "https://github.com/Editorial-Labs-CR/ai-labelling-system"
+url: "https://editorial-labs-cr.github.io/ai-labelling-system/"
+keywords:
+  - research integrity
+  - artificial intelligence
+  - disclosure
+  - scholarly publishing
+  - metadata
+  - open science
