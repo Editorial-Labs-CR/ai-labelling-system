@@ -2074,7 +2074,7 @@ function runSelfTest(){
   ORDER.forEach(c=>cases.push({[c]:4}));                           // cada código, extensión máxima
   cases.push({ED:1, TR:3, RF:2});                                  // el ejemplo del §4.4
   cases.push({ED:0, TR:0, RF:0});                                  // varios sin extensión
-  cases.push({ED:2, GE:0, TR:4});                                  // mezcla declarada / no declarada
+  cases.push({ED:2, TG:0, TR:4});                                  // mezcla declarada / no declarada
   cases.push(Object.fromEntries(ORDER.map((c,i)=>[c,i%5])));       // los 8, mezclado
   cases.push(Object.fromEntries(ORDER.map(c=>[c,4])));             // los 8, todos en 4
   cases.push(Object.fromEntries(ORDER.map(c=>[c,0])));             // los 8, ninguno declarado
@@ -2659,7 +2659,7 @@ function runSelfTest(){
   ok(qrWarning==='', 'la advertencia se limpia al volver a una URL válida');
 
   // 11. exportación real
-  state = {TR:1, ED:2, GE:1};
+  state = {TR:1, ED:2, TG:1};
   const Lx = computeLayout(badgeStrings(), {ax3:'none', qrSafe:true});
   const svgx = renderSVG(Lx, qrDataUrl('https://investiga.uned.ac.cr/cienciaabierta', true), {embed:true});
   ok(svgx.length>200 && svgx.startsWith('<svg'), 'SVG exportable generado');
