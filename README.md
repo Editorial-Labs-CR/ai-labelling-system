@@ -66,6 +66,10 @@ use must produce the same string, in any country, so that it can be searched, co
 and aggregated. What *does* follow the label language is the natural-language text
 inside the label, and the prose declaration.
 
+The tool has **two independent language controls**: «Tool language», at the top, changes
+the screen only; «Label and prose language», further down, is the language of the article
+and is what gets printed. An editor can work in one language and publish in another.
+
 ### Running it
 
 It is a **single HTML file with no build step**. Open `index.html` in a browser, or host
@@ -159,6 +163,11 @@ sea el idioma de la interfaz. Esa es la razón de ser de un código: dos artícu
 declaran el mismo uso tienen que producir la misma cadena, en cualquier país, para que
 se pueda buscar, comparar y agregar. Lo que *sí* sigue al idioma de la etiqueta es el
 texto en lengua natural que va dentro, y la prosa de la declaración.
+
+La herramienta tiene **dos controles de idioma independientes**: «Idioma de la
+herramienta», arriba, cambia solo la pantalla; «Idioma de la etiqueta y la prosa», más
+abajo, es el idioma del artículo y es el que se imprime. Una persona editora puede
+trabajar en una lengua y publicar en otra.
 
 ### Cómo se usa
 
