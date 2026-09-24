@@ -56,9 +56,9 @@ preparation only, not the rest of the research process.
 
 **What gets declared.** Activities **2 to 8** always, however little they were used.
 Activity **1** (spell checker, grammar, style) need not be: that is the threshold, set
-by the 2023 STM Guidelines. If there was nothing above it, the correct declaration is
-`AI: N`, which states not that no tool was used but that none was used above the
-threshold. A journal may set its threshold lower, and `ED` stays available for that.
+by the 2023 STM Guidelines. If you used it alongside other activities, simply leave it unticked. If there was
+nothing above it at all, the correct declaration is `AI: N`, which is exclusive and states
+not that no tool was used but that none was used above the threshold. A journal may set its threshold lower, and `ED` stays available for that.
 
 A second, **optional** axis records the extent of each use: 1 incidental (<¼),
 2 partial (¼–½), 3 majority (½–¾), 4 total (>¾). Omitting it is a valid declaration.
@@ -159,8 +159,9 @@ manuscrito, no el resto del proceso de investigación.
 
 **Qué se declara.** Las actividades **2 a 8** siempre, por poco que se hayan usado. La
 **1** (corrector, gramática, estilo) no hace falta: ese es el umbral, fijado por las guías
-de STM de 2023. Si no hubo nada por encima, la declaración correcta es `AI: N`, que no
-dice que no se usara ninguna herramienta sino que no se usó ninguna por encima del umbral.
+de STM de 2023. Si la usó junto con otras actividades, basta con dejarla sin marcar. Si no hubo nada por
+encima en absoluto, la declaración correcta es `AI: N`, que es excluyente y no dice que no
+se usara ninguna herramienta sino que no se usó ninguna por encima del umbral.
 Una revista puede situar su umbral más abajo, y para eso `ED` sigue disponible.
 
 Un segundo eje, **opcional**, registra la extensión de cada uso: 1 puntual (<¼),

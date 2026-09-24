@@ -365,9 +365,9 @@ const TASKS = [
   /* (**) en la lámina de STM: «2023 STM Guidelines recommend that disclosure
      is not necessary for this use of automated tools». Es el umbral del §4.5. */
   {code:'ED', from:'Editing', gloss:{es:'edición', pt:'edição'}, stm:1, tag:'tagThreshold', stmNote:{
-     es:'Está en el umbral: la guía internacional en que se basa el sistema no pide declarar esto. Si fue lo único que usó, marque N. El código queda por si desea declararlo igual, o si la revista lo pide.',
-     en:'It sits at the threshold: the international guideline this system is based on does not ask for this to be declared. If it was all you used, tick N. The code is there in case you want to declare it anyway, or the journal asks for it.',
-     pt:'Está no limiar: a diretriz internacional em que o sistema se baseia não pede que isto se declare. Se foi tudo o que usou, marque N. O código fica caso queira declará-lo mesmo assim, ou se a revista o pedir.'},
+     es:'Está en el umbral: la guía internacional no pide declararla. Si no desea declararla, déjela sin marcar; y si tampoco hubo ningún otro uso de IA, marque N, la opción de arriba. Si desea declararla de todos modos, o la revista lo pide, marque esta tarea.',
+     en:'It sits at the threshold: the international guideline does not ask for it to be declared. If you would rather not declare it, leave it unticked; and if there was no other AI use either, tick N, the option above. If you want to declare it anyway, or the journal asks for it, tick this task.',
+     pt:'Está no limiar: a diretriz internacional não pede que se declare. Se não quiser declará-la, deixe-a sem marcar; e se também não houve nenhum outro uso de IA, marque N, a opção de cima. Se quiser declará-la de todos os modos, ou a revista o pedir, marque esta tarefa.'},
    es:'Refinamiento, corrección, edición o formato del manuscrito para mejorar la claridad del lenguaje',
    en:'Refinement, correction, editing or formatting the manuscript to improve clarity of language',
    pt:'Refinamento, correção, edição ou formatação do manuscrito para melhorar a clareza da linguagem'},
@@ -802,7 +802,8 @@ ${extentTable()}
 <h3>7. What gets declared and what does not</h3>
 <p><b>Always declare</b> any use of activities <b>2 to 8</b>: generating content, translating, handling data, images, visualisations, code or references. <b>However little was used</b>: if it was used, it is declared.</p>
 <p><b>You need not declare</b> activity <b>1</b>: spell checker, grammar and style polishing. That is the threshold.</p>
-<p><b>If there was nothing above activity 1</b>, the correct declaration is <code>AI: N</code>. That is why <code>N</code> does not say "no tool was used": it says there was no use above the threshold. Without that distinction, anyone who ran a spell checker would be declaring inaccurately.</p>
+<p><b>If you used activity 1 along with others</b>, there is no need to tick it: tick only the others and leave it unticked.</p>
+<p><b>If there was nothing above activity 1</b>, the correct declaration is <code>AI: N</code>, which is exclusive and clears the rest. That is why <code>N</code> does not say "no tool was used": it says there was no use above the threshold. Without that distinction, anyone who ran a spell checker would be declaring inaccurately.</p>
 <p class="warn"><b>Do not confuse this with Axis 2.</b> The extent being optional does not make the task optional: <code>AI: TR</code> with no number is a valid declaration, but <b>saying nothing</b> about having translated is not.</p>
 <p>The threshold is not this system's invention: the 2023 STM Guidelines recommend that activity 1 need not be disclosed, and a review of the policies of eleven large-scale publishers finds the same: minor assistive uses for grammar and style typically are not disclosed, and substantive ones are.</p>
 <p><b>If the journal asks for more, the journal wins.</b> It may set its threshold lower and require activity 1 to be disclosed too; the <code>ED</code> code is available for that, and for anyone who wishes to disclose it voluntarily.</p>
@@ -856,7 +857,8 @@ ${extentTable()}
 <h3>7. O que se declara e o que não</h3>
 <p><b>Declara-se sempre</b> qualquer uso das atividades <b>2 a 8</b>: gerar conteúdo, traduzir, tratar dados, imagens, visualizações, código ou referências. <b>Por pouco que se tenha usado</b>: se se usou, declara-se.</p>
 <p><b>Não é preciso declarar</b> a atividade <b>1</b>: corretor ortográfico, gramática e polimento de estilo. Esse é o limiar.</p>
-<p><b>Se não houve nada acima da atividade 1</b>, a declaração correta é <code>AI: N</code>. Por isso <code>N</code> não diz "não se usou nenhuma ferramenta": diz que não houve uso acima do limiar. Sem essa distinção, quem passou o corretor estaria declarando de forma inexata.</p>
+<p><b>Se usou a atividade 1 junto com outras</b>, não é preciso marcá-la: marque só as outras e deixe-a sem marcar.</p>
+<p><b>Se não houve nada acima da atividade 1</b>, a declaração correta é <code>AI: N</code>, que é excludente e apaga o resto. Por isso <code>N</code> não diz "não se usou nenhuma ferramenta": diz que não houve uso acima do limiar. Sem essa distinção, quem passou o corretor estaria declarando de forma inexata.</p>
 <p class="warn"><b>Não confundir com o Eixo 2.</b> Que a extensão seja opcional não torna a tarefa opcional: <code>AI: TR</code> sem número é uma declaração válida, mas <b>calar</b> que se traduziu não é.</p>
 <p>O limiar não é invenção deste sistema: as diretrizes da STM de 2023 recomendam que a atividade 1 não exija declaração, e uma revisão de políticas de onze editoras de grande escala encontra o mesmo: os usos assistivos menores de gramática e estilo tipicamente não se declaram, e os substantivos sim.</p>
 <p><b>Se a revista pedir mais, manda a revista.</b> Pode situar o seu limiar mais abaixo e exigir que a atividade 1 também se declare; para isso o código <code>ED</code> está disponível, e também o usa quem queira declará-la por vontade própria.</p>
@@ -910,7 +912,8 @@ ${extentTable()}
 <h3>7. Qué se declara y qué no</h3>
 <p><b>Se declara siempre</b> cualquier uso de las actividades <b>2 a 8</b>: generar contenido, traducir, tratar datos, imágenes, visualizaciones, código o referencias. <b>Da igual cuán poco se haya usado</b>: si se usó, se declara.</p>
 <p><b>No hace falta declarar</b> la actividad <b>1</b>: corrector ortográfico, gramática y pulido de estilo. Ese es el umbral.</p>
-<p><b>Si no hubo nada por encima de la actividad 1</b>, la declaración correcta es <code>AI: N</code>. Por eso <code>N</code> no dice "no se usó ninguna herramienta": dice que no hubo uso por encima del umbral. Sin esa distinción, quien pasó el corrector estaría declarando de forma inexacta.</p>
+<p><b>Si usó la actividad 1 junto con otras</b>, no hace falta marcarla: marque solo las otras y déjela sin marcar.</p>
+<p><b>Si no hubo nada por encima de la actividad 1</b>, la declaración correcta es <code>AI: N</code>, que es excluyente y borra el resto. Por eso <code>N</code> no dice "no se usó ninguna herramienta": dice que no hubo uso por encima del umbral. Sin esa distinción, quien pasó el corrector estaría declarando de forma inexacta.</p>
 <p class="warn"><b>Cuidado con no confundirlo con el Eje 2.</b> Que la extensión sea opcional no vuelve opcional la tarea: <code>AI: TR</code> sin número es una declaración válida, pero <b>callar</b> que se tradujo no lo es.</p>
 <p>El umbral no lo inventa este sistema: las guías de STM de 2023 recomiendan que la actividad 1 no requiera declaración, y una revisión de políticas de once editoriales de gran escala encuentra lo mismo: los usos asistivos menores de gramática y estilo típicamente no se declaran, y los sustantivos sí.</p>
 <p><b>Si la revista pide más, manda la revista.</b> Puede situar su umbral más abajo y exigir que se declare también la actividad 1; para eso el código <code>ED</code> está disponible, y también lo usa quien quiera declararla por voluntad propia.</p>
@@ -2426,6 +2429,11 @@ function runSelfTest(){
      'las notas de las actividades no usan la sigla STM sin explicar');
   ok(LANG_ALL.every(l=>/STM/.test(UI[l].tipStmSub) && UI[l].tipStmSub.length>100),
      'la guía del chip numerado sí explica qué es STM');
+  { const ed = TASKS.find(t=>t.code==='ED');
+    ok(LANG_ALL.every(l=>/\bN\b/.test(ed.stmNote[l])),
+       'la guía de la actividad del umbral dice qué hacer con N');
+    ok(LANG_ALL.every(l=>/sin marcar|unticked|sem marcar/.test(ed.stmNote[l])),
+       'y también el caso de dejarla sin marcar, que es el que evita borrar otras tareas con N'); }
   { const conTag = TASKS.filter(t=>t.tag);
     ok(conTag.length===1 && conTag[0].code==='ED' && LANG_ALL.every(l=>UI[l][conTag[0].tag]),
        'la actividad del umbral lleva etiqueta visible en todos los idiomas');
