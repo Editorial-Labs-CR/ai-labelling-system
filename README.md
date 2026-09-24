@@ -203,3 +203,7 @@ por ninguna de las dos.
 **Alexander Chinchilla Serrano** · [ORCID 0000-0001-9465-1522](https://orcid.org/0000-0001-9465-1522) · <fchinchillas@uned.ac.cr>
 Unidad de Ciencia Abierta, Vicerrectoría de Investigación
 Universidad Estatal a Distancia (UNED), Costa Rica
+
+**Codificación · Coding:** Claude Opus 5 (Anthropic) — identificador del modelo
+`claude-opus-5` — bajo instrucción, criterio y experiencia editorial humana / under human
+editorial instruction, judgement and experience.
