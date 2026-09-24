@@ -130,6 +130,7 @@ SOFTWARE.
   .dlg-in code{font-size:12px;background:#f2f2f4;padding:1px 4px;border-radius:4px;}
   .dlg-in .cite{border-left:3px solid var(--ink);padding-left:10px;}
   .dlg-in details summary{cursor:pointer;font-weight:600;margin-top:8px;}
+  .dlg-in p.warn{border-left:3px solid var(--ink);padding-left:10px;}
   .dlg-in .lic-text{white-space:pre-wrap;font-size:11px;line-height:1.5;background:#f6f6f8;padding:10px 12px;border-radius:8px;max-height:260px;overflow:auto;}
   .prose h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0;}
   .prose-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
@@ -240,6 +241,9 @@ SOFTWARE.
       <fieldset>
         <legend data-i18n="legAxes"></legend>
         <div id="taskList"></div>
+        <!-- Va acá y no entre las notas del final: es donde la persona decide
+             qué marcar, y la duda «¿esto se declara?» aparece en ese momento. -->
+        <p class="note" data-i18n="noteThreshold"></p>
       </fieldset>
 
       <fieldset id="toolsBox">
@@ -361,9 +365,9 @@ const TASKS = [
   /* (**) en la lámina de STM: «2023 STM Guidelines recommend that disclosure
      is not necessary for this use of automated tools». Es el umbral del §4.5. */
   {code:'ED', from:'Editing', gloss:{es:'edición', pt:'edição'}, stm:1, stmNote:{
-     es:'Las guías STM 2023 recomiendan que esta actividad NO requiera declaración. Es el umbral operativo del §4.5; el código queda disponible para declararla voluntariamente o para revistas que sitúen su umbral por debajo.',
-     en:'The 2023 STM Guidelines recommend that this activity NOT require disclosure. It is the operative threshold of §4.5; the code remains available for voluntary disclosure, or for journals that set their threshold lower.',
-     pt:'As diretrizes STM 2023 recomendam que esta atividade NÃO exija declaração. É o limiar operacional do §4.5; o código permanece disponível para declará-la voluntariamente ou para revistas que situem seu limiar abaixo.'},
+     es:'Las guías STM 2023 recomiendan que esta actividad NO requiera declaración. Es el umbral operativo del §4.5; el código queda disponible para declararla voluntariamente o para revistas que sitúen su umbral por debajo. Manual, §7.',
+     en:'The 2023 STM Guidelines recommend that this activity NOT require disclosure. It is the operative threshold of §4.5; the code remains available for voluntary disclosure, or for journals that set their threshold lower. User guide, §7.',
+     pt:'As diretrizes STM 2023 recomendam que esta atividade NÃO exija declaração. É o limiar operacional do §4.5; o código permanece disponível para declará-la voluntariamente ou para revistas que situem seu limiar abaixo. Manual, §7.'},
    es:'Refinamiento, corrección, edición o formato del manuscrito para mejorar la claridad del lenguaje',
    en:'Refinement, correction, editing or formatting the manuscript to improve clarity of language',
    pt:'Refinamento, correção, edição ou formatação do manuscrito para melhorar a clareza da linguagem'},
@@ -478,6 +482,7 @@ const UI = {
     hdrOpen:'Sistema de notación abierto, <b>propuesto para cualquier revista científica</b>. La etiqueta <b>no sustituye la declaración en prosa</b>: la acompaña y se genera del mismo acto declarativo, para que el dato sea comparable entre artículos, agregable en conjuntos grandes y transportable como metadato. <b>Se coloca en una página destacada del artículo</b> (habitualmente la primera) para que cualquier lector identifique de un vistazo el uso declarado. La adopción es gradual y <b>no exige que una revista modifique sus políticas vigentes</b>: puede incorporar primero la etiqueta visible, después el bloque de metadatos y después la generación automática de la prosa.',
     hdrVocab:'<b>Vocabulario.</b> STM Association (2025), <i>Recommendations for a Classification of AI Use in Academic Manuscript Preparation</i>. Las nueve actividades se adoptan sin redefinirlas; ocho son declarables y la novena no, porque las guías de STM recomiendan prohibirla. El alcance es el de la fuente: solo la preparación del manuscrito, no el resto del proceso de investigación.',
     hdrAxes:'<b>Dos ejes.</b> Tipo de tarea (Eje 1) y extensión del uso (Eje 2, opcional). La verificación humana no es un nivel: es una afirmación única que cubre todo lo declarado.',
+    noteThreshold:'<b>¿Qué se declara?</b> Las actividades <b>2 a 8</b> siempre, por poco que se hayan usado. La <b>1</b> (corrector, gramática, estilo) no hace falta: es el umbral. Si no hubo nada por encima, <code>AI: N</code>. Detalle en el manual, §7.',
     legAxes:'Eje 1 · Tipo de tarea &nbsp;·&nbsp; Eje 2 · Extensión (opcional)',
     lblLang:'Idioma de la herramienta',
     lblDocLang:'Idioma de la etiqueta y la prosa',
@@ -507,7 +512,7 @@ const UI = {
     tipStmSub:'El número es el identificador canónico; el código de dos letras es capa de despliegue, como en CRediT.',
     tipCodeSub:'Las letras salen del término en inglés. El código es el mismo en cualquier idioma.',
     tipNoStm:'Ajeno a la clasificación de STM',
-    tipNoStmSub:'N no describe una actividad: afirma que no hubo uso por encima del umbral declarable (§4.5).',
+    tipNoStmSub:'N no describe una actividad: afirma que no hubo uso por encima del umbral —la actividad 1 de STM, corrección y estilo—. Manual, §7: qué se declara y qué no.',
     legendTitle:'Eje 2 · extensión', legendNotDecl:'no declarada',
     fontOk:kb=>`Tipografía: Inter incrustada (${kb} KB en el SVG). El archivo exportado se ve igual en cualquier máquina.`,
     fontFail:'Tipografía: sin red — se usa la del sistema. El diseño no se rompe, pero el SVG exportado dependerá de las fuentes de quien lo abra.',
@@ -536,6 +541,7 @@ const UI = {
     hdrOpen:'An open notation system, <b>proposed for any scholarly journal</b>. The label <b>does not replace the prose declaration</b>: it accompanies it and is generated from the same declarative act, so that the record is comparable across articles, aggregable at scale and transportable as metadata. <b>It sits on a prominent page of the article</b> (usually the first) so that any reader identifies the declared use at a glance. Adoption is gradual and <b>does not require a journal to change its current policies</b>: it can start with the visible label, then the metadata block, then automatic generation of the prose.',
     hdrVocab:'<b>Vocabulary.</b> STM Association (2025), <i>Recommendations for a Classification of AI Use in Academic Manuscript Preparation</i>. The nine activities are adopted without redefining them; eight are disclosable and the ninth is not, because the STM guidelines recommend prohibiting it. The scope is that of the source: manuscript preparation only, not the rest of the research process.',
     hdrAxes:'<b>Two axes.</b> Task type (Axis 1) and extent of use (Axis 2, optional). Human verification is not a level: it is a single statement covering everything declared.',
+    noteThreshold:'<b>What gets declared?</b> Activities <b>2 to 8</b> always, however little they were used. Activity <b>1</b> (spell checker, grammar, style) need not be: that is the threshold. If there was nothing above it, <code>AI: N</code>. Details in the user guide, §7.',
     legAxes:'Axis 1 · Task type &nbsp;·&nbsp; Axis 2 · Extent (optional)',
     lblLang:'Tool language',
     lblDocLang:'Label and prose language',
@@ -565,7 +571,7 @@ const UI = {
     tipStmSub:'The number is the canonical identifier; the two-letter code is a display layer, as in CRediT.',
     tipCodeSub:'The letters come from the English term. The code is the same in any language.',
     tipNoStm:'Outside the STM classification',
-    tipNoStmSub:'N does not describe an activity: it states that there was no use above the disclosable threshold (§4.5).',
+    tipNoStmSub:'N does not describe an activity: it states that there was no use above the threshold — STM activity 1, language correction and style. User guide, §7: what gets declared and what does not.',
     legendTitle:'Axis 2 · extent', legendNotDecl:'not declared',
     fontOk:kb=>`Typeface: Inter embedded (${kb} KB in the SVG). The exported file looks the same on any machine.`,
     fontFail:'Typeface: offline — the system font is used. The layout does not break, but the exported SVG will depend on the reader’s fonts.',
@@ -594,6 +600,7 @@ const UI = {
     hdrOpen:'Sistema de notação aberto, <b>proposto para qualquer revista científica</b>. A etiqueta <b>não substitui a declaração em prosa</b>: acompanha-a e é gerada do mesmo ato declarativo, para que o dado seja comparável entre artigos, agregável em conjuntos grandes e transportável como metadado. <b>Coloca-se em uma página destacada do artigo</b> (habitualmente a primeira) para que qualquer leitor identifique de relance o uso declarado. A adoção é gradual e <b>não exige que uma revista modifique suas políticas vigentes</b>: pode incorporar primeiro a etiqueta visível, depois o bloco de metadados e depois a geração automática da prosa.',
     hdrVocab:'<b>Vocabulário.</b> STM Association (2025), <i>Recommendations for a Classification of AI Use in Academic Manuscript Preparation</i>. As nove atividades são adotadas sem redefini-las; oito são declaráveis e a nona não, porque as diretrizes da STM recomendam proibi-la. O alcance é o da fonte: apenas a preparação do manuscrito, não o restante do processo de pesquisa.',
     hdrAxes:'<b>Dois eixos.</b> Tipo de tarefa (Eixo 1) e extensão do uso (Eixo 2, opcional). A verificação humana não é um nível: é uma afirmação única que cobre tudo o que foi declarado.',
+    noteThreshold:'<b>O que se declara?</b> As atividades <b>2 a 8</b> sempre, por pouco que se tenham usado. A <b>1</b> (corretor, gramática, estilo) não é preciso: esse é o limiar. Se não houve nada acima, <code>AI: N</code>. Detalhe no manual, §7.',
     legAxes:'Eixo 1 · Tipo de tarefa &nbsp;·&nbsp; Eixo 2 · Extensão (opcional)',
     lblLang:'Idioma da ferramenta',
     lblDocLang:'Idioma da etiqueta e da prosa',
@@ -623,7 +630,7 @@ const UI = {
     tipStmSub:'O número é o identificador canônico; o código de duas letras é camada de exibição, como no CRediT.',
     tipCodeSub:'As letras vêm do termo em inglês. O código é o mesmo em qualquer idioma.',
     tipNoStm:'Fora da classificação da STM',
-    tipNoStmSub:'N não descreve uma atividade: afirma que não houve uso acima do limiar declarável (§4.5).',
+    tipNoStmSub:'N não descreve uma atividade: afirma que não houve uso acima do limiar — a atividade 1 da STM, correção e estilo. Manual, §7: o que se declara e o que não.',
     legendTitle:'Eixo 2 · extensão', legendNotDecl:'não declarada',
     fontOk:kb=>`Tipografia: Inter incorporada (${kb} KB no SVG). O arquivo exportado fica igual em qualquer máquina.`,
     fontFail:'Tipografia: sem conexão — usa-se a fonte do sistema. O layout não quebra, mas o SVG exportado dependerá das fontes de quem o abra.',
@@ -789,7 +796,14 @@ ${extentTable()}
 <li>Use the <b>SVG</b> for layout and the <b>4× PNG</b> for print. Never distort the label: always scale it proportionally.</li>
 <li>In print, keep the QR code at least about 2 cm wide so a phone can read it.</li>
 </ul>
-<h3>7. Frequently asked questions</h3>
+<h3>7. What gets declared and what does not</h3>
+<p><b>Always declare</b> any use of activities <b>2 to 8</b>: generating content, translating, handling data, images, visualisations, code or references. <b>However little was used</b>: if it was used, it is declared.</p>
+<p><b>You need not declare</b> activity <b>1</b>: spell checker, grammar and style polishing. That is the threshold.</p>
+<p><b>If there was nothing above activity 1</b>, the correct declaration is <code>AI: N</code>. That is why <code>N</code> does not say «no tool was used»: it says there was no use above the threshold. Without that distinction, anyone who ran a spell checker would be declaring inaccurately.</p>
+<p class="warn"><b>Do not confuse this with Axis 2.</b> The extent being optional does not make the task optional: <code>AI: TR</code> with no number is a valid declaration, but <b>saying nothing</b> about having translated is not.</p>
+<p>The threshold is not this system's invention: the 2023 STM Guidelines recommend that activity 1 need not be disclosed, and a review of the policies of eleven large-scale publishers finds the same — minor assistive uses for grammar and style typically are not disclosed, substantive ones are.</p>
+<p><b>If the journal asks for more, the journal wins.</b> It may set its threshold lower and require activity 1 to be disclosed too; the <code>ED</code> code is available for that, and for anyone who wishes to disclose it voluntarily.</p>
+<h3>8. Frequently asked questions</h3>
 <p><b>Why are there two language selectors?</b> Because they are two different things. The one at the top, «Tool language», changes this screen only: it is for whoever operates the tool. The one below, «Label and prose language», is the language of the article, and it is what gets printed. An editor can work in Spanish and produce an English label for an English article. The codes depend on neither.</p>
 <p><b>Does the label replace the written declaration?</b> No. It accompanies it.</p>
 <p><b>What about human verification?</b> It is not a level on the scale: whoever declares is understood to have reviewed everything incorporated and to take responsibility for the content.</p>
@@ -836,7 +850,14 @@ ${extentTable()}
 <li>Use o <b>SVG</b> para diagramar e o <b>PNG 4×</b> para impressão. Não deforme a etiqueta: escale-a sempre em proporção.</li>
 <li>Impressa, procure que o código QR não fique abaixo de uns 2 cm de lado, para que possa ser lido com o telefone.</li>
 </ul>
-<h3>7. Perguntas frequentes</h3>
+<h3>7. O que se declara e o que não</h3>
+<p><b>Declara-se sempre</b> qualquer uso das atividades <b>2 a 8</b>: gerar conteúdo, traduzir, tratar dados, imagens, visualizações, código ou referências. <b>Por pouco que se tenha usado</b>: se se usou, declara-se.</p>
+<p><b>Não é preciso declarar</b> a atividade <b>1</b>: corretor ortográfico, gramática e polimento de estilo. Esse é o limiar.</p>
+<p><b>Se não houve nada acima da atividade 1</b>, a declaração correta é <code>AI: N</code>. Por isso <code>N</code> não diz «não se usou nenhuma ferramenta»: diz que não houve uso acima do limiar. Sem essa distinção, quem passou o corretor estaria declarando de forma inexata.</p>
+<p class="warn"><b>Não confundir com o Eixo 2.</b> Que a extensão seja opcional não torna a tarefa opcional: <code>AI: TR</code> sem número é uma declaração válida, mas <b>calar</b> que se traduziu não é.</p>
+<p>O limiar não é invenção deste sistema: as diretrizes da STM de 2023 recomendam que a atividade 1 não exija declaração, e uma revisão de políticas de onze editoras de grande escala encontra o mesmo — os usos assistivos menores de gramática e estilo tipicamente não se declaram, os substantivos sim.</p>
+<p><b>Se a revista pedir mais, manda a revista.</b> Pode situar o seu limiar mais abaixo e exigir que a atividade 1 também se declare; para isso o código <code>ED</code> está disponível, e também o usa quem queira declará-la por vontade própria.</p>
+<h3>8. Perguntas frequentes</h3>
 <p><b>Por que há dois seletores de idioma?</b> Porque são duas coisas distintas. O de cima, «Idioma da ferramenta», muda apenas esta tela: é para quem opera. O de baixo, «Idioma da etiqueta e da prosa», é o idioma do artigo, e é o que se imprime. Uma pessoa editora pode trabalhar em português e produzir uma etiqueta em inglês para um artigo em inglês. Os códigos não dependem de nenhum dos dois.</p>
 <p><b>A etiqueta substitui a declaração escrita?</b> Não. Acompanha-a.</p>
 <p><b>E a verificação humana?</b> Não é um nível da escala: entende-se que quem declara revisou tudo o que foi incorporado e assume a responsabilidade pelo conteúdo.</p>
@@ -883,7 +904,14 @@ ${extentTable()}
 <li>Use el <b>SVG</b> para maquetar y el <b>PNG 4×</b> para impresión. No deforme la etiqueta: escálela siempre en proporción.</li>
 <li>Impresa, procure que el código QR no quede por debajo de unos 2 cm de lado, para que se pueda leer con el teléfono.</li>
 </ul>
-<h3>7. Preguntas frecuentes</h3>
+<h3>7. Qué se declara y qué no</h3>
+<p><b>Se declara siempre</b> cualquier uso de las actividades <b>2 a 8</b>: generar contenido, traducir, tratar datos, imágenes, visualizaciones, código o referencias. <b>Da igual cuán poco se haya usado</b>: si se usó, se declara.</p>
+<p><b>No hace falta declarar</b> la actividad <b>1</b>: corrector ortográfico, gramática y pulido de estilo. Ese es el umbral.</p>
+<p><b>Si no hubo nada por encima de la actividad 1</b>, la declaración correcta es <code>AI: N</code>. Por eso <code>N</code> no dice «no se usó ninguna herramienta»: dice que no hubo uso por encima del umbral. Sin esa distinción, quien pasó el corrector estaría declarando de forma inexacta.</p>
+<p class="warn"><b>Cuidado con no confundirlo con el Eje 2.</b> Que la extensión sea opcional no vuelve opcional la tarea: <code>AI: TR</code> sin número es una declaración válida, pero <b>callar</b> que se tradujo no lo es.</p>
+<p>El umbral no lo inventa este sistema: las guías de STM de 2023 recomiendan que la actividad 1 no requiera declaración, y una revisión de políticas de once editoriales de gran escala encuentra lo mismo —los usos asistivos menores de gramática y estilo típicamente no se declaran, los sustantivos sí—.</p>
+<p><b>Si la revista pide más, manda la revista.</b> Puede situar su umbral más abajo y exigir que se declare también la actividad 1; para eso el código <code>ED</code> está disponible, y también lo usa quien quiera declararla por voluntad propia.</p>
+<h3>8. Preguntas frecuentes</h3>
 <p><b>¿Por qué hay dos selectores de idioma?</b> Porque son dos cosas distintas. El de arriba, «Idioma de la herramienta», cambia solo esta pantalla: es para quien opera. El de abajo, «Idioma de la etiqueta y la prosa», es el idioma del artículo, y es el que se imprime. Una persona editora puede trabajar en español y producir una etiqueta en inglés para un artículo en inglés. Los códigos no dependen de ninguno de los dos.</p>
 <p><b>¿La etiqueta reemplaza la declaración escrita?</b> No. La acompaña.</p>
 <p><b>¿Y la verificación humana?</b> No es un nivel de la escala: se entiende que quien declara revisó todo lo incorporado y asume la responsabilidad del contenido.</p>

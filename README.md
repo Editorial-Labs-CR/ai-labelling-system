@@ -54,6 +54,12 @@ preparation only, not the rest of the research process.
 | `CO` | Code | 7 | Refinement or formatting of code reported in the submitted manuscript |
 | `RF` | References | 8 | Assisting with gathering references |
 
+**What gets declared.** Activities **2 to 8** always, however little they were used.
+Activity **1** — spell checker, grammar, style — need not be: that is the threshold, set
+by the 2023 STM Guidelines. If there was nothing above it, the correct declaration is
+`AI: N`, which states not that no tool was used but that none was used above the
+threshold. A journal may set its threshold lower, and `ED` stays available for that.
+
 A second, **optional** axis records the extent of each use: 1 incidental (<¼),
 2 partial (¼–½), 3 majority (½–¾), 4 total (>¾). Omitting it is a valid declaration.
 Human verification is not a level: it is a single statement covering everything declared.
@@ -150,6 +156,12 @@ manuscrito, no el resto del proceso de investigación.
 | `VI` | Visualisations (visualizaciones) | 6 | Generación, refinamiento, corrección, edición o formato de visualizaciones de datos o resultados de investigación |
 | `CO` | Code (código) | 7 | Refinamiento o formato del código reportado en el manuscrito enviado |
 | `RF` | References (referencias) | 8 | Ayuda en la recopilación y búsqueda de referencias |
+
+**Qué se declara.** Las actividades **2 a 8** siempre, por poco que se hayan usado. La
+**1** —corrector, gramática, estilo— no hace falta: ese es el umbral, fijado por las guías
+de STM de 2023. Si no hubo nada por encima, la declaración correcta es `AI: N`, que no
+dice que no se usara ninguna herramienta sino que no se usó ninguna por encima del umbral.
+Una revista puede situar su umbral más abajo, y para eso `ED` sigue disponible.
 
 Un segundo eje, **opcional**, registra la extensión de cada uso: 1 puntual (<¼),
 2 parcial (¼–½), 3 mayoritaria (½–¾), 4 total (>¾). Omitirlo es una declaración válida.
