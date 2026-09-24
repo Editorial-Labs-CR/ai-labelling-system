@@ -64,10 +64,15 @@ SOFTWARE.
 <meta property="og:title" content="AI Labelling System · Sistema de etiquetado AI">
 <meta property="og:description" content="Graphic declaration of artificial intelligence use in scientific manuscripts · Declaración gráfica de uso de inteligencia artificial en manuscritos científicos">
 <meta property="og:url" content="https://editorial-labs-cr.github.io/ai-labelling-system/">
+<meta property="og:image" content="https://editorial-labs-cr.github.io/ai-labelling-system/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="La etiqueta AI: ED+TR+CO con su código detallado, la frase de complementariedad y el código QR">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="es_CR">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AI Labelling System · Sistema de etiquetado AI">
+<meta name="twitter:image" content="https://editorial-labs-cr.github.io/ai-labelling-system/og-image.png">
 <meta name="twitter:description" content="Graphic declaration of artificial intelligence use in scientific manuscripts · Declaración gráfica de uso de inteligencia artificial en manuscritos científicos">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 <style>
@@ -2477,6 +2482,8 @@ function runSelfTest(){
     ok(og('title')===STATIC_TITLE, 'og:title coincide con el título del archivo');
     ok(og('url').startsWith('https://') && og('description').length>40,
        'los metadatos de enlace llevan url absoluta y descripción');
+    ok(og('image').startsWith('https://') && /\.png$/.test(og('image')) && og('image:alt').length>20,
+       'la vista previa lleva imagen absoluta con texto alternativo');
     ok(!/Alexander/.test(og('description')+og('title')+og('description')),
        'los metadatos de enlace tampoco llevan el nombre viejo'); }
 
