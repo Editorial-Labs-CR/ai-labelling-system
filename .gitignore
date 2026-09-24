@@ -7,3 +7,6 @@
 # borradores y material que no se publica
 *.docx
 Prepints*/
+
+# copia temporal para probar sin conexión
+_sin-conexion.html

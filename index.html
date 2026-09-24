@@ -2063,6 +2063,12 @@ function runSelfTest(){
   const log = [];
   let pass=0, fail=0, tightest={g:1e9, what:''};
   const ok = (c,msg)=>{ c?pass++:fail++; log.push(`<span class="${c?'p':'f'}">${c?'OK  ':'FAIL'}</span> ${msg}`); };
+  /* Omitir NO es aprobar: se cuenta aparte y se ve en el registro. Hace falta
+     porque hay pruebas que dependen del CDN y la app promete funcionar sin
+     conexión — si la batería se cae ahí, deja de cubrir justo ese escenario. */
+  let skipped = 0;
+  const skip = msg =>{ skipped++; log.push(`<span class="s">OMIT</span> ${msg}`); };
+  const hayQR = typeof QRious !== 'undefined';
 
   const saved = JSON.parse(JSON.stringify(state));
   const savedTools = JSON.parse(JSON.stringify(toolRows));
@@ -2633,6 +2639,8 @@ function runSelfTest(){
     ok(abierto && !d.open, 'el acerca de se abre y se cierra'); }
 
   // 10. guardas del QR (el fallo silencioso de la librería)
+  if(!hayQR) skip('guardas del QR: la librería no cargó desde el CDN; se omite el bloque entero');
+  else {
   qrDataUrl('https://investiga.uned.ac.cr/cienciaabierta', true);
   ok(qrWarning==='', 'URL corta: QR sin advertencias');
   /* Los avisos se comprueban por CONDUCTA y en los tres idiomas, no por su
@@ -2657,6 +2665,7 @@ function runSelfTest(){
     lang=pl; U=UI[pl]; }
   qrDataUrl('https://investiga.uned.ac.cr/cienciaabierta', true);
   ok(qrWarning==='', 'la advertencia se limpia al volver a una URL válida');
+  }
 
   // 11. exportación real
   state = {TR:1, ED:2, TG:1};
@@ -2679,14 +2688,14 @@ function runSelfTest(){
   function finish(p,f2){
     pass+=p; fail+=f2;
     const limpio = log.map(l=>l.replace(/<[^>]+>/g,''));
-    console.log(`${pass} pruebas OK · ${fail} fallidas\n`
+    console.log(`${pass} pruebas OK · ${fail} fallidas${skipped?` · ${skipped} omitidas (sin conexión)`:''}\n`
       + `punto más apretado del sistema: ${tightest.g.toFixed(1)} u — ${tightest.what}\n`
       + '─'.repeat(52) + '\n' + limpio.join('\n'));
     state = saved;                       // dejar la app como estaba antes de las pruebas
     toolRows = savedTools; buildTools();
     lang = $('lang').value; applyLang();
     buildControls(); render();
-    window.__testResult = {pass, fail, tightest, lines: limpio};
+    window.__testResult = {pass, fail, skipped, tightest, lines: limpio};
   }
 }
 function onToggleSilently(code, checked){
