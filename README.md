@@ -39,7 +39,7 @@ gradual and does not require a journal to change its current policies.
 Built on the nine activities of the STM Association (2025), *Recommendations for a
 Classification of AI Use in Academic Manuscript Preparation*. The activities are adopted
 **without redefining them**: eight are disclosable and the ninth is not, because the STM
-guidelines recommend prohibiting it. The scope is that of the source — manuscript
+guidelines recommend prohibiting it. The scope is that of the source: manuscript
 preparation only, not the rest of the research process.
 
 | Code | From | STM | Activity |
@@ -55,7 +55,7 @@ preparation only, not the rest of the research process.
 | `RF` | References | 8 | Assisting with gathering references |
 
 **What gets declared.** Activities **2 to 8** always, however little they were used.
-Activity **1** — spell checker, grammar, style — need not be: that is the threshold, set
+Activity **1** (spell checker, grammar, style) need not be: that is the threshold, set
 by the 2023 STM Guidelines. If there was nothing above it, the correct declaration is
 `AI: N`, which states not that no tool was used but that none was used above the
 threshold. A journal may set its threshold lower, and `ED` stays available for that.
@@ -72,8 +72,8 @@ use must produce the same string, in any country, so that it can be searched, co
 and aggregated. What *does* follow the label language is the natural-language text
 inside the label, and the prose declaration.
 
-The tool has **two independent language controls**: «Tool language», at the top, changes
-the screen only; «Label and prose language», further down, is the language of the article
+The tool has **two independent language controls**: "Tool language", at the top, changes
+the screen only; "Label and prose language", further down, is the language of the article
 and is what gets printed. An editor can work in one language and publish in another.
 
 ### Running it
@@ -158,7 +158,7 @@ manuscrito, no el resto del proceso de investigación.
 | `RF` | References (referencias) | 8 | Ayuda en la recopilación y búsqueda de referencias |
 
 **Qué se declara.** Las actividades **2 a 8** siempre, por poco que se hayan usado. La
-**1** —corrector, gramática, estilo— no hace falta: ese es el umbral, fijado por las guías
+**1** (corrector, gramática, estilo) no hace falta: ese es el umbral, fijado por las guías
 de STM de 2023. Si no hubo nada por encima, la declaración correcta es `AI: N`, que no
 dice que no se usara ninguna herramienta sino que no se usó ninguna por encima del umbral.
 Una revista puede situar su umbral más abajo, y para eso `ED` sigue disponible.
@@ -176,8 +176,8 @@ declaran el mismo uso tienen que producir la misma cadena, en cualquier país, p
 se pueda buscar, comparar y agregar. Lo que *sí* sigue al idioma de la etiqueta es el
 texto en lengua natural que va dentro, y la prosa de la declaración.
 
-La herramienta tiene **dos controles de idioma independientes**: «Idioma de la
-herramienta», arriba, cambia solo la pantalla; «Idioma de la etiqueta y la prosa», más
+La herramienta tiene **dos controles de idioma independientes**: "Idioma de la
+herramienta", arriba, cambia solo la pantalla; "Idioma de la etiqueta y la prosa", más
 abajo, es el idioma del artículo y es el que se imprime. Una persona editora puede
 trabajar en una lengua y publicar en otra.
 
