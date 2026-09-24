@@ -52,7 +52,23 @@ SOFTWARE.
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sistema de etiquetado Alexander — declaración de uso de IA</title>
+<!-- ATENCIÓN: esto es lo que leen WhatsApp, Slack, Teams y los buscadores.
+     NO ejecutan JavaScript, así que no ven el título que pone applyLang(): ven
+     ESTAS etiquetas. Se quedaron con el nombre viejo del sistema durante varias
+     versiones justo por eso — nadie las miraba. Hay prueba que las vigila.
+     Van bilingües a propósito: el enlace se comparte en los dos idiomas. -->
+<title>AI Labelling System · Sistema de etiquetado AI</title>
+<meta name="description" content="Graphic declaration of artificial intelligence use in scientific manuscripts · Declaración gráfica de uso de inteligencia artificial en manuscritos científicos">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI Labelling System">
+<meta property="og:title" content="AI Labelling System · Sistema de etiquetado AI">
+<meta property="og:description" content="Graphic declaration of artificial intelligence use in scientific manuscripts · Declaración gráfica de uso de inteligencia artificial en manuscritos científicos">
+<meta property="og:url" content="https://editorial-labs-cr.github.io/ai-labelling-system/">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="es_CR">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AI Labelling System · Sistema de etiquetado AI">
+<meta name="twitter:description" content="Graphic declaration of artificial intelligence use in scientific manuscripts · Declaración gráfica de uso de inteligencia artificial en manuscritos científicos">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 <style>
   :root{
@@ -319,6 +335,11 @@ SOFTWARE.
    ========================================================================= */
 
 const NS = 'http://www.w3.org/2000/svg';
+
+/* El título tal como viene en el archivo, antes de que applyLang() lo cambie.
+   Es lo único que ven los rastreadores de enlaces, y se quedó desactualizado
+   durante varias versiones porque en pantalla nunca se veía. */
+const STATIC_TITLE = document.title;
 
 /* --- Vocabulario (Eje 1) --------------------------------------------------
    Fuente: preprint §4.1, que adopta las nueve actividades de STM (2025).
@@ -2447,6 +2468,18 @@ function runSelfTest(){
 
   /* 9ter. AUTORÍA, LICENCIA Y DOCUMENTACIÓN */
   ok(!/Alexander/.test(UI.es.appName + UI.en.appName), 'el nombre del sistema ya no lleva «Alexander»');
+  /* Metadatos de enlace: lo que ven WhatsApp, Slack y los buscadores. */
+  { const og = k => (document.querySelector(`meta[property="og:${k}"]`)||{}).content
+               || (document.querySelector(`meta[name="${k}"]`)||{}).content || '';
+    ok(!/Alexander/.test(STATIC_TITLE), 'el título del archivo no lleva el nombre viejo del sistema');
+    ok(STATIC_TITLE.includes(UI.en.appName) && STATIC_TITLE.includes(UI.es.appName),
+       'el título del archivo nombra el sistema en los dos idiomas que se ofrecen');
+    ok(og('title')===STATIC_TITLE, 'og:title coincide con el título del archivo');
+    ok(og('url').startsWith('https://') && og('description').length>40,
+       'los metadatos de enlace llevan url absoluta y descripción');
+    ok(!/Alexander/.test(og('description')+og('title')+og('description')),
+       'los metadatos de enlace tampoco llevan el nombre viejo'); }
+
   { const cab = document.documentElement.previousSibling;
     ok(cab && cab.nodeType===8 && cab.nodeValue.includes('MIT License') && cab.nodeValue.includes(MIT.slice(0,60)),
        'el archivo lleva la licencia MIT en su cabecera, idéntica a la del acerca de');
