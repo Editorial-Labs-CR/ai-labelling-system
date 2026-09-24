@@ -24,8 +24,9 @@ State at first release / Estado en la primera publicación:
 
 Known limitations / Limitaciones conocidas:
 
-- **The QR still points to a placeholder address.** It will be repointed at this app once
-  it is live. A printed QR cannot be revoked, so do not print a definitive label yet.
+- The QR points to the published app itself. A journal that adopts the system will
+  normally replace it with its own editorial policy page. A printed QR cannot be revoked,
+  so check the address before going to print.
 - The QR needs a connection: the library is loaded from a CDN.
 - One description departs on purpose from the preprint that documents the system (`RF`);
   the divergence is declared in the test suite.
