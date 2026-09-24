@@ -1186,7 +1186,7 @@ function selectedCodes(){ return ORDER.filter(c => c in state); }   // ya en ord
    ====================================================================== */
 const PROSE = {
   es:{
-    none   : 'Las personas autoras declaran que en la preparación de este manuscrito no se utilizaron herramientas de inteligencia artificial por encima del umbral declarable.',
+    none   : 'Las personas autoras declaran que en la preparación de este manuscrito no se utilizaron herramientas de inteligencia artificial por encima del umbral declarable, es decir, más allá de la corrección ortográfica, gramatical o de estilo.',
     lead1  : 'En la preparación de este manuscrito se utilizaron herramientas de inteligencia artificial para la siguiente tarea: ',
     leadN  : 'En la preparación de este manuscrito se utilizaron herramientas de inteligencia artificial para las siguientes tareas: ',
     extent : lv => `extensión ${lv}`,
@@ -1197,7 +1197,7 @@ const PROSE = {
     label  : 'Etiqueta de declaración: ',
   },
   en:{
-    none   : 'The authors declare that no artificial intelligence tools were used in the preparation of this manuscript above the disclosable threshold.',
+    none   : 'The authors declare that no artificial intelligence tools were used in the preparation of this manuscript above the disclosable threshold, that is, beyond spelling, grammar or style correction.',
     lead1  : 'Artificial intelligence tools were used in the preparation of this manuscript for the following task: ',
     leadN  : 'Artificial intelligence tools were used in the preparation of this manuscript for the following tasks: ',
     extent : lv => `${lv} extent`,
@@ -1208,7 +1208,7 @@ const PROSE = {
     label  : 'Declaration label: ',
   },
   pt:{
-    none   : 'Os autores declaram que na preparação deste manuscrito não foram utilizadas ferramentas de inteligência artificial acima do limiar declarável.',
+    none   : 'Os autores declaram que na preparação deste manuscrito não foram utilizadas ferramentas de inteligência artificial acima do limiar declarável, isto é, além da correção ortográfica, gramatical ou de estilo.',
     lead1  : 'Na preparação deste manuscrito foram utilizadas ferramentas de inteligência artificial para a seguinte tarefa: ',
     leadN  : 'Na preparação deste manuscrito foram utilizadas ferramentas de inteligência artificial para as seguintes tarefas: ',
     extent : lv => `extensão ${lv}`,
@@ -2498,8 +2498,17 @@ function runSelfTest(){
 
   // casos borde, uno por uno
   toolRows=[]; state={N:true};
-  ok(proseText('es')==='Las personas autoras declaran que en la preparación de este manuscrito no se utilizaron herramientas de inteligencia artificial por encima del umbral declarable. Etiqueta de declaración: AI: N.',
+  /* Se compone desde PROSE en vez de llevar la frase copiada: con el texto
+     literal, cualquier retoque de redacción hacía fallar una prueba que vigila
+     otra cosa (que la prosa de N esté completa y sin huecos que rellenar). */
+  ok(proseText('es')===PROSE.es.none+' '+PROSE.es.label+'AI: N.',
      'prosa de N: declaración negativa completa, sin huecos');
+  ok(proseSegments('es').every(x=>!x.ph), 'la prosa de N no deja nada por completar');
+  /* El umbral se explica DENTRO de la prosa: sale publicada en el artículo,
+     donde no hay guía flotante ni manual a mano. */
+  ok(LANG_ALL.every(l=>/es decir|that is|isto é/.test(PROSE[l].none)
+       && /ortográfic|spelling|ortográf/.test(PROSE[l].none)),
+     'la prosa de N explica qué es el umbral, sin depender de la app');
   state={RF:2, ED:1}; toolRows=[];
   /* Los fragmentos salen del vocabulario, no escritos a mano: con el texto
      literal, cambiar una descripción hacía fallar la prueba del ORDEN, que no
