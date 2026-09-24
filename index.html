@@ -105,6 +105,7 @@ SOFTWARE.
   .topnav{display:flex;gap:6px;align-items:center;}
   .prose-lang{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);}
   .code[data-tip]{cursor:help;}
+  .desc .eg{display:block;margin-top:3px;color:var(--muted);font-size:11.5px;line-height:1.4;}
   .langlbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);}
   .topnav{flex-wrap:wrap;}
   .langsel{padding:6px 10px;border:1px solid var(--ink);border-radius:7px;font:600 12.5px/1.2 inherit;font-family:inherit;background:#fff;color:var(--ink);cursor:pointer;}
@@ -238,6 +239,19 @@ SOFTWARE.
 <div class="layout">
   <div class="controls">
     <div class="card">
+      <!-- Primero el idioma: gobierna la etiqueta Y la prosa, así que escogerlo
+           al final obliga a releer lo ya generado. El otro eje de idioma vive
+           en la barra superior porque es de quien opera la herramienta. Los
+           códigos no dependen de ninguno: son invariantes. -->
+      <fieldset>
+        <legend data-i18n="legStart"></legend>
+        <div class="field" style="margin-bottom:2px">
+          <label for="docLang" data-i18n="lblDocLang"></label>
+          <select id="docLang" data-i18n-tip="tipDocLang" data-i18n-tipsub="tipDocLangSub"></select>
+          <p class="note" data-i18n="noteDocLang"></p>
+        </div>
+      </fieldset>
+
       <fieldset>
         <legend data-i18n="legAxes"></legend>
         <div id="taskList"></div>
@@ -253,24 +267,13 @@ SOFTWARE.
         <p class="note" data-i18n="noteTools"></p>
       </fieldset>
 
-      <!-- Lo que entra AL ARTÍCULO, junto. El otro eje de idioma vive en la
-           barra superior porque es de quien opera la herramienta. Los códigos
-           (AI:, ED, TR…) no dependen de ninguno de los dos: son invariantes. -->
-      <fieldset>
-        <legend data-i18n="legLabel"></legend>
-        <div class="field">
-          <label for="docLang" data-i18n="lblDocLang"></label>
-          <select id="docLang"></select>
-          <p class="note" data-i18n="noteDocLang"></p>
-        </div>
-        <div class="field" style="margin-bottom:2px">
-          <label for="qrUrl" data-i18n="lblQrUrl"></label>
-          <input type="text" id="qrUrl" value="https://editorial-labs-cr.github.io/ai-labelling-system/" spellcheck="false">
-        </div>
-      </fieldset>
 
       <fieldset>
         <legend data-i18n="legProd"></legend>
+        <div class="field">
+          <label for="qrUrl" data-i18n="lblQrUrl"></label>
+          <input type="text" id="qrUrl" value="https://editorial-labs-cr.github.io/ai-labelling-system/" spellcheck="false">
+        </div>
         <label class="check"><input type="checkbox" id="optQrSafe" checked><span data-i18n="optQrSafe"></span></label>
         <label class="check"><input type="checkbox" id="optEmbed" checked><span data-i18n="optEmbed"></span></label>
         <label class="check"><input type="checkbox" id="optDark"><span data-i18n="optDark"></span></label>
@@ -364,10 +367,24 @@ const TASKS = [
    pt:'Sem uso acima do limiar declarável'},
   /* (**) en la lámina de STM: «2023 STM Guidelines recommend that disclosure
      is not necessary for this use of automated tools». Es el umbral del §4.5. */
-  {code:'ED', from:'Editing', gloss:{es:'edición', pt:'edição'}, stm:1, tag:'tagThreshold', stmNote:{
-     es:'Está en el umbral: la guía internacional no pide declararla. Si no desea declararla, déjela sin marcar; y si tampoco hubo ningún otro uso de IA, marque N, la opción de arriba. Si desea declararla de todos modos, o la revista lo pide, marque esta tarea.',
-     en:'It sits at the threshold: the international guideline does not ask for it to be declared. If you would rather not declare it, leave it unticked; and if there was no other AI use either, tick N, the option above. If you want to declare it anyway, or the journal asks for it, tick this task.',
-     pt:'Está no limiar: a diretriz internacional não pede que se declare. Se não quiser declará-la, deixe-a sem marcar; e se também não houve nenhum outro uso de IA, marque N, a opção de cima. Se quiser declará-la de todos os modos, ou a revista o pedir, marque esta tarefa.'},
+  /* `eg` sale de las columnas «Examples of the activity» y «Activity does NOT
+     include» de la lámina de STM, que la tabla del §4.1 no recoge porque solo
+     toma el nombre. No es redefinir la actividad: es mostrar lo que la fuente
+     ya dice y el artículo resume. Va VISIBLE bajo la descripción, no en la
+     guía flotante, porque la duda «¿esto es la 1 o la 2?» aparece justo al
+     leer la fila y quien no conoce el tema no sabe que hay algo que consultar.
+     STM, actividad 1 — ejemplos: «Using spell checkers, grammar checkers, and
+     similar tools (such as Microsoft 365's inbuilt editing tools) to refine
+     text written primarily by humans»; no incluye: «Using AI tools to generate
+     text from prompts…». */
+  {code:'ED', from:'Editing', gloss:{es:'edición', pt:'edição'}, stm:1, tag:'tagThreshold',
+   eg:{es:'Por ejemplo, correctores ortográficos y gramaticales sobre un texto escrito principalmente por personas. No incluye generar texto a partir de indicaciones: eso es la actividad 2.',
+       en:'For example, spell checkers and grammar checkers on text written primarily by humans. Does not include generating text from prompts: that is activity 2.',
+       pt:'Por exemplo, corretores ortográficos e gramaticais sobre um texto escrito principalmente por pessoas. Não inclui gerar texto a partir de instruções: isso é a atividade 2.'},
+   stmNote:{
+     es:'Está en el umbral: la guía internacional STM no pide declararla. Si no desea declararla, déjela sin marcar; y si tampoco hubo ningún otro uso de IA, marque N, la opción de arriba. Si desea declararla de todos modos, o la revista lo pide, marque esta tarea.',
+     en:'It sits at the threshold: the international STM guideline does not ask for it to be declared. If you would rather not declare it, leave it unticked; and if there was no other AI use either, tick N, the option above. If you want to declare it anyway, or the journal asks for it, tick this task.',
+     pt:'Está no limiar: a diretriz internacional STM não pede que se declare. Se não quiser declará-la, deixe-a sem marcar; e se também não houve nenhum outro uso de IA, marque N, a opção de cima. Se quiser declará-la de todos os modos, ou a revista o pedir, marque esta tarefa.'},
    es:'Refinamiento, corrección, edición o formato del manuscrito para mejorar la claridad del lenguaje',
    en:'Refinement, correction, editing or formatting the manuscript to improve clarity of language',
    pt:'Refinamento, correção, edição ou formatação do manuscrito para melhorar a clareza da linguagem'},
@@ -427,9 +444,9 @@ const TASKS = [
   /* (***) en la lámina de STM: «2023 STM Guidelines recommend prohibiting
      this use of AI tools». Por eso no es declarable. */
   {code:null, stm:9, declarable:false, stmNote:{
-     es:'La guía internacional recomienda PROHIBIR este uso, no declararlo. No hay código para marcarlo: es un asunto de integridad editorial y lo resuelve la revista, no una etiqueta.',
-     en:'The international guideline recommends PROHIBITING this use, not disclosing it. There is no code to tick: it is a matter of editorial integrity, resolved by the journal, not by a label.',
-     pt:'A diretriz internacional recomenda PROIBIR este uso, não declará-lo. Não há código para marcar: é uma questão de integridade editorial, que a revista resolve, não uma etiqueta.'},
+     es:'La guía internacional STM recomienda PROHIBIR este uso, no declararlo. No hay código para marcarlo: es un asunto de integridad editorial y lo resuelve la revista, no una etiqueta.',
+     en:'The international STM guideline recommends PROHIBITING this use, not disclosing it. There is no code to tick: it is a matter of editorial integrity, resolved by the journal, not by a label.',
+     pt:'A diretriz internacional STM recomenda PROIBIR este uso, não declará-lo. Não há código para marcar: é uma questão de integridade editorial, que a revista resolve, não uma etiqueta.'},
    es:'No declarable. Presentación de cualquier tipo de contenido generado por herramientas de IA como si fuera dato o resultado de investigación original procedente de fuentes no maquinales',
    en:'Presentation of any kind of content generated by AI tools as though it were original research data/results from non-machine sources',
    pt:'Apresentação de qualquer tipo de conteúdo gerado por ferramentas de IA como se fosse dado ou resultado de pesquisa original proveniente de fontes não maquinais'},
@@ -486,10 +503,12 @@ const UI = {
     legAxes:'Eje 1 · Tipo de tarea &nbsp;·&nbsp; Eje 2 · Extensión (opcional)',
     lblLang:'Idioma de la herramienta',
     lblDocLang:'Idioma de la etiqueta y la prosa',
-    legLabel:'Etiqueta y prosa',
+    legStart:'Antes de empezar',
+    tipDocLang:'Idioma de la etiqueta y la prosa',
+    tipDocLangSub:'Se recomienda el mismo idioma del artículo. Si el artículo está en una lengua que la herramienta todavía no ofrece, use inglés.',
     tipLang:'Idioma de la herramienta',
     tipLangSub:'Solo cambia esta pantalla. El idioma de la etiqueta y de la prosa se escoge más abajo, en "Etiqueta y prosa".',
-    noteDocLang:'Es el idioma del artículo, no el de quien usa la herramienta. <b>El código NO cambia</b>: <code>AI: ED+TR+CO</code> se escribe igual en cualquier idioma.',
+    noteDocLang:'Escójalo primero: gobierna las descripciones de la etiqueta y el texto de la prosa. <b>El código NO cambia</b>: <code>AI: ED+TR+CO</code> se escribe igual en cualquier idioma.',
     lblQrUrl:'URL del QR (página explicativa)',
     legProd:'Opciones de producción',
     optQrSafe:'QR de alto contraste estándar<small>Módulos oscuros sobre placa blanca dentro del bloque negro.</small>',
@@ -513,7 +532,7 @@ const UI = {
     tipStmSub:'STM es la asociación internacional de editoriales científicas cuya guía adopta este sistema. El número identifica la actividad en esa guía; las dos letras son solo su forma corta para la etiqueta.',
     tipCodeSub:'Las letras salen del término en inglés. El código es el mismo en cualquier idioma.',
     tipNoStm:'Ajeno a la clasificación de STM',
-    tipNoStmSub:'N no describe una actividad: afirma que no hubo uso por encima del umbral (la actividad 1 de la guía internacional: corrección y estilo). Ver "Qué se declara y qué no" en el manual.',
+    tipNoStmSub:'N no describe una actividad: afirma que no hubo uso por encima del umbral (la actividad 1 de la guía internacional STM: corrección y estilo). Ver "Qué se declara y qué no" en el manual.',
     legendTitle:'Eje 2 · extensión', legendNotDecl:'no declarada',
     fontOk:kb=>`Tipografía: Inter incrustada (${kb} KB en el SVG). El archivo exportado se ve igual en cualquier máquina.`,
     fontFail:'Tipografía: sin red, se usa la del sistema. El diseño no se rompe, pero el SVG exportado dependerá de las fuentes de quien lo abra.',
@@ -546,10 +565,12 @@ const UI = {
     legAxes:'Axis 1 · Task type &nbsp;·&nbsp; Axis 2 · Extent (optional)',
     lblLang:'Tool language',
     lblDocLang:'Label and prose language',
-    legLabel:'Label and prose',
+    legStart:'Before you start',
+    tipDocLang:'Label and prose language',
+    tipDocLangSub:'Use the same language as the article. If the article is in a language the tool does not offer yet, use English.',
     tipLang:'Tool language',
     tipLangSub:'Changes this screen only. The language of the label and the prose is chosen further down, under "Label and prose".',
-    noteDocLang:'The language of the article, not of whoever uses the tool. <b>The code does NOT change</b>: <code>AI: ED+TR+CO</code> is written the same in any language.',
+    noteDocLang:'Choose this first: it governs the descriptions in the label and the text of the prose. <b>The code does NOT change</b>: <code>AI: ED+TR+CO</code> is written the same in any language.',
     lblQrUrl:'QR URL (explanatory page)',
     legProd:'Production options',
     optQrSafe:'Standard high-contrast QR<small>Dark modules on a white plate inside the black block.</small>',
@@ -573,7 +594,7 @@ const UI = {
     tipStmSub:'STM is the international association of scientific publishers whose guideline this system adopts. The number identifies the activity in that guideline; the two letters are just its short form for the label.',
     tipCodeSub:'The letters come from the English term. The code is the same in any language.',
     tipNoStm:'Outside the STM classification',
-    tipNoStmSub:'N does not describe an activity: it states that there was no use above the threshold (activity 1 of the international guideline: language correction and style). See "What gets declared and what does not" in the user guide.',
+    tipNoStmSub:'N does not describe an activity: it states that there was no use above the threshold (activity 1 of the international STM guideline: language correction and style). See "What gets declared and what does not" in the user guide.',
     legendTitle:'Axis 2 · extent', legendNotDecl:'not declared',
     fontOk:kb=>`Typeface: Inter embedded (${kb} KB in the SVG). The exported file looks the same on any machine.`,
     fontFail:'Typeface: offline, the system font is used. The layout does not break, but the exported SVG will depend on the reader’s fonts.',
@@ -606,10 +627,12 @@ const UI = {
     legAxes:'Eixo 1 · Tipo de tarefa &nbsp;·&nbsp; Eixo 2 · Extensão (opcional)',
     lblLang:'Idioma da ferramenta',
     lblDocLang:'Idioma da etiqueta e da prosa',
-    legLabel:'Etiqueta e prosa',
+    legStart:'Antes de começar',
+    tipDocLang:'Idioma da etiqueta e da prosa',
+    tipDocLangSub:'Recomenda-se o mesmo idioma do artigo. Se o artigo estiver numa língua que a ferramenta ainda não oferece, use inglês.',
     tipLang:'Idioma da ferramenta',
     tipLangSub:'Muda apenas esta tela. O idioma da etiqueta e da prosa escolhe-se mais abaixo, em "Etiqueta e prosa".',
-    noteDocLang:'É o idioma do artigo, não o de quem usa a ferramenta. <b>O código NÃO muda</b>: <code>AI: ED+TR+CO</code> escreve-se igual em qualquer idioma.',
+    noteDocLang:'Escolha-o primeiro: governa as descrições da etiqueta e o texto da prosa. <b>O código NÃO muda</b>: <code>AI: ED+TR+CO</code> escreve-se igual em qualquer idioma.',
     lblQrUrl:'URL do QR (página explicativa)',
     legProd:'Opções de produção',
     optQrSafe:'QR de alto contraste padrão<small>Módulos escuros sobre placa branca dentro do bloco preto.</small>',
@@ -633,7 +656,7 @@ const UI = {
     tipStmSub:'STM é a associação internacional de editoras científicas cuja diretriz este sistema adota. O número identifica a atividade nessa diretriz; as duas letras são apenas a sua forma curta para a etiqueta.',
     tipCodeSub:'As letras vêm do termo em inglês. O código é o mesmo em qualquer idioma.',
     tipNoStm:'Fora da classificação da STM',
-    tipNoStmSub:'N não descreve uma atividade: afirma que não houve uso acima do limiar (a atividade 1 da diretriz internacional: correção e estilo). Ver "O que se declara e o que não" no manual.',
+    tipNoStmSub:'N não descreve uma atividade: afirma que não houve uso acima do limiar (a atividade 1 da diretriz internacional STM: correção e estilo). Ver "O que se declara e o que não" no manual.',
     legendTitle:'Eixo 2 · extensão', legendNotDecl:'não declarada',
     fontOk:kb=>`Tipografia: Inter incorporada (${kb} KB no SVG). O arquivo exportado fica igual em qualquer máquina.`,
     fontFail:'Tipografia: sem conexão, usa-se a fonte do sistema. O layout não quebra, mas o SVG exportado dependerá das fontes de quem o abra.',
@@ -745,6 +768,7 @@ function codesTable(){
     const desc = (t.declarable===false
       ? `<b>${U.tagNotDecl}.</b> ${esc(t[lang].replace(/^No declarable\.\s*/,''))}`
       : (t.tag ? `<b>${esc(U[t.tag])}.</b> ${esc(t[lang])}` : esc(t[lang])))
+      + (t.eg ? `<br><small>${esc(t.eg[lang])}</small>` : '')
       + (t.scopeNote ? `<br><small>${esc(t.scopeNote[lang])}</small>` : '');
     return `<tr><td>${code}</td><td>${t.from ? `<i>${esc(fromLabel(t))}</i>` : '—'}</td><td>${stm}</td><td>${desc}</td></tr>`;
   }).join('');
@@ -1778,7 +1802,7 @@ function buildControls(){
        de este span: `closest('[data-tip]')` resuelve al más interno, así que
        cada mitad muestra lo suyo sin estorbarse. */
     label.innerHTML = `<span class="code" data-tip="${esc(t.code + ' · ' + fromLabel(t))}" data-tip-sub="${esc(U.tipCodeSub)}">${t.code} ${stm}</span>`
-                    + `<span class="desc">${t[lang]}</span>`;
+                    + `<span class="desc">${esc(t[lang])}${t.eg?`<small class="eg">${esc(t.eg[lang])}</small>`:''}</span>`;
     row.append(cb, label);
 
     if(!t.exclusive){
@@ -2422,13 +2446,22 @@ function runSelfTest(){
      nota (distinta de la descripción) y que no pierda de dónde sale. */
   ok(TASKS.filter(t=>t.stmNote).every(t=>LANG_ALL.every(l=>t.stmNote[l] && t.stmNote[l]!==t[l] && t.stmNote[l].length>60)),
      'las notas al pie siguen siendo notas y no se confunden con las descripciones');
-  /* La sigla STM solo se usa donde queda explicada (el chip numerado y su guía
-     genérica) o donde se cita la fuente formalmente. En las notas concretas se
-     habla de «la guía internacional»: nadie que abra la app sabe qué es STM. */
-  ok(TASKS.filter(t=>t.stmNote).every(t=>LANG_ALL.every(l=>!/\bSTM\b/.test(t.stmNote[l]))),
-     'las notas de las actividades no usan la sigla STM sin explicar');
+  /* La sigla nunca va sola: siempre pegada a «guía/diretriz internacional», que
+     la explica sin obligar a saber de antemano qué es STM. */
+  ok(TASKS.filter(t=>t.stmNote).every(t=>LANG_ALL.every(l=>
+       !/\bSTM\b/.test(t.stmNote[l])
+       || /(gu[íi]a|diretriz)[^.]{0,32}STM/i.test(t.stmNote[l])
+       || /STM[^.]{0,32}guideline/i.test(t.stmNote[l]))),
+     'la sigla STM nunca aparece sola en las notas: va junto a «guía internacional»');
   ok(LANG_ALL.every(l=>/STM/.test(UI[l].tipStmSub) && UI[l].tipStmSub.length>100),
      'la guía del chip numerado sí explica qué es STM');
+  { const ed0 = TASKS.find(t=>t.code==='ED');
+    ok(LANG_ALL.every(l=>ed0.eg && ed0.eg[l] && ed0.eg[l]!==ed0[l]),
+       'la actividad del umbral lleva ejemplo propio en todos los idiomas');
+    ok(LANG_ALL.every(l=>/actividad 2|activity 2|atividade 2/.test(ed0.eg[l])),
+       'y ese ejemplo dice qué NO incluye, remitiendo a la actividad 2');
+    buildControls();
+    ok(!!document.querySelector('.desc .eg'), 'el ejemplo se ve en la fila, sin tener que pasar el cursor'); }
   { const ed = TASKS.find(t=>t.code==='ED');
     ok(LANG_ALL.every(l=>/\bN\b/.test(ed.stmNote[l])),
        'la guía de la actividad del umbral dice qué hacer con N');
